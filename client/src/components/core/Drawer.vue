@@ -20,11 +20,7 @@
 
     <v-list-item two-line>
       <v-list-item-avatar color="white">
-        <v-img
-          src="/img/logo.png"
-          height="34"
-          contain
-        />
+        <v-img src="/img/logo.png" height="34" contain />
       </v-list-item-avatar>
 
       <v-list-item-title class="title">
