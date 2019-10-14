@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.moowork.gradle.node.npm.NpmTask
 
 plugins {
     id("org.springframework.boot") version "2.1.9.RELEASE"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
     kotlin("jvm") version "1.2.71"
     kotlin("plugin.spring") version "1.2.71"
+    id("com.moowork.node") version "1.3.1"
 }
 
 group = "net.relaxism.devtools"
@@ -41,4 +43,34 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "1.8"
     }
+}
+
+node {
+    version = "10.16.2"
+    npmVersion = "6.11.3"
+    download = true
+}
+
+// Task for installing frontend dependencies in web
+val npmInstallDependencies by tasks.registering(NpmTask::class) {
+    setArgs(listOf("install"))
+    setExecOverrides(closureOf<ExecSpec> {
+        setWorkingDir("./client")
+    })
+}
+
+// Task for executing build:gradle in web
+val npmRunBuild by tasks.registering(NpmTask::class) {
+    // Before buildWeb can run, installDependencies must run
+    dependsOn(npmInstallDependencies)
+
+    setArgs(listOf("run", "build"))
+    setExecOverrides(closureOf<ExecSpec> {
+        setWorkingDir("./client")
+    })
+}
+
+// Before build can run, buildWeb must run
+tasks.processResources {
+    dependsOn(npmRunBuild)
 }
