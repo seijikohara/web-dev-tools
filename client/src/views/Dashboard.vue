@@ -95,6 +95,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import axios from "axios";
 import * as Bowser from "bowser";
 
 @Component({
@@ -111,7 +112,7 @@ export default class Dashboard extends Vue {
 
   mounted(): void {
     this.browserInfo = Bowser.parse(window.navigator.userAgent);
-    this.$http
+    axios
       .get("/api/ip")
       .then(response => (this.ipAddress = response.data.ipAddress));
   }
