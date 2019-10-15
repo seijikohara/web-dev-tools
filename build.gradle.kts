@@ -64,7 +64,7 @@ val npmRunBuild by tasks.registering(NpmTask::class) {
     // Before buildWeb can run, installDependencies must run
     dependsOn(npmInstallDependencies)
 
-    setArgs(listOf("run", "build"))
+    setArgs(listOf("run", "build", "--", "--dest", "../src/main/resources/generated"))
     setExecOverrides(closureOf<ExecSpec> {
         setWorkingDir("./client")
     })
