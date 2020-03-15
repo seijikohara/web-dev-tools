@@ -9,14 +9,14 @@
             :requireModes="['json']"
             width="100%"
             height="500"
-          ></editor>
+          />
           <div class="buttons">
             <v-btn @click="onClickFormat">Format</v-btn>
             <v-select
               label="Options"
               :items="formatOptions"
               v-model="formatOption"
-            ></v-select>
+            />
           </div>
         </material-card>
       </v-col>

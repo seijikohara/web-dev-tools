@@ -13,7 +13,7 @@
             :requireModes="['text']"
             width="100%"
             height="300"
-          ></editor>
+          />
           <div class="buttons">
             <v-btn @click="onClickEncode">Encode</v-btn>
             <v-btn @click="onClickDecode">Decode</v-btn>

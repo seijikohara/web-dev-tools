@@ -72,6 +72,11 @@ export default class Drawer extends Vue {
       to: "/url-encoding",
       icon: "mdi-text",
       text: "URL Encoding"
+    },
+    {
+      to: "/b-crypt",
+      icon: "mdi-text",
+      text: "BCrypt"
     }
   ];
 
