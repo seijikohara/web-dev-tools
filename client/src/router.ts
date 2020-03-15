@@ -19,6 +19,11 @@ export default new Router({
       path: "/url-encoding",
       name: "url encoding",
       component: () => import("./views/UrlEncoding.vue")
+    },
+    {
+      path: "/b-crypt",
+      name: "bcrypt",
+      component: () => import("./views/BCryptHashCalculator.vue")
     }
   ]
 });

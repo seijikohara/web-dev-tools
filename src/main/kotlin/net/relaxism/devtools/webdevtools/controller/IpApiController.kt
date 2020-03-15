@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletRequest
 class IpApiController() {
 
     @GetMapping
-    fun getIp(request: HttpServletRequest): ResponseEntity<Ip> {
+    fun getIp(request: HttpServletRequest): ResponseEntity<IpResponse> {
         val ipAddress = getRemoteAddress(request)
-        return ResponseEntity.ok(Ip(ipAddress))
+        return ResponseEntity.ok(IpResponse(ipAddress))
     }
 
     private fun getRemoteAddress(request: HttpServletRequest): String {
@@ -21,6 +21,6 @@ class IpApiController() {
         return xForwardedFor ?: request.remoteAddr;
     }
 
-    data class Ip(val ipAddress: String)
+    data class IpResponse(val ipAddress: String)
 
 }
