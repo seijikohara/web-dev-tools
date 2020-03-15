@@ -32,14 +32,14 @@ import Editor from "@/components/Editor.vue";
   components: { Editor }
 })
 export default class JsonFormatter extends Vue {
-  content: string = "{}";
+  content = "{}";
   formatOptions: object[] = [
     { text: "2 Spaces", value: "2spaces" },
     { text: "4 Spaces", value: "4spaces" },
     { text: "1 Tab", value: "1tab" },
     { text: "Compact", value: "compact" }
   ];
-  formatOption: string = "2spaces";
+  formatOption = "2spaces";
 
   onEditorInput(val: string): void {
     this.content = val;

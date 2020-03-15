@@ -31,7 +31,7 @@ export default class Editor extends Vue {
   @Prop({ default: () => ["chrome"] })
   requireThemes!: string[];
 
-  content: string = "";
+  content = "";
 
   @Emit("input")
   input(val: string): string {
@@ -39,12 +39,12 @@ export default class Editor extends Vue {
   }
 
   @Watch("content")
-  onEditorContentChanged(newVal: string, oldVal: string) {
+  onEditorContentChanged(newVal: string) {
     this.input(newVal);
   }
 
   @Watch("value")
-  onValueChanged(newVal: string, oldVal: string) {
+  onValueChanged(newVal: string) {
     this.content = newVal;
   }
 

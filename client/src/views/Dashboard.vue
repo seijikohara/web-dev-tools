@@ -102,7 +102,7 @@ import * as Bowser from "bowser";
   components: {}
 })
 export default class Dashboard extends Vue {
-  ipAddress: string = "";
+  ipAddress = "";
   browserInfo: object = {
     browser: { name: "", version: "" },
     os: { name: "", version: "", versionName: "" },
