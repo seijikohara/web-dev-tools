@@ -1,11 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import { IAppState } from "./modules/app";
+import { AppState } from "./modules/app";
 
 Vue.use(Vuex);
 
 export interface State {
-  app: IAppState;
+  app: AppState;
 }
 export default new Vuex.Store<State>({});

@@ -32,7 +32,7 @@ import Editor from "@/components/Editor.vue";
   components: { Editor }
 })
 export default class UrlEncoding extends Vue {
-  content: string = "";
+  content = "";
 
   onClickEncode(): void {
     this.content = encodeURI(this.content);

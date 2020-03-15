@@ -24,8 +24,8 @@ import { appModule } from "@/store/modules/app";
   components: {}
 })
 export default class AppBar extends Vue {
-  title: string = "";
-  responsive: boolean = false;
+  title = "";
+  responsive = false;
 
   // lifescycle hook
   mounted(): void {

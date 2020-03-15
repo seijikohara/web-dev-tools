@@ -7,13 +7,13 @@ import {
 } from "vuex-module-decorators";
 import store from "@/store";
 
-export interface IAppState {
+export interface AppState {
   drawer: boolean;
 }
 @Module({ dynamic: true, store, name: "app", namespaced: true })
-class App extends VuexModule implements IAppState {
+class App extends VuexModule implements AppState {
   // state
-  drawer: boolean = false;
+  drawer = false;
 
   // mutation
   @Mutation
