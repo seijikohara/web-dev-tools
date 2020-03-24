@@ -14,7 +14,7 @@
             thumb-label
             label="Rounds"
             :max="20"
-            :min="0"
+            :min="4"
             hide-details
           >
             <template v-slot:append>
