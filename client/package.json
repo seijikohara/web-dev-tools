@@ -15,7 +15,7 @@
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "bowser": "^2.9.0",
-    "core-js": "^3.6.4",
+    "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.4.0",
