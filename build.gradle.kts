@@ -76,7 +76,27 @@ val npmRunBuild by tasks.registering(NpmTask::class) {
     })
 }
 
-// Before build can run, buildWeb must run
-tasks.processResources {
+
+/**
+ * Heroku
+ */
+
+val herokuStageBuildClient by tasks.registering {
+    group = "heroku"
     dependsOn(npmRunBuild)
+    doLast {
+        delete("client/node_modules")
+    }
+}
+
+val herokuStageBuild by tasks.registering {
+    group = "heroku"
+    dependsOn("bootJar")
+    mustRunAfter(herokuStageBuildClient)
+}
+
+val herokuStage by tasks.registering {
+    group = "heroku"
+    dependsOn(herokuStageBuild)
+    dependsOn(herokuStageBuildClient)
 }
