@@ -1,0 +1,30 @@
+{
+  "name": "web-dev-tools",
+  "description": "Web Development Tools",
+  "scripts": {},
+  "env": {
+    "NEW_RELIC_APP_NAME": "web-dev-tools",
+    "SPRING_PROFILES_ACTIVE": "production"
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    },
+    "worker": {
+    }
+  },
+  "addons": [
+    {
+      "plan": "newrelic"
+    },
+    {
+      "plan": "papertrail"
+    }
+  ],
+  "stack": "heroku-18",
+  "buildpacks": [
+    {
+      "url": "heroku/gradle"
+    }
+  ]
+}
