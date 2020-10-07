@@ -3,8 +3,12 @@
     <v-row justify="center">
       <v-col cols="12">
         <material-card color="green" title="Browser" text="Browser information">
-          <v-row no-gutters>
-            <v-col cols="12" sm="4">
+          <p class="display-1 text--primary">
+            User agent
+          </p>
+          <p>{{ userAgent }}</p>
+          <v-row>
+            <v-col>
               <v-card>
                 <v-card-text>
                   <p class="display-1 text--primary">
@@ -16,14 +20,12 @@
                         <tr>
                           <th class="text-left">Name</th>
                           <th class="text-left">Version</th>
-                          <th class="text-left">Engine</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
                           <td>{{ browserInfo.browser.name }}</td>
                           <td>{{ browserInfo.browser.version }}</td>
-                          <td>{{ browserInfo.engine.name }}</td>
                         </tr>
                       </tbody>
                     </template>
@@ -31,7 +33,34 @@
                 </v-card-text>
               </v-card>
             </v-col>
-            <v-col cols="12" sm="4">
+            <v-col>
+              <v-card>
+                <v-card-text>
+                  <p class="display-1 text--primary">
+                    Engine
+                  </p>
+                  <v-simple-table>
+                    <template v-slot:default>
+                      <thead>
+                        <tr>
+                          <th class="text-left">Name</th>
+                          <th class="text-left">Version</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{{ browserInfo.engine.name }}</td>
+                          <td>{{ browserInfo.engine.version }}</td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
               <v-card>
                 <v-card-text>
                   <p class="display-1 text--primary">
@@ -58,7 +87,7 @@
                 </v-card-text>
               </v-card>
             </v-col>
-            <v-col cols="12" sm="4">
+            <v-col>
               <v-card>
                 <v-card-text>
                   <p class="display-1 text--primary">
@@ -86,7 +115,50 @@
           </v-row>
         </material-card>
         <material-card color="green" title="Network" text="Network information">
-          <div class="headline">{{ ipAddress }}</div>
+          <v-row>
+            <v-col>
+              <v-card>
+                <v-card-text>
+                  <p class="display-1 text--primary">
+                    IP address
+                  </p>
+                  <p>{{ ipAddress }}</p>
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col>
+              <v-card>
+                <v-card-text>
+                  <p class="display-1 text--primary">
+                    Host name
+                  </p>
+                  <p>{{ hostName }}</p>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-card>
+                <v-card-text>
+                  <p class="display-1 text--primary">
+                    Geo location
+                  </p>
+                  <json-view :data="geo" :maxDepth="100" rootKey="/" />
+                </v-card-text>
+              </v-card>
+            </v-col>
+            <v-col>
+              <v-card>
+                <v-card-text>
+                  <p class="display-1 text--primary">
+                    RDAP infromation
+                  </p>
+                  <json-view :data="rdap" :maxDepth="100" rootKey="/" />
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </material-card>
       </v-col>
     </v-row>
@@ -102,19 +174,33 @@ import * as Bowser from "bowser";
   components: {}
 })
 export default class Dashboard extends Vue {
-  ipAddress = "";
+  userAgent = "";
   browserInfo: object = {
     browser: { name: "", version: "" },
     os: { name: "", version: "", versionName: "" },
     platform: { type: "", vendor: "" },
-    engine: { name: "" }
+    engine: { name: "", version: "" }
   };
+  ipAddress = "";
+  hostName = "";
+  rdap = {};
+  geo = {};
 
-  mounted(): void {
-    this.browserInfo = Bowser.parse(window.navigator.userAgent);
-    axios
-      .get("/api/ip")
-      .then(response => (this.ipAddress = response.data.ipAddress));
+  async mounted() {
+    const userAgent = window.navigator.userAgent;
+    this.userAgent = userAgent;
+    this.browserInfo = Bowser.parse(userAgent);
+
+    const ipResponse = await axios.get("/api/ip");
+    this.ipAddress = ipResponse.data.ipAddress;
+    this.hostName = ipResponse.data.hostName;
+
+    axios.get(`/api/rdap/${this.ipAddress}`).then(response => {
+      this.rdap = JSON.parse(response.data.rdap);
+    });
+    axios.get(`/api/geo/${this.ipAddress}`).then(response => {
+      this.geo = JSON.parse(response.data.geo);
+    });
   }
 }
 </script>
