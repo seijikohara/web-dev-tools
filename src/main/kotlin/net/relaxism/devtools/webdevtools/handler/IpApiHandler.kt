@@ -7,24 +7,20 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
 
 @Component
-class IpApiHandler {
+class IpApiHandler() {
 
     fun getIp(request: ServerRequest): Mono<ServerResponse> {
-        val ipAddress = getRealRemoteIpAddress(request)
-        val ipResponse = IpResponse(ipAddress)
+        val remoteAddress = request.remoteAddress()
+        val remoteIpAddress = request.headers().firstHeader("X-Forwarded-For")
+            ?: remoteAddress.map { it.address.hostAddress }.orElse(null)
+        val remoteHostname = remoteAddress.map { it.address.canonicalHostName }.orElse(null)
+
+        val response = Response(remoteIpAddress, remoteHostname)
         return ServerResponse.ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(Mono.just(ipResponse), IpResponse::class.java)
+            .body(Mono.just(response), Response::class.java)
     }
 
-    private fun getRealRemoteIpAddress(request: ServerRequest): String {
-        val xForwardedFor: String? = request.headers().firstHeader("X-Forwarded-For")
-        val remoteAddress = request.remoteAddress();
-        return xForwardedFor ?: remoteAddress
-            .map { inetSocketAddress -> inetSocketAddress.address.toString() }
-            .orElse(null)
-    }
-
-    data class IpResponse(val ipAddress: String?)
+    data class Response(val ipAddress: String?, val hostName: String?)
 
 }
