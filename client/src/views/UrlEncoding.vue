@@ -9,7 +9,7 @@
         >
           <editor
             v-model="content"
-            lang="text"
+            mode="text"
             :requireModes="['text']"
             width="100%"
             height="300"

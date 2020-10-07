@@ -5,7 +5,7 @@
         <material-card color="green" title="JSON" text="JSON Formatter">
           <editor
             v-model="content"
-            lang="json"
+            mode="json"
             :requireModes="['json']"
             width="100%"
             height="500"
@@ -15,7 +15,7 @@
             <v-select
               label="Options"
               :items="formatOptions"
-              v-model="formatOption"
+              v-model="formatOptionValue"
             />
           </div>
         </material-card>
@@ -34,12 +34,12 @@ import Editor from "@/components/Editor.vue";
 export default class JsonFormatter extends Vue {
   content = "{}";
   formatOptions: object[] = [
-    { text: "2 Spaces", value: "2spaces" },
-    { text: "4 Spaces", value: "4spaces" },
-    { text: "1 Tab", value: "1tab" },
-    { text: "Compact", value: "compact" }
+    { text: "2 Spaces", value: " ".repeat(2) },
+    { text: "4 Spaces", value: " ".repeat(4) },
+    { text: "1 Tab", value: "\t" },
+    { text: "Compact", value: null }
   ];
-  formatOption = "2spaces";
+  formatOptionValue = "  ";
 
   onEditorInput(val: string): void {
     this.content = val;
@@ -47,20 +47,8 @@ export default class JsonFormatter extends Vue {
 
   onClickFormat(): void {
     const parsed = JSON.parse(this.content);
-    switch (this.formatOption) {
-      case "2spaces":
-        this.content = JSON.stringify(parsed, undefined, "  ");
-        break;
-      case "4spaces":
-        this.content = JSON.stringify(parsed, undefined, "    ");
-        break;
-      case "1tab":
-        this.content = JSON.stringify(parsed, undefined, "\t");
-        break;
-      case "compact":
-        this.content = JSON.stringify(parsed);
-        break;
-    }
+    const padString = this.formatOptionValue;
+    this.content = JSON.stringify(parsed, undefined, padString);
   }
 }
 </script>
