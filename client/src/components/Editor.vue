@@ -2,7 +2,7 @@
   <ace
     v-model="content"
     @init="aceInit"
-    :lang="lang"
+    :lang="mode"
     :theme="theme"
     :width="width"
     :height="height"
@@ -17,7 +17,7 @@ import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
 })
 export default class Editor extends Vue {
   @Prop({ default: "html" })
-  lang!: string;
+  mode!: string;
   @Prop({ default: "chrome" })
   theme!: string;
   @Prop({ default: "100%" })
