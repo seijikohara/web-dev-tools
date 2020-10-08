@@ -24,7 +24,7 @@
     "vue2-ace-editor": "0.0.15",
     "vuetify": "^2.3.13",
     "vuex": "^3.5.1",
-    "vuex-module-decorators": "^0.16.1"
+    "vuex-module-decorators": "^1.0.1"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
