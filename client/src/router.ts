@@ -21,6 +21,11 @@ export default new Router({
       component: () => import("./views/UrlEncoding.vue")
     },
     {
+      path: "/hash",
+      name: "hash",
+      component: () => import("./views/HashGenerator.vue")
+    },
+    {
       path: "/b-crypt",
       name: "bcrypt",
       component: () => import("./views/BCryptHashCalculator.vue")
