@@ -113,6 +113,22 @@
               </v-card>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col>
+              <v-card>
+                <v-card-text>
+                  <p class="display-1 text--primary">
+                    HTTP headers
+                  </p>
+                  <v-data-table
+                    :headers="httpTableHeaders"
+                    :items="httpTableData"
+                    :items-per-page="5"
+                  />
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </material-card>
         <material-card color="green" title="Network" text="Network information">
           <v-row>
@@ -168,19 +184,23 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import axios from "axios";
-import * as Bowser from "bowser";
-
+import Bowser, { Parser } from "bowser";
 @Component({
   components: {}
 })
 export default class Dashboard extends Vue {
   userAgent = "";
-  browserInfo: object = {
+  browserInfo: Parser.ParsedResult = {
     browser: { name: "", version: "" },
     os: { name: "", version: "", versionName: "" },
     platform: { type: "", vendor: "" },
     engine: { name: "", version: "" }
   };
+  httpTableHeaders = [
+    { text: "Name", value: "name" },
+    { text: "Value", value: "value" }
+  ];
+  httpTableData = [];
   ipAddress = "";
   hostName = "";
   rdap = {};
@@ -190,6 +210,10 @@ export default class Dashboard extends Vue {
     const userAgent = window.navigator.userAgent;
     this.userAgent = userAgent;
     this.browserInfo = Bowser.parse(userAgent);
+
+    axios
+      .get("/api/http-headers")
+      .then(response => (this.httpTableData = response.data.headers));
 
     const ipResponse = await axios.get("/api/ip");
     this.ipAddress = ipResponse.data.ipAddress;
