@@ -2,7 +2,6 @@
   <v-navigation-drawer
     id="app-drawer"
     v-model="inputValue"
-    src="/img/drawer-background.jpg"
     app
     color="grey darken-2"
     dark
@@ -24,7 +23,7 @@
       </v-list-item-avatar>
 
       <v-list-item-title class="title">
-        web-dev-tools
+        <v-img src="/img/logo-title.svg" height="34" contain />
       </v-list-item-title>
     </v-list-item>
 
