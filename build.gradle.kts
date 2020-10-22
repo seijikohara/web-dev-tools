@@ -1,5 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import com.moowork.gradle.node.npm.NpmTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.github.node-gradle.node") version "2.2.4"
@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "net.relaxism.devtools"
-version = "0.0.1-SNAPSHOT"
+version = "1.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 configurations {

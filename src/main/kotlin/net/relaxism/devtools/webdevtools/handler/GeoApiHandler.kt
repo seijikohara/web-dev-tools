@@ -1,6 +1,7 @@
 package net.relaxism.devtools.webdevtools.handler
 
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
+import net.relaxism.devtools.webdevtools.utils.JsonUtils
 import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -23,12 +24,12 @@ class GeoApiHandler(
         logger.info("[GEO] ${uri}")
         val geoJson = callExternalApi(restTemplate, uri)
 
-        val response = Response(geoJson)
+        val response = Response(JsonUtils.fromJson(geoJson))
         return ServerResponse.ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(Mono.just(response), Response::class.java)
     }
 
-    data class Response(val geo: String?)
+    data class Response(val geo: Map<String?, Any?>?)
 
 }

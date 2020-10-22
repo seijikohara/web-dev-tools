@@ -1,57 +1,56 @@
 <template>
-  <v-container fill-height fluid grid-list-xl>
-    <v-row justify="center">
-      <v-col cols="12">
-        <material-card
-          color="green"
-          title="BCyprt"
-          text="BCrypt hash calculator"
-        >
-          <v-text-field v-model="password" label="Password" required />
-          <v-slider
-            v-model="rounds"
-            class="align-center"
-            thumb-label
-            label="Rounds"
-            :max="20"
-            :min="4"
-            hide-details
-          >
-            <template v-slot:append>
-              <v-text-field
-                v-model="rounds"
-                class="mt-0 pt-0"
-                hide-details
-                single-line
-                type="number"
-                style="width: 60px"
-              ></v-text-field>
-            </template>
-          </v-slider>
-          <v-text-field
-            v-model="hashedValue"
-            label="Hashed password"
-            readonly
-          />
-        </material-card>
-      </v-col>
-    </v-row>
-  </v-container>
+  <Card>
+    <template #title>
+      BCyprt
+    </template>
+    <template #subtitle>
+      BCrypt hash calculator
+    </template>
+    <template #content>
+      <div class="p-fluid">
+        <div class="p-field">
+          <label for="password">Password</label>
+          <InputText id="password" type="text" v-model="state.password" />
+        </div>
+        <div class="p-field">
+          <label for="rounds">Rounds</label>
+          <InputNumber id="rounds" v-model="state.rounds" :min="4" :max="20" />
+          <Slider v-model="state.rounds" :min="4" :max="20" />
+        </div>
+        <div class="p-field">
+          <Fieldset legend="Hashed password">
+            <span>{{ hashedValue }}</span>
+          </Fieldset>
+        </div>
+      </div>
+    </template>
+  </Card>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { defineComponent, reactive, computed } from "vue";
 import * as bcrypt from "bcryptjs";
 
-@Component({
-  components: {}
-})
-export default class BCryptHashCalculator extends Vue {
-  password = "";
-  rounds = 8;
+import Card from "primevue/card";
+import Fieldset from "primevue/fieldset";
+import InputNumber from "primevue/inputnumber";
+import InputText from "primevue/inputtext";
+import Slider from "primevue/slider";
 
-  public get hashedValue(): string {
-    return bcrypt.hashSync(this.password, this.rounds);
+export default defineComponent({
+  components: { Card, Fieldset, InputNumber, InputText, Slider },
+  setup() {
+    const state = reactive({
+      password: "",
+      rounds: 8
+    });
+    const hashedValue = computed(() =>
+      bcrypt.hashSync(state.password, state.rounds)
+    );
+    return {
+      state,
+      hashedValue
+    };
   }
-}
+});
 </script>
