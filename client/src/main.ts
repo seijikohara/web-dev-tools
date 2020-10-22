@@ -1,15 +1,14 @@
-import Vue from "vue";
+import { createApp } from "vue";
 import App from "./App.vue";
+import { store } from "./store";
 import router from "./router";
-import store from "./store";
-import "./plugins";
-import vuetify from "./plugins/vuetify";
 
-Vue.config.productionTip = false;
+import "@/assets/scss/layout.scss";
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
-}).$mount("#app");
+const app = createApp(App);
+app
+  .use(store)
+  .use(router)
+  .mount("#app");
+
+app.config.globalProperties.$primevue = { ripple: true };

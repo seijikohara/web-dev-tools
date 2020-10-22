@@ -1,56 +1,67 @@
 <template>
-  <v-container fill-height fluid grid-list-xl>
-    <v-row justify="center">
-      <v-col cols="12">
-        <material-card color="green" title="JSON" text="JSON Formatter">
-          <editor
-            v-model="content"
-            mode="json"
-            :requireModes="['json']"
-            width="100%"
-            height="500"
-          />
-          <div class="buttons">
-            <v-btn @click="onClickFormat">Format</v-btn>
-            <v-select
-              label="Options"
-              :items="formatOptions"
-              v-model="formatOptionValue"
-            />
-          </div>
-        </material-card>
-      </v-col>
-    </v-row>
-  </v-container>
+  <Card>
+    <template #title>
+      JSON Formatter
+    </template>
+    <template #subtitle>
+      Formatting JSON
+    </template>
+    <template #content>
+      <Editor v-model:value="state.content" mode="json" height="500px" />
+    </template>
+    <template #footer>
+      <div class="p-inputgroup">
+        <Button label="Format" @click="onClickFormat" />
+        <Dropdown
+          v-model="state.formatOptionValue"
+          :options="formatOptions"
+          optionLabel="text"
+          optionValue="value"
+        />
+      </div>
+    </template>
+  </Card>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { defineComponent, reactive, readonly } from "vue";
+
+import Button from "primevue/button";
+import Card from "primevue/card";
+import Dropdown from "primevue/dropdown";
+
 import Editor from "@/components/Editor.vue";
 
-@Component({
-  components: { Editor }
-})
-export default class JsonFormatter extends Vue {
-  content = "{}";
-  formatOptions: object[] = [
-    { text: "2 Spaces", value: " ".repeat(2) },
-    { text: "4 Spaces", value: " ".repeat(4) },
-    { text: "1 Tab", value: "\t" },
-    { text: "Compact", value: null }
-  ];
-  formatOptionValue = "  ";
+type FormatOption = {
+  text: string;
+  value: string;
+};
 
-  onEditorInput(val: string): void {
-    this.content = val;
+export default defineComponent({
+  components: { Button, Card, Dropdown, Editor },
+  setup() {
+    const formatOptions = readonly([
+      { text: "2 Spaces", value: " ".repeat(2) },
+      { text: "4 Spaces", value: " ".repeat(4) },
+      { text: "1 Tab", value: "\t" },
+      { text: "Compact", value: "" }
+    ] as FormatOption[]);
+    const state = reactive({
+      content: "{}",
+      formatOptionValue: formatOptions[0].value
+    });
+    const onClickFormat = () => {
+      const parsed = JSON.parse(state.content);
+      const padString = state.formatOptionValue;
+      state.content = JSON.stringify(parsed, undefined, padString);
+    };
+    return {
+      formatOptions,
+      state,
+      onClickFormat
+    };
   }
-
-  onClickFormat(): void {
-    const parsed = JSON.parse(this.content);
-    const padString = this.formatOptionValue;
-    this.content = JSON.stringify(parsed, undefined, padString);
-  }
-}
+});
 </script>
 
 <style lang="scss" scoped>

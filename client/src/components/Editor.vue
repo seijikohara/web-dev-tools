@@ -1,61 +1,87 @@
 <template>
-  <ace
-    v-model="content"
-    @init="aceInit"
+  <VAceEditor
+    v-model:value="state.content"
     :lang="mode"
     :theme="theme"
-    :width="width"
-    :height="height"
-  ></ace>
+    :style="styles"
+    :options="{
+      ...{ showPrintMargin: false, showInvisibles: true },
+      ...options
+    }"
+  />
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
+import { computed, defineComponent, reactive, SetupContext, watch } from "vue";
 
-@Component({
-  components: { ace: require("vue2-ace-editor") }
-})
-export default class Editor extends Vue {
-  @Prop({ default: "html" })
-  mode!: string;
-  @Prop({ default: "chrome" })
-  theme!: string;
-  @Prop({ default: "100%" })
-  width!: string;
-  @Prop({ default: "100%" })
-  height!: string;
-  @Prop({ default: "" })
-  value!: string;
-  @Prop({ default: () => ["html"] })
-  requireModes!: string[];
-  @Prop({ default: () => ["chrome"] })
-  requireThemes!: string[];
+import { VAceEditor } from "vue3-ace-editor";
 
-  content = "";
+type Props = {
+  mode: string;
+  theme: string;
+  width: string;
+  height: string;
+  value: string;
+  options?: object;
+};
 
-  @Emit("input")
-  input(val: string): string {
-    return val;
+export default defineComponent({
+  name: "Editor",
+  components: { VAceEditor },
+  props: {
+    mode: {
+      type: String,
+      default: "text",
+      required: true
+    },
+    theme: {
+      type: String,
+      default: "github",
+      required: true
+    },
+    width: {
+      type: String,
+      default: "100%",
+      required: true
+    },
+    height: {
+      type: String,
+      default: "100%",
+      required: true
+    },
+    value: {
+      type: String,
+      default: ""
+    },
+    options: {
+      type: Object,
+      required: false
+    }
+  },
+  setup(props: Props, context: SetupContext) {
+    const state = reactive({
+      content: props.value
+    });
+    const styles = computed(() => {
+      return {
+        height: props.height,
+        width: props.width
+      };
+    });
+    const valueChanged = watch(
+      () => props.value,
+      value => (state.content = value)
+    );
+    const contentChanged = watch(
+      () => state.content,
+      value => context.emit("update:value", value)
+    );
+    return {
+      state,
+      styles,
+      valueChanged,
+      contentChanged
+    };
   }
-
-  @Watch("content")
-  onEditorContentChanged(newVal: string) {
-    this.input(newVal);
-  }
-
-  @Watch("value")
-  onValueChanged(newVal: string) {
-    this.content = newVal;
-  }
-
-  mounted(): void {
-    this.content = this.value;
-  }
-
-  aceInit(): void {
-    require("brace/ext/language_tools"); //language extension prerequsite...
-    this.requireModes.forEach(mode => require(`brace/mode/${mode}`));
-    this.requireThemes.forEach(theme => require(`brace/theme/${theme}`));
-  }
-}
+});
 </script>

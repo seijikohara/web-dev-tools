@@ -1,51 +1,50 @@
 <template>
-  <v-container fill-height fluid grid-list-xl>
-    <v-row justify="center">
-      <v-col cols="12">
-        <material-card
-          color="green"
-          title="URL Encoding"
-          text="URL Encoding & Decoding"
-        >
-          <editor
-            v-model="content"
-            mode="text"
-            :requireModes="['text']"
-            width="100%"
-            height="300"
-          />
-          <div class="buttons">
-            <v-btn @click="onClickEncode">Encode</v-btn>
-            <v-btn @click="onClickDecode">Decode</v-btn>
-          </div>
-        </material-card>
-      </v-col>
-    </v-row>
-  </v-container>
+  <Card>
+    <template #title>
+      URL Encoding
+    </template>
+    <template #subtitle>
+      URL Encoding & Decoding
+    </template>
+    <template #content>
+      <Editor v-model:value="state.content" mode="text" height="500px" />
+    </template>
+    <template #footer>
+      <div class="p-formgroup-inline">
+        <Button label="Encode" @click="onClickEncode" />
+        <Button label="Decode" @click="onClickDecode" />
+      </div>
+    </template>
+  </Card>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { defineComponent, reactive } from "vue";
+
+import Button from "primevue/button";
+import Card from "primevue/card";
+
 import Editor from "@/components/Editor.vue";
 
-@Component({
-  components: { Editor }
-})
-export default class UrlEncoding extends Vue {
-  content = "";
-
-  onClickEncode(): void {
-    this.content = encodeURI(this.content);
+export default defineComponent({
+  components: { Button, Card, Editor },
+  setup() {
+    const state = reactive({
+      content: ""
+    });
+    const onClickEncode = () => (state.content = encodeURI(state.content));
+    const onClickDecode = () => (state.content = decodeURI(state.content));
+    return {
+      state,
+      onClickEncode,
+      onClickDecode
+    };
   }
-  onClickDecode(): void {
-    this.content = decodeURI(this.content);
-  }
-}
+});
 </script>
 
 <style lang="scss" scoped>
-.buttons {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+.p-button {
+  margin-right: 0.5rem;
 }
 </style>
