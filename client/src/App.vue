@@ -1,19 +1,22 @@
 <template>
-  <v-app>
-    <core-app-bar />
-    <core-drawer />
-    <core-view />
-    <core-footer />
-  </v-app>
+  <LayoutWrapper>
+    <AppTopbar />
+    <AppSidebar />
+    <AppContent />
+    <AppFooter />
+  </LayoutWrapper>
 </template>
 
-<script>
-export default {
-  components: {
-    CoreDrawer: () => import("@/components/core/Drawer"),
-    CoreFooter: () => import("@/components/core/Footer"),
-    CoreAppBar: () => import("@/components/core/AppBar"),
-    CoreView: () => import("@/components/core/View")
-  }
-};
+<script lang="ts">
+import { defineComponent } from "vue";
+
+import LayoutWrapper from "@/components/layout/LayoutWrapper.vue";
+import AppTopbar from "@/components/layout/AppTopbar.vue";
+import AppSidebar from "@/components/layout/AppSidebar.vue";
+import AppContent from "@/components/layout/AppContent.vue";
+import AppFooter from "@/components/layout/AppFooter.vue";
+
+export default defineComponent({
+  components: { LayoutWrapper, AppTopbar, AppSidebar, AppContent, AppFooter }
+});
 </script>
