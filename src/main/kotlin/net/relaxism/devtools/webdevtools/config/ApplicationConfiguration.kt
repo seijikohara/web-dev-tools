@@ -22,9 +22,22 @@ class ApplicationConfiguration {
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "application")
-data class ApplicationProperties(val network: NetworkProperties) {
+data class ApplicationProperties(
+    val cors: CorsProperties,
+    val network: NetworkProperties
+) {
 
-    data class NetworkProperties(val rdap: RdapProperties, val geo: GeoProperties) {
+    data class CorsProperties(
+        val mappingPathPattern: String,
+        val allowedOrigins: List<String>,
+        val allowedMethods: List<String>,
+        val maxAge: Long
+    )
+
+    data class NetworkProperties(
+        val rdap: RdapProperties,
+        val geo: GeoProperties
+    ) {
 
         data class RdapProperties(val uri: String)
         data class GeoProperties(val uri: String)

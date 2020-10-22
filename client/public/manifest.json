@@ -1,6 +1,6 @@
 {
-  "name": "client",
-  "short_name": "client",
+  "name": "WEB DEV TOOLS",
+  "short_name": "Web Development Tools",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

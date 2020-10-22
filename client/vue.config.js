@@ -1,4 +1,9 @@
 module.exports = {
-  outputDir: "../src/main/resources/static",
-  transpileDependencies: ["vuetify"]
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: `@import "@/assets/scss/_variables.scss";`
+      }
+    }
+  }
 };
