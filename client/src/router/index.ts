@@ -10,8 +10,7 @@ import { eq, when } from "@/helper/Switch";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Home",
-    component: () => import("@/views/Dashboard.vue")
+    redirect: "/dashboard"
   },
   {
     path: "/dashboard",
