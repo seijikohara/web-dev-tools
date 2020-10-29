@@ -3,6 +3,13 @@ import axios from "axios";
 const api = axios.create({
   baseURL: `${process.env.VUE_APP_API_BASE_URL}api`
 });
+api.interceptors.response.use(
+  response => response,
+  error => {
+    alert(error);
+    return Promise.reject(error);
+  }
+);
 
 export type IpInfo = {
   ipAddress: string;
