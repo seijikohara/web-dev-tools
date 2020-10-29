@@ -89,12 +89,12 @@
         </div>
         <div class="p-col-12 p-md-12 p-lg-6">
           <Panel header="Geo location">
-            <JsonTreeView :data="geo" :maxDepth="100" />
+            <JsonTreeView :data="JSON.stringify(geo)" :maxDepth="100" />
           </Panel>
         </div>
         <div class="p-col-12 p-md-12 p-lg-6">
           <Panel header="RDAP infromation">
-            <JsonTreeView :data="rdap" :maxDepth="100" />
+            <JsonTreeView :data="JSON.stringify(rdap)" :maxDepth="100" />
           </Panel>
         </div>
       </div>
@@ -105,13 +105,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import * as Bowser from "bowser";
+import { JsonTreeView } from "json-tree-view-vue3";
 
 import Card from "primevue/card";
 import Panel from "primevue/panel";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 
-import JsonTreeView from "@/components/json/JsonTreeView.vue";
 import ApiService from "@/services/ApiService";
 
 const userAgent = window.navigator.userAgent;
