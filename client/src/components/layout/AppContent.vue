@@ -2,12 +2,12 @@
   <div class="layout-content">
     <div class="content-section">
       <router-view v-slot="{ Component }">
-        <Suspense>
+        <Suspense timeout="0">
           <template #default>
             <component :is="Component" />
           </template>
           <template #fallback>
-            <span>Loading...</span>
+            <LoadingSpinner />
           </template>
         </Suspense>
       </router-view>
@@ -18,10 +18,14 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-export default defineComponent({});
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+
+export default defineComponent({
+  components: { LoadingSpinner }
+});
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .layout-content {
   margin-left: $sidebarWidth;
   padding-top: $topbarHeight;
