@@ -30,6 +30,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: "/xml-formatter",
+    name: "XML Formatter",
+    component: () => import("@/views/XmlFormatter.vue"),
+    meta: {
+      menu: true
+    }
+  },
+  {
     path: "/url-encoding",
     name: "URL Encoding",
     component: () => import("@/views/UrlEncoding.vue"),
