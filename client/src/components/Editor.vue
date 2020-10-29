@@ -36,7 +36,7 @@ export default defineComponent({
     },
     theme: {
       type: String,
-      default: "github",
+      default: "chrome",
       required: true
     },
     width: {
