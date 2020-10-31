@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
 
 @Component
-class IpApiHandler() {
+class IpApiHandler {
 
     fun getIp(request: ServerRequest): Mono<ServerResponse> {
         val remoteAddress = request.remoteAddress()
