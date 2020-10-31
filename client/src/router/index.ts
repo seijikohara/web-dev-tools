@@ -5,7 +5,7 @@ import {
   RouteRecordRaw
 } from "vue-router";
 
-import { eq, when } from "@/helper/Switch";
+import { eq, when } from "switch-ts";
 
 const routes: Array<RouteRecordRaw> = [
   {
