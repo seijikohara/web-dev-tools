@@ -63,9 +63,9 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const history = when(process.env.VUE_APP_HISTORY_MODE)
-  .on(eq("history"), () => createWebHistory(process.env.BASE_URL))
-  .on(eq("hash"), () => createWebHashHistory())
-  .otherwise(() => createWebHistory(process.env.BASE_URL));
+  .is(eq("history"), () => createWebHistory(process.env.BASE_URL))
+  .is(eq("hash"), () => createWebHashHistory())
+  .default(() => createWebHistory(process.env.BASE_URL));
 
 const scrollBehavior = () => {
   return {
