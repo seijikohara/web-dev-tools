@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
+import java.net.URI
 
 @Component
 class RdapApiHandler(
@@ -21,12 +22,13 @@ class RdapApiHandler(
         val ipAddress = request.pathVariable("ip")
         val uri = "${applicationProperties.network.rdap.uri}/${ipAddress}";
         logger.info("[RDAP] ${uri}")
-        val rdapJson = externalJsonApiService.get(uri)
+        val clientResponseMono = externalJsonApiService.get(URI.create(uri))
 
-        val response = Response(rdapJson)
-        return ServerResponse.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(Mono.just(response), Response::class.java)
+        return clientResponseMono.flatMap { json ->
+            ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(Response(json)), Response::class.java)
+        }
     }
 
     data class Response(val rdap: Map<String?, Any?>?)
