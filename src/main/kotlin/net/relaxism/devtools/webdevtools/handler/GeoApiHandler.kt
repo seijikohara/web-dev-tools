@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
+import java.net.URI
 
 @Component
 class GeoApiHandler(
@@ -21,12 +22,13 @@ class GeoApiHandler(
         val ipAddress = request.pathVariable("ip")
         val uri = "${applicationProperties.network.geo.uri}/${ipAddress}";
         logger.info("[GEO] ${uri}")
-        val geoJson = externalJsonApiService.get(uri)
+        val clientResponseMono = externalJsonApiService.get(URI.create(uri))
 
-        val response = Response(geoJson)
-        return ServerResponse.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(Mono.just(response), Response::class.java)
+        return clientResponseMono.flatMap { json ->
+            ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(Response(json)), Response::class.java)
+        }
     }
 
     data class Response(val geo: Map<String?, Any?>?)

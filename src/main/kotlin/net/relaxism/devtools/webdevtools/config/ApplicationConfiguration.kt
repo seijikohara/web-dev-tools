@@ -3,19 +3,17 @@ package net.relaxism.devtools.webdevtools.config
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
 @EnableConfigurationProperties(ApplicationProperties::class)
 class ApplicationConfiguration {
 
     @Bean
-    fun restTemplate(): RestTemplate {
-        val restTemplateBuilder = RestTemplateBuilder()
-        return restTemplateBuilder.build()
+    fun webClient(): WebClient {
+        return WebClient.builder().build();
     }
 
 }
