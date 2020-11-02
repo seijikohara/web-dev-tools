@@ -9,15 +9,14 @@ import reactor.core.publisher.Mono
 import java.net.URI
 
 @Service
-class ExternalJsonApiService(@Autowired val webClient: WebClient) {
+class ExternalJsonApiService(@Autowired private val webClient: WebClient) {
 
     fun get(uri: URI): Mono<Map<String?, Any?>> =
         webClient.get()
             .uri(uri)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
-            .flatMap { clientResponse -> clientResponse.bodyToMono(String::class.java); }
-            .map { response -> JsonUtils.fromJson(response) }
-
-
+            .flatMap { clientResponse -> clientResponse.bodyToMono(String::class.java) }
+            .map { responseBody -> JsonUtils.fromJson(responseBody) }
+            .switchIfEmpty(Mono.defer { Mono.just(mapOf<String?, Any?>()) })
 }

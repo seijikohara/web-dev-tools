@@ -13,9 +13,9 @@ import java.net.URI
 
 @Component
 class GeoApiHandler(
-    @Autowired val logger: Logger,
-    @Autowired val applicationProperties: ApplicationProperties,
-    @Autowired val externalJsonApiService: ExternalJsonApiService
+    @Autowired private val logger: Logger,
+    @Autowired private val applicationProperties: ApplicationProperties,
+    @Autowired private val externalJsonApiService: ExternalJsonApiService
 ) {
 
     fun getGeo(request: ServerRequest): Mono<ServerResponse> {
