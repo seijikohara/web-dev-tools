@@ -2,32 +2,22 @@ package net.relaxism.devtools.webdevtools.service
 
 import net.relaxism.devtools.webdevtools.utils.JsonUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestClientResponseException
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
+import reactor.core.publisher.Mono
 import java.net.URI
 
 @Service
-class ExternalJsonApiService(@Autowired val restTemplate: RestTemplate) {
+class ExternalJsonApiService(@Autowired val webClient: WebClient) {
 
-    fun get(uri: String): Map<String?, Any?> {
-        return get(URI.create(uri))
-    }
+    fun get(uri: URI): Mono<Map<String?, Any?>> =
+        webClient.get()
+            .uri(uri)
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .flatMap { clientResponse -> clientResponse.bodyToMono(String::class.java); }
+            .map { response -> JsonUtils.fromJson(response) }
 
-    fun get(uri: URI): Map<String?, Any?> {
-        return runCatching {
-            restTemplate.getForEntity(uri, String::class.java)
-        }.fold(
-            onSuccess = { JsonUtils.fromJson(it.body ?: "{}") },
-            onFailure = {
-                when (it) {
-                    is RestClientResponseException -> {
-                        return JsonUtils.fromJson(it.responseBodyAsString)
-                    }
-                    else -> throw it
-                }
-            }
-        )
-    }
 
 }
