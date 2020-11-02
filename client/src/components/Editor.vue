@@ -6,7 +6,7 @@
     :style="styles"
     :options="{
       ...{ showPrintMargin: false, showInvisibles: true },
-      ...options
+      ...options,
     }"
   />
 </template>
@@ -32,56 +32,56 @@ export default defineComponent({
     mode: {
       type: String,
       default: "text",
-      required: true
+      required: true,
     },
     theme: {
       type: String,
       default: "chrome",
-      required: true
+      required: true,
     },
     width: {
       type: String,
       default: "100%",
-      required: true
+      required: true,
     },
     height: {
       type: String,
       default: "100%",
-      required: true
+      required: true,
     },
     value: {
       type: String,
-      default: ""
+      default: "",
     },
     options: {
       type: Object,
-      required: false
-    }
+      required: false,
+    },
   },
   setup(props: Props, context: SetupContext) {
     const state = reactive({
-      content: props.value
+      content: props.value,
     });
     const styles = computed(() => {
       return {
         height: props.height,
-        width: props.width
+        width: props.width,
       };
     });
     const valueChanged = watch(
       () => props.value,
-      value => (state.content = value)
+      (value) => (state.content = value)
     );
     const contentChanged = watch(
       () => state.content,
-      value => context.emit("update:value", value)
+      (value) => context.emit("update:value", value)
     );
     return {
       state,
       styles,
       valueChanged,
-      contentChanged
+      contentChanged,
     };
-  }
+  },
 });
 </script>

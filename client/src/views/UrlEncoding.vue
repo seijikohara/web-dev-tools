@@ -1,11 +1,7 @@
 <template>
   <Card>
-    <template #title>
-      URL Encoding
-    </template>
-    <template #subtitle>
-      URL Encoding & Decoding
-    </template>
+    <template #title> URL Encoding </template>
+    <template #subtitle> URL Encoding & Decoding </template>
     <template #content>
       <Editor v-model:value="state.content" mode="text" height="500px" />
     </template>
@@ -30,16 +26,16 @@ export default defineComponent({
   components: { Button, Card, Editor },
   setup() {
     const state = reactive({
-      content: ""
+      content: "",
     });
     const onClickEncode = () => (state.content = encodeURI(state.content));
     const onClickDecode = () => (state.content = decodeURI(state.content));
     return {
       state,
       onClickEncode,
-      onClickDecode
+      onClickDecode,
     };
-  }
+  },
 });
 </script>
 

@@ -1,11 +1,7 @@
 <template>
   <Card>
-    <template #title>
-      Hash
-    </template>
-    <template #subtitle>
-      Hash calculator
-    </template>
+    <template #title> Hash </template>
+    <template #subtitle> Hash calculator </template>
     <template #content>
       <div class="p-fluid">
         <div class="p-field">
@@ -13,9 +9,7 @@
         </div>
         <div class="p-field">
           <DataTable :value="hashedValues" class="p-datatable-sm">
-            <template #header>
-              Hash values
-            </template>
+            <template #header> Hash values </template>
             <Column
               field="method"
               header="Method"
@@ -44,7 +38,7 @@ export default defineComponent({
   components: { Card, DataTable, Column, Editor },
   setup() {
     const state = reactive({
-      text: ""
+      text: "",
     });
     const hashedValues = computed(() => {
       const value = state.text;
@@ -54,14 +48,14 @@ export default defineComponent({
         { method: "sha224", value: CryptoJS.SHA224(value).toString() },
         { method: "sha256", value: CryptoJS.SHA256(value).toString() },
         { method: "sha384", value: CryptoJS.SHA384(value).toString() },
-        { method: "sha512", value: CryptoJS.SHA512(value).toString() }
+        { method: "sha512", value: CryptoJS.SHA512(value).toString() },
       ];
     });
     return {
       state,
-      hashedValues
+      hashedValues,
     };
-  }
+  },
 });
 </script>
 

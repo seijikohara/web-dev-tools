@@ -1,11 +1,7 @@
 <template>
   <Card>
-    <template #title>
-      JSON Formatter
-    </template>
-    <template #subtitle>
-      Formatting JSON
-    </template>
+    <template #title> JSON Formatter </template>
+    <template #subtitle> Formatting JSON </template>
     <template #content>
       <Editor v-model:value="state.content" mode="json" height="500px" />
     </template>
@@ -44,11 +40,11 @@ export default defineComponent({
       { text: "2 Spaces", value: " ".repeat(2) },
       { text: "4 Spaces", value: " ".repeat(4) },
       { text: "1 Tab", value: "\t" },
-      { text: "Compact", value: "" }
+      { text: "Compact", value: "" },
     ] as FormatOption[]);
     const state = reactive({
       content: "{}",
-      formatOptionValue: formatOptions[0].value
+      formatOptionValue: formatOptions[0].value,
     });
     const onClickFormat = () => {
       const parsed = JSON.parse(state.content);
@@ -58,9 +54,9 @@ export default defineComponent({
     return {
       formatOptions,
       state,
-      onClickFormat
+      onClickFormat,
     };
-  }
+  },
 });
 </script>
 

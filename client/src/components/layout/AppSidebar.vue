@@ -10,7 +10,7 @@
           :to="route.path"
           :class="{
             'menu-active': route.name === currentRouteName,
-            'menu-inactive': route.name !== currentRouteName
+            'menu-inactive': route.name !== currentRouteName,
           }"
         >
           <i class="menu-icon pi pi-th-large" />
@@ -36,11 +36,11 @@ export default defineComponent({
     const routes = computed(() =>
       router
         .getRoutes()
-        .filter(route => route.meta["menu"])
-        .map(route => {
+        .filter((route) => route.meta["menu"])
+        .map((route) => {
           return {
             name: route.name,
-            path: route.path
+            path: route.path,
           };
         })
     );
@@ -51,9 +51,9 @@ export default defineComponent({
       isDrawerVisible,
       routes,
       currentRouteName,
-      onClick
+      onClick,
     };
-  }
+  },
 });
 </script>
 

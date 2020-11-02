@@ -17,6 +17,6 @@ import AppContent from "@/components/layout/AppContent.vue";
 import AppFooter from "@/components/layout/AppFooter.vue";
 
 export default defineComponent({
-  components: { LayoutWrapper, AppTopbar, AppSidebar, AppContent, AppFooter }
+  components: { LayoutWrapper, AppTopbar, AppSidebar, AppContent, AppFooter },
 });
 </script>
