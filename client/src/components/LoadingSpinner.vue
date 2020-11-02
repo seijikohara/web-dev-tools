@@ -11,7 +11,7 @@ import ProgressSpinner from "primevue/progressspinner";
 
 export default defineComponent({
   name: "LoadingSpinner",
-  components: { ProgressSpinner }
+  components: { ProgressSpinner },
 });
 </script>
 

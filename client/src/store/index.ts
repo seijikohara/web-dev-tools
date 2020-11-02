@@ -7,7 +7,7 @@ import {
   Store as VuexStore,
   CommitOptions,
   DispatchOptions,
-  createLogger
+  createLogger,
 } from "vuex";
 
 /**
@@ -18,14 +18,14 @@ export type State = {
 };
 
 const state: State = {
-  drawer: false
+  drawer: false,
 };
 
 /**
  * Mutation
  */
 export enum MutationTypes {
-  SET_DRAWER = "SET_DRAWER"
+  SET_DRAWER = "SET_DRAWER",
 }
 
 export type Mutations<S = State> = {
@@ -35,14 +35,14 @@ export type Mutations<S = State> = {
 const mutations: MutationTree<State> & Mutations = {
   [MutationTypes.SET_DRAWER](state: State, payload: boolean) {
     state.drawer = payload;
-  }
+  },
 };
 
 /**
  * Action
  */
 export enum ActionTypes {
-  SET_DRAWER = "SET_DRAWER"
+  SET_DRAWER = "SET_DRAWER",
 }
 
 type AugmentedActionContext = {
@@ -62,7 +62,7 @@ export interface Actions {
 export const actions: ActionTree<State, State> & Actions = {
   [ActionTypes.SET_DRAWER]({ commit }, payload: boolean) {
     commit(MutationTypes.SET_DRAWER, payload);
-  }
+  },
 };
 
 /**
@@ -73,9 +73,9 @@ export type Getters = {
 };
 
 export const getters: GetterTree<State, State> & Getters = {
-  getDrawer: state => {
+  getDrawer: (state) => {
     return state.drawer;
-  }
+  },
 };
 
 /**
@@ -107,7 +107,7 @@ export const store = createStore({
   mutations,
   actions,
   getters,
-  plugins: [createLogger()]
+  plugins: [createLogger()],
 });
 
 export function useStore() {

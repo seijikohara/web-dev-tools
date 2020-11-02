@@ -1,7 +1,5 @@
 <template>
-  <div class="layout-footer">
-    Seiji Kohara &copy; 2020
-  </div>
+  <div class="layout-footer">Seiji Kohara &copy; 2020</div>
 </template>
 
 <script lang="ts">

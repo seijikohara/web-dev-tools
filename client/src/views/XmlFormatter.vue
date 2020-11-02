@@ -1,11 +1,7 @@
 <template>
   <Card>
-    <template #title>
-      XML Formatter
-    </template>
-    <template #subtitle>
-      Formatting XML
-    </template>
+    <template #title> XML Formatter </template>
+    <template #subtitle> Formatting XML </template>
     <template #content>
       <Editor v-model:value="state.content" mode="xml" height="500px" />
     </template>
@@ -82,29 +78,29 @@ export default defineComponent({
       { text: "2 Spaces", value: " ".repeat(2) },
       { text: "4 Spaces", value: " ".repeat(4) },
       { text: "1 Tab", value: "\t" },
-      { text: "Compact", value: "" }
+      { text: "Compact", value: "" },
     ] as FormatOption[]);
     const state = reactive({
       content: "<xml></xml>",
       formatOptionValue: formatOptions[0].value,
       collapseContent: false,
       whiteSpaceAtEndOfSelfclosingTag: false,
-      excludeComments: false
+      excludeComments: false,
     });
     const onClickFormat = () => {
       state.content = format(state.content, {
         indentation: state.formatOptionValue,
         collapseContent: state.collapseContent,
         whiteSpaceAtEndOfSelfclosingTag: state.whiteSpaceAtEndOfSelfclosingTag,
-        filter: node => !state.excludeComments || node.type !== "Comment"
+        filter: (node) => !state.excludeComments || node.type !== "Comment",
       });
     };
     return {
       formatOptions,
       state,
-      onClickFormat
+      onClickFormat,
     };
-  }
+  },
 });
 </script>
 

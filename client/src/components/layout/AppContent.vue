@@ -21,7 +21,7 @@ import { defineComponent } from "vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 export default defineComponent({
-  components: { LoadingSpinner }
+  components: { LoadingSpinner },
 });
 </script>
 

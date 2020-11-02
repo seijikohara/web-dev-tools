@@ -1,11 +1,7 @@
 <template>
   <Card class="bottom-pad">
-    <template v-slot:title>
-      Browser
-    </template>
-    <template v-slot:subtitle>
-      Browser information
-    </template>
+    <template v-slot:title> Browser </template>
+    <template v-slot:subtitle> Browser information </template>
     <template v-slot:content>
       <div class="p-grid">
         <div class="p-col-12">
@@ -69,12 +65,8 @@
     </template>
   </Card>
   <Card class="bottom-pad">
-    <template v-slot:title>
-      Network
-    </template>
-    <template v-slot:subtitle>
-      Client network information
-    </template>
+    <template v-slot:title> Network </template>
+    <template v-slot:subtitle> Client network information </template>
     <template v-slot:content>
       <div class="p-grid">
         <div class="p-col-12 p-md-6 p-lg-6">
@@ -132,14 +124,14 @@ export default defineComponent({
         browser: [bowserResult.browser],
         engine: [bowserResult.engine],
         os: [bowserResult.os],
-        platform: [bowserResult.platform]
+        platform: [bowserResult.platform],
       },
       ipInfo,
       httpHeaders,
       geo,
-      rdap
+      rdap,
     };
-  }
+  },
 });
 </script>
 
