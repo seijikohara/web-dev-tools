@@ -64,7 +64,7 @@ tasks.withType<KotlinCompile> {
 
 node {
     version = "12.19.0"
-    npmVersion = "7.0.6"
+    npmVersion = "6.14.8"
     download = true
 }
 
