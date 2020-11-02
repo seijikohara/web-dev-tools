@@ -1,6 +1,6 @@
 <template>
   <div class="layout-topbar">
-    <a class="menu-button" @click="onClickMenu"><i class="pi pi-bars"/></a>
+    <a class="menu-button" @click="onClickMenu"><i class="pi pi-bars" /></a>
     <router-link to="/">
       <img src="/img/logo-top.png" height="60" />
     </router-link>
@@ -18,9 +18,9 @@ export default defineComponent({
     const store = useStore();
     const onClickMenu = () => store.dispatch(ActionTypes.SET_DRAWER, true);
     return {
-      onClickMenu
+      onClickMenu,
     };
-  }
+  },
 });
 </script>
 

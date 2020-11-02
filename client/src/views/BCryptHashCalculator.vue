@@ -1,11 +1,7 @@
 <template>
   <Card>
-    <template #title>
-      BCyprt
-    </template>
-    <template #subtitle>
-      BCrypt hash calculator
-    </template>
+    <template #title> BCyprt </template>
+    <template #subtitle> BCrypt hash calculator </template>
     <template #content>
       <div class="p-fluid">
         <div class="p-field">
@@ -42,15 +38,15 @@ export default defineComponent({
   setup() {
     const state = reactive({
       password: "",
-      rounds: 8
+      rounds: 8,
     });
     const hashedValue = computed(() =>
       bcrypt.hashSync(state.password, state.rounds)
     );
     return {
       state,
-      hashedValue
+      hashedValue,
     };
-  }
+  },
 });
 </script>
