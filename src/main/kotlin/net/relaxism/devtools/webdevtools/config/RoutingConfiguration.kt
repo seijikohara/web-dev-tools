@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.router
 
-
 @Configuration
 class RoutingConfiguration(
     @Autowired private val ipApiHandler: IpApiHandler,
