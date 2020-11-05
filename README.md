@@ -6,6 +6,8 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/seijikohara/web-dev-tools)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/seijikohara/web-dev-tools)
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/seijikohara/web-dev-tools/tree/main)
+
 ## 利用するフレームワーク・ライブラリ
 
 ### ビルドツール
@@ -19,8 +21,13 @@
 - [Kotlin](https://kotlinlang.org/)
 - [Spring Boot 2](https://spring.io/projects/spring-boot)
   - [WebFlux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux)
+- [R2DBC](https://r2dbc.io/)
+- [Flyway](https://flywaydb.org/)
+- [Kotest](https://kotest.io/)
+- [SpringMockK](https://github.com/Ninja-Squad/springmockk)
+- [H2](https://www.h2database.com/html/main.html)
 
-### クライアントサイド
+### フロントエンド
 
 - [Node.js](https://nodejs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
