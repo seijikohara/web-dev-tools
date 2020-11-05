@@ -19,6 +19,11 @@
 - [Kotlin](https://kotlinlang.org/)
 - [Spring Boot 2](https://spring.io/projects/spring-boot)
   - [WebFlux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux)
+- [R2DBC](https://r2dbc.io/)
+- [Flyway](https://flywaydb.org/)
+- [Kotest](https://kotest.io/)
+- [SpringMockK](https://github.com/Ninja-Squad/springmockk)
+- [H2](https://www.h2database.com/html/main.html)
 
 ### クライアントサイド
 
