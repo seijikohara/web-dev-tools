@@ -16,7 +16,7 @@
     "bowser": "^2.11.0",
     "core-js": "^3.6.5",
     "crypto-js": "^4.0.0",
-    "dayjs": "^1.9.4",
+    "dayjs": "^1.9.5",
     "json-tree-view-vue3": "^0.1.8",
     "primeflex": "^2.0.0",
     "primeicons": "^4.0.0",
