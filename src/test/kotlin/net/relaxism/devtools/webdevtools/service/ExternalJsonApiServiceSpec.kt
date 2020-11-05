@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.test.StepVerifier
 import java.net.URI
 
-class ExternalJsonApiServiceSpec() : StringSpec() {
+class ExternalJsonApiServiceSpec : StringSpec() {
 
     init {
         val mockWebServer = MockWebServer()
