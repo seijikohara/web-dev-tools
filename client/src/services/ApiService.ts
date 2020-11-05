@@ -5,10 +5,7 @@ const api = axios.create({
 });
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    alert(error);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export type IpInfo = {
