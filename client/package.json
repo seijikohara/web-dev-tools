@@ -23,7 +23,7 @@
     "primevue": "^3.0.1",
     "switch-ts": "^1.0.2",
     "vue": "^3.0.2",
-    "vue-router": "^4.0.0-rc.1",
+    "vue-router": "^4.0.0-rc.2",
     "vue3-ace-editor": "^1.0.2",
     "vuex": "^4.0.0-rc.1",
     "xml-formatter": "^2.3.1"
