@@ -27,7 +27,11 @@ class HttpHeadersApiHandlerSpec(
                 .expectStatus().isOk
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                .json("{\"headers\":[{\"name\":\"accept-encoding\",\"value\":\"gzip\"},{\"name\":\"user-agent\",\"value\":\"ReactorNetty/0.9.12.RELEASE\"},{\"name\":\"host\",\"value\":\"localhost:${localServerPort}\"},{\"name\":\"WebTestClient-Request-Id\",\"value\":\"1\"},{\"name\":\"${customHeaderName}\",\"value\":\"${customHeaderValue1}\"},{\"name\":\"${customHeaderName}\",\"value\":\"${customHeaderValue2}\"},{\"name\":\"Accept\",\"value\":\"application/json\"}]}")
+                .jsonPath("$.headers[2].value").isEqualTo("localhost:${localServerPort}")
+                .jsonPath("$.headers[4].name").isEqualTo(customHeaderName)
+                .jsonPath("$.headers[4].value").isEqualTo(customHeaderValue1)
+                .jsonPath("$.headers[5].name").isEqualTo(customHeaderName)
+                .jsonPath("$.headers[5].value").isEqualTo(customHeaderValue2)
         }
 
     }
