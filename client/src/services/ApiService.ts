@@ -25,6 +25,20 @@ export type HttpHeaders = {
   headers: HttpHeader[];
 };
 
+export type HtmlEntity = {
+  name: string;
+  code: number;
+  code2?: number;
+  standard?: string;
+  dtd?: string;
+  description?: string;
+  entityReference: string;
+};
+
+export type HtmlEntities = {
+  entities: Array<HtmlEntity>;
+};
+
 export default class ApiService {
   async getIpAddress(): Promise<IpInfo> {
     const response = await api.get("ip");
@@ -43,6 +57,11 @@ export default class ApiService {
 
   async getRdap(ipAddress: string): Promise<object> {
     const response = await api.get(`rdap/${ipAddress}`);
+    return response.data;
+  }
+
+  async getHtmlEntities(): Promise<HtmlEntities> {
+    const response = await api.get(`html-entities`);
     return response.data;
   }
 }
