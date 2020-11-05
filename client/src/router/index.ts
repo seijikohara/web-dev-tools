@@ -60,6 +60,14 @@ const routes: Array<RouteRecordRaw> = [
       menu: true,
     },
   },
+  {
+    path: "/html-entities",
+    name: "HTML Entities",
+    component: () => import("@/views/HtmlEntities.vue"),
+    meta: {
+      menu: true,
+    },
+  },
 ];
 
 const history = when(process.env.VUE_APP_HISTORY_MODE)
