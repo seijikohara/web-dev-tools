@@ -77,7 +77,7 @@ node {
 val npmInstallDependencies by tasks.registering(NpmTask::class) {
     setArgs(listOf("install"))
     setExecOverrides(closureOf<ExecSpec> {
-        setWorkingDir("./client")
+        setWorkingDir("./frontend")
     })
 }
 
@@ -88,7 +88,7 @@ val npmRunBuild by tasks.registering(NpmTask::class) {
 
     setArgs(listOf("run", "build", "--", "--dest", "../src/main/resources/static"))
     setExecOverrides(closureOf<ExecSpec> {
-        setWorkingDir("./client")
+        setWorkingDir("./frontend")
     })
 }
 
@@ -97,22 +97,22 @@ val npmRunBuild by tasks.registering(NpmTask::class) {
  * Heroku
  */
 
-val herokuStageBuildClient by tasks.registering {
+val herokuStageBuildFrontend by tasks.registering {
     group = "heroku"
     dependsOn(npmRunBuild)
     doLast {
-        delete("client/node_modules")
+        delete("frontend/node_modules")
     }
 }
 
 val herokuStageBuild by tasks.registering {
     group = "heroku"
     dependsOn("bootJar")
-    mustRunAfter(herokuStageBuildClient)
+    mustRunAfter(herokuStageBuildFrontend)
 }
 
 val herokuStage by tasks.registering {
     group = "heroku"
     dependsOn(herokuStageBuild)
-    dependsOn(herokuStageBuildClient)
+    dependsOn(herokuStageBuildFrontend)
 }
