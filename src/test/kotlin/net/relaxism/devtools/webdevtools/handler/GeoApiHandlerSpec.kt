@@ -27,7 +27,7 @@ class GeoApiHandlerSpec(
             every { externalJsonApiService.get(URI.create("${geoProperties.uri}/${ipAddress}")) } returns Mono.just(mapOf<String?, Any?>("key1" to "value1"))
 
             webTestClient.get()
-                .uri("/api/geo/${ipAddress}")
+                .uri("${applicationProperties.apiBasePath}/geo/${ipAddress}")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk

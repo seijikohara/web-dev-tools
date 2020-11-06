@@ -1,6 +1,7 @@
 package net.relaxism.devtools.webdevtools.handler
 
 import io.kotest.core.spec.style.StringSpec
+import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
@@ -9,6 +10,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HttpHeadersApiHandlerSpec(
+    @Autowired private val applicationProperties: ApplicationProperties,
     @Autowired private val webTestClient: WebTestClient,
     @LocalServerPort private val localServerPort: Int
 ) : StringSpec() {
@@ -20,7 +22,7 @@ class HttpHeadersApiHandlerSpec(
             val customHeaderValue1 = "value1"
             val customHeaderValue2 = "value2"
             webTestClient.get()
-                .uri("/api/http-headers")
+                .uri("${applicationProperties.apiBasePath}/http-headers")
                 .header(customHeaderName, customHeaderValue1, customHeaderValue2)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()

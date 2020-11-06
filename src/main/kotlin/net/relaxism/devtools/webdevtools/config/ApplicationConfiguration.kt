@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.io.Resource
 import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
@@ -19,6 +20,8 @@ class ApplicationConfiguration {
 @ConstructorBinding
 @ConfigurationProperties(prefix = "application")
 data class ApplicationProperties(
+    val apiBasePath: String,
+    val indexFile: Resource,
     val cors: CorsProperties,
     val network: NetworkProperties
 ) {

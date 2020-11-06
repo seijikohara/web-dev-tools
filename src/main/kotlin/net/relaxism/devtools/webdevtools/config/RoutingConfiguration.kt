@@ -9,6 +9,8 @@ import org.springframework.web.reactive.function.server.router
 
 @Configuration
 class RoutingConfiguration(
+    @Autowired private val applicationProperties: ApplicationProperties,
+    @Autowired private val indexHandler: IndexHandler,
     @Autowired private val ipApiHandler: IpApiHandler,
     @Autowired private val rdapApiHandler: RdapApiHandler,
     @Autowired private val geoApiHandler: GeoApiHandler,
@@ -18,12 +20,14 @@ class RoutingConfiguration(
 
     @Bean
     fun apiRouter() = router {
+        val apiBasePath = applicationProperties.apiBasePath
         accept(MediaType.ALL).nest {
-            GET("/api/ip", ipApiHandler::getIp)
-            GET("/api/rdap/{ip}", rdapApiHandler::getRdap)
-            GET("/api/geo/{ip}", geoApiHandler::getGeo)
-            GET("/api/http-headers", httpHeadersApiHandler::getHttpHeaders)
-            GET("/api/html-entities", htmlEntitiesApiHandler::getHtmlEntities)
+            GET("/", indexHandler::getIndex)
+            GET("${apiBasePath}/ip", ipApiHandler::getIp)
+            GET("${apiBasePath}/rdap/{ip}", rdapApiHandler::getRdap)
+            GET("${apiBasePath}/geo/{ip}", geoApiHandler::getGeo)
+            GET("${apiBasePath}/http-headers", httpHeadersApiHandler::getHttpHeaders)
+            GET("${apiBasePath}/html-entities", htmlEntitiesApiHandler::getHtmlEntities)
         }
     }
 
