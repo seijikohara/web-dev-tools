@@ -27,7 +27,7 @@ class RdapApiHandlerSpec(
             every { externalJsonApiService.get(URI.create("${rdapProperties.uri}/${ipAddress}")) } returns Mono.just(mapOf<String?, Any?>("key1" to "value1"))
 
             webTestClient.get()
-                .uri("/api/rdap/${ipAddress}")
+                .uri("${applicationProperties.apiBasePath}/rdap/${ipAddress}")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk

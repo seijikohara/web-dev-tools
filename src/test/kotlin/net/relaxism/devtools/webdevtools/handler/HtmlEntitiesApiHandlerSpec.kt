@@ -3,6 +3,7 @@ package net.relaxism.devtools.webdevtools.handler
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.core.spec.style.StringSpec
 import io.mockk.every
+import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import net.relaxism.devtools.webdevtools.repository.HtmlEntity
 import net.relaxism.devtools.webdevtools.service.HtmlEntityService
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +15,7 @@ import reactor.core.publisher.Flux
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HtmlEntitiesApiHandlerSpec(
     @MockkBean private val htmlEntityService: HtmlEntityService,
+    @Autowired private val applicationProperties: ApplicationProperties,
     @Autowired private val webTestClient: WebTestClient,
 ) : StringSpec() {
 
@@ -26,7 +28,7 @@ class HtmlEntitiesApiHandlerSpec(
             every { htmlEntityService.findAll() } returns Flux.just(entity1, entity2)
 
             webTestClient.get()
-                .uri("/api/html-entities")
+                .uri("${applicationProperties.apiBasePath}/html-entities")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk
