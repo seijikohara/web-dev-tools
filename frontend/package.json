@@ -14,7 +14,7 @@
     "axios": "^0.21.0",
     "bcryptjs": "^2.4.3",
     "bowser": "^2.11.0",
-    "core-js": "^3.6.5",
+    "core-js": "^3.7.0",
     "crypto-js": "^4.0.0",
     "dayjs": "^1.9.5",
     "json-tree-view-vue3": "^0.1.8",
