@@ -47,12 +47,12 @@ export default class ApiService {
     return response.data as HttpHeaders;
   }
 
-  async getGeo(ipAddress: string): Promise<object> {
+  async getGeo(ipAddress: string): Promise<unknown> {
     const response = await api.get(`geo/${ipAddress}`);
     return response.data;
   }
 
-  async getRdap(ipAddress: string): Promise<object> {
+  async getRdap(ipAddress: string): Promise<unknown> {
     const response = await api.get(`rdap/${ipAddress}`);
     return response.data;
   }

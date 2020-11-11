@@ -110,6 +110,6 @@ export const store = createStore({
   plugins: [createLogger()],
 });
 
-export function useStore() {
+export function useStore(): Store {
   return store as Store;
 }
