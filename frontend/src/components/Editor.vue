@@ -22,7 +22,7 @@ type Props = {
   width: string;
   height: string;
   value: string;
-  options?: object;
+  options?: unknown;
 };
 
 export default defineComponent({
