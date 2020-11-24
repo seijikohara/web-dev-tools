@@ -3,10 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.github.node-gradle.node") version "2.2.4"
-    id("org.springframework.boot") version "2.3.5.RELEASE"
+    id("org.springframework.boot") version "2.4.0"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
-    kotlin("jvm") version "1.4.10"
-    kotlin("plugin.spring") version "1.4.10"
+    kotlin("jvm") version "1.4.20"
+    kotlin("plugin.spring") version "1.4.20"
 }
 
 group = "net.relaxism.devtools"
@@ -48,7 +48,7 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
     testImplementation("io.kotest:kotest-extensions-spring:${kotestVersion}")
-    testImplementation("com.ninja-squad:springmockk:2.0.3")
+    testImplementation("com.ninja-squad:springmockk:3.0.0")
 }
 
 tasks.withType<Test> {
