@@ -4,20 +4,27 @@
     <template #subtitle> List of HTML entities </template>
     <template #content>
       <DataView
-        :value="filteredEntities"
+        :value="state.entities"
         :layout="state.layout"
         paginatorPosition="both"
         :paginator="true"
-        :rows="200"
+        :rows="state.size"
+        :lazy="true"
+        :totalRecords="state.totalRecords"
+        :alwaysShowPaginator="false"
+        :rowsPerPageOptions="[25, 50, 100, 200, 1000]"
+        @page="onPage($event)"
       >
         <template #header>
           <div class="p-grid p-nogutter">
             <div class="p-col-6" style="text-align: left">
               <div class="p-inputgroup">
-                <span class="p-inputgroup-addon">
-                  <i class="pi pi-search"></i>
-                </span>
-                <InputText placeholder="Search..." v-model="state.searchWord" />
+                <InputText
+                  placeholder="Search..."
+                  v-model="state.searchWord"
+                  @keyup.enter="onClickSearch"
+                />
+                <Button icon="pi pi-search" @click="onClickSearch" />
               </div>
             </div>
             <div class="p-col-6" style="text-align: right">
@@ -66,45 +73,75 @@
             </div>
           </div>
         </template>
+        <template #empty>
+          <div class="empty-record-message">No records found.</div>
+        </template>
       </DataView>
     </template>
   </Card>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive } from "vue";
+import { defineComponent, reactive } from "vue";
 
+import Button from "primevue/button";
 import Card from "primevue/card";
 import DataView from "primevue/dataview";
 import DataViewLayoutOptions from "primevue/dataviewlayoutoptions";
 import InputText from "primevue/inputtext";
 import Tooltip from "primevue/tooltip";
 
-import ApiService from "@/services/ApiService";
+import ApiService, { Content } from "@/services/ApiService";
+
+type PageEvent = {
+  page: number;
+  first?: number;
+  rows: number;
+  pageCount?: number;
+};
 
 export default defineComponent({
-  components: { Card, DataView, DataViewLayoutOptions, InputText },
+  components: {
+    Button,
+    Card,
+    DataView,
+    DataViewLayoutOptions,
+    InputText,
+  },
   directives: { Tooltip },
   async setup() {
-    const apiService = new ApiService();
-    const htmlEntities = await apiService.getHtmlEntities();
     const state = reactive({
       layout: "list",
-      searchWord: undefined,
+      searchWord: "",
+      page: 0,
+      size: 50,
+      totalRecords: 0,
+      entities: [] as Content[],
     });
-    const filteredEntities = computed(() =>
-      htmlEntities.entities.filter((entity) => {
-        const searchWord = state.searchWord;
-        if (searchWord == null) return true;
-        return (
-          entity.name.includes(searchWord) ||
-          entity.description?.includes(searchWord)
-        );
-      })
-    );
+    const apiService = new ApiService();
+
+    async function onPage(event: PageEvent) {
+      state.page = event.page;
+      state.size = event.rows;
+      const pagedEntities = await apiService.getHtmlEntities(
+        state.searchWord,
+        state.page,
+        state.size
+      );
+      state.entities = pagedEntities.content;
+      state.totalRecords = pagedEntities.totalElements;
+    }
+
+    async function onClickSearch() {
+      await onPage({ page: 0, rows: state.size });
+    }
+
+    await onClickSearch();
+
     return {
       state,
-      filteredEntities,
+      onClickSearch,
+      onPage,
     };
   },
 });
@@ -142,5 +179,9 @@ export default defineComponent({
   .code {
     font-size: 0.75rem;
   }
+}
+.empty-record-message {
+  margin: 2rem;
+  text-align: center;
 }
 </style>

@@ -22,18 +22,43 @@ export type HttpHeaders = {
   headers: HttpHeader[];
 };
 
-export type HtmlEntity = {
+export type HtmlEntities = {
+  content: Content[];
+  pageable?: Pageable;
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  numberOfElements: number;
+  sort?: Sort;
+  first: boolean;
+  number: number;
+  size: number;
+  empty: boolean;
+};
+
+export type Content = {
   name: string;
   code: number;
-  code2?: number;
-  standard?: string;
-  dtd?: string;
-  description?: string;
+  code2: number | null;
+  standard: string | null;
+  dtd: string | null;
+  description: string | null;
   entityReference: string;
 };
 
-export type HtmlEntities = {
-  entities: Array<HtmlEntity>;
+export type Pageable = {
+  sort: Sort;
+  offset: number;
+  pageNumber: number;
+  pageSize: number;
+  paged: boolean;
+  unpaged: boolean;
+};
+
+export type Sort = {
+  sorted: boolean;
+  unsorted: boolean;
+  empty: boolean;
 };
 
 export default class ApiService {
@@ -57,8 +82,18 @@ export default class ApiService {
     return response.data;
   }
 
-  async getHtmlEntities(): Promise<HtmlEntities> {
-    const response = await api.get(`html-entities`);
+  async getHtmlEntities(
+    name: string,
+    page: number,
+    size: number
+  ): Promise<HtmlEntities> {
+    const response = await api.get(`html-entities`, {
+      params: {
+        name,
+        page,
+        size,
+      },
+    });
     return response.data;
   }
 }
