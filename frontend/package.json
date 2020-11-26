@@ -17,7 +17,7 @@
     "core-js": "^3.8.0",
     "crypto-js": "^4.0.0",
     "dayjs": "^1.9.6",
-    "json-tree-view-vue3": "^0.1.11",
+    "json-tree-view-vue3": "^0.1.12",
     "primeflex": "^2.0.0",
     "primeicons": "^4.1.0",
     "primevue": "^3.0.2",
