@@ -68,6 +68,14 @@ const routes: Array<RouteRecordRaw> = [
       menu: true,
     },
   },
+  {
+    path: "/json-to-typescript",
+    name: "JSON to TypeScript",
+    component: () => import("@/views/JsonToTypeScript.vue"),
+    meta: {
+      menu: true,
+    },
+  },
 ];
 
 const history = when(process.env.VUE_APP_HISTORY_MODE)
