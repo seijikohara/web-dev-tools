@@ -68,19 +68,17 @@ export default defineComponent({
         width: props.width,
       };
     });
-    const valueChanged = watch(
+    watch(
       () => props.value,
       (value) => (state.content = value)
     );
-    const contentChanged = watch(
+    watch(
       () => state.content,
       (value) => context.emit("update:value", value)
     );
     return {
       state,
       styles,
-      valueChanged,
-      contentChanged,
     };
   },
 });

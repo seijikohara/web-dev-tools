@@ -120,7 +120,7 @@ export default defineComponent({
     });
     const apiService = new ApiService();
 
-    async function onPage(event: PageEvent) {
+    const onPage = async (event: PageEvent) => {
       state.page = event.page;
       state.size = event.rows;
       const pagedEntities = await apiService.getHtmlEntities(
@@ -130,11 +130,11 @@ export default defineComponent({
       );
       state.entities = pagedEntities.content;
       state.totalRecords = pagedEntities.totalElements;
-    }
+    };
 
-    async function onClickSearch() {
+    const onClickSearch = async () => {
       await onPage({ page: 0, rows: state.size });
-    }
+    };
 
     await onClickSearch();
 
