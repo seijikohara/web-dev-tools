@@ -30,13 +30,13 @@
             <DataTable :value="browserInformation.os">
               <Column field="name" header="Name" />
               <Column field="version" header="Version" />
-              <Column field="versionName" header="Version name" />
             </DataTable>
           </Panel>
         </div>
         <div class="p-col-12 p-md-6 p-lg-6">
-          <Panel header="Platform">
-            <DataTable :value="browserInformation.platform">
+          <Panel header="Device">
+            <DataTable :value="browserInformation.device">
+              <Column field="model" header="Model" />
               <Column field="type" header="Type" />
               <Column field="vendor" header="Vendor" />
             </DataTable>
@@ -96,7 +96,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import * as Bowser from "bowser";
+import UAParser from "ua-parser-js";
 import { JsonTreeView } from "json-tree-view-vue3";
 
 import Card from "primevue/card";
@@ -107,7 +107,8 @@ import Column from "primevue/column";
 import ApiService from "@/services/ApiService";
 
 const userAgent = window.navigator.userAgent;
-const bowserResult = Bowser.parse(userAgent);
+const uaParser = new UAParser();
+const bowserResult = uaParser.getResult();
 
 export default defineComponent({
   components: { Card, Panel, DataTable, Column, JsonTreeView },
@@ -124,7 +125,7 @@ export default defineComponent({
         browser: [bowserResult.browser],
         engine: [bowserResult.engine],
         os: [bowserResult.os],
-        platform: [bowserResult.platform],
+        device: [bowserResult.device],
       },
       ipInfo,
       httpHeaders,
