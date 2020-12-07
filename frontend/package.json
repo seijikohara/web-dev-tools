@@ -26,7 +26,7 @@
     "ua-parser-js": "^0.7.22",
     "vue": "^3.0.3",
     "vue-gtag-next": "^1.14.0",
-    "vue-router": "^4.0.0-rc.6",
+    "vue-router": "^4.0.1",
     "vue3-ace-editor": "^1.0.2",
     "vuex": "^4.0.0-rc.2",
     "xml-formatter": "^2.4.0"
