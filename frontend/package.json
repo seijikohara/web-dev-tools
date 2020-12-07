@@ -14,7 +14,7 @@
     "@types/ua-parser-js": "^0.7.34",
     "axios": "^0.21.0",
     "bcryptjs": "^2.4.3",
-    "core-js": "^3.8.0",
+    "core-js": "^3.8.1",
     "crypto-js": "^4.0.0",
     "dayjs": "^1.9.7",
     "json-to-ts": "^1.7.0",
