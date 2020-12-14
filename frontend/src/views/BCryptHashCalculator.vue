@@ -35,7 +35,7 @@ import Slider from "primevue/slider";
 
 export default defineComponent({
   components: { Card, Fieldset, InputNumber, InputText, Slider },
-  setup() {
+  async setup() {
     const state = reactive({
       password: "",
       rounds: 8,

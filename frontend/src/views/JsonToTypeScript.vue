@@ -34,7 +34,7 @@ import Editor from "@/components/Editor.vue";
 
 export default defineComponent({
   components: { Card, Editor, Panel },
-  setup() {
+  async setup() {
     const state = reactive({
       json: "{}",
       typeScript: "",

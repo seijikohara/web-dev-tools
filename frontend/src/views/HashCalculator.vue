@@ -36,7 +36,7 @@ import Editor from "@/components/Editor.vue";
 
 export default defineComponent({
   components: { Card, DataTable, Column, Editor },
-  setup() {
+  async setup() {
     const state = reactive({
       text: "",
     });
