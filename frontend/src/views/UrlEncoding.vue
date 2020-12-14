@@ -24,7 +24,7 @@ import Editor from "@/components/Editor.vue";
 
 export default defineComponent({
   components: { Button, Card, Editor },
-  setup() {
+  async setup() {
     const state = reactive({
       content: "",
     });

@@ -35,7 +35,7 @@ type FormatOption = {
 
 export default defineComponent({
   components: { Button, Card, Dropdown, Editor },
-  setup() {
+  async setup() {
     const formatOptions = readonly([
       { text: "2 Spaces", value: " ".repeat(2) },
       { text: "4 Spaces", value: " ".repeat(4) },
