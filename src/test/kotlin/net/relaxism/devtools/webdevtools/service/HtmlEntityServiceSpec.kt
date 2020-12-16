@@ -15,7 +15,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class HtmlEntityServiceSpec(
     @MockkBean private val htmlEntityRepository: HtmlEntityRepository,
     @Autowired private val htmlEntityService: HtmlEntityService
@@ -41,7 +41,10 @@ class HtmlEntityServiceSpec(
             val pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Order.asc("id")))
 
             every { htmlEntityRepository.countByNameContaining(name = any()) } returns Mono.just(2L)
-            every { htmlEntityRepository.findByNameContaining(name = any(), pageable = any()) } returns Flux.just(entity1, entity2)
+            every { htmlEntityRepository.findByNameContaining(name = any(), pageable = any()) } returns Flux.just(
+                entity1,
+                entity2
+            )
 
             StepVerifier
                 .create(htmlEntityService.findByNameContaining("a", pageable))
