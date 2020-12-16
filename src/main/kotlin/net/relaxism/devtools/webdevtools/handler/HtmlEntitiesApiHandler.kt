@@ -17,13 +17,26 @@ class HtmlEntitiesApiHandler(@Autowired private val htmlEntityService: HtmlEntit
         val pageable: Pageable = PageRequest.of(
             request.queryParam("page").map { Integer.parseInt(it) }.orElse(0),
             request.queryParam("size").map { Integer.parseInt(it) }.orElse(50),
-            Sort.by(Sort.Order.asc("id")))
+            Sort.by(Sort.Order.asc("id"))
+        )
         val pagedEntities = htmlEntityService.findByNameContaining(name, pageable)
         return ServerResponse.ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(
-                pagedEntities.map { page -> PageImpl(page.content.map { Entity(it.name, it.code, it.code2, it.standard, it.dtd, it.description) }, page.pageable, page.totalElements) },
-                Page::class.java)
+                pagedEntities.map { page ->
+                    PageImpl(page.content.map {
+                        Entity(
+                            it.name,
+                            it.code,
+                            it.code2,
+                            it.standard,
+                            it.dtd,
+                            it.description
+                        )
+                    }, page.pageable, page.totalElements)
+                },
+                Page::class.java
+            )
     }
 
     data class Entity(

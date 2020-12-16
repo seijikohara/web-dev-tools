@@ -30,7 +30,13 @@ class HtmlEntitiesApiHandlerSpec(
             val entity2 = HtmlEntity(2, "name2", 2, 2, "standard2", "dtd2", "desc2")
             val pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Order.asc("id")))
 
-            every { htmlEntityService.findByNameContaining(name = any(), pageable = any()) } returns Mono.just(PageImpl(listOf(entity1, entity2), pageable, 2))
+            every { htmlEntityService.findByNameContaining(name = any(), pageable = any()) } returns Mono.just(
+                PageImpl(
+                    listOf(entity1, entity2),
+                    pageable,
+                    2
+                )
+            )
 
             webTestClient.get()
                 .uri("${applicationProperties.apiBasePath}/html-entities?name=&page=0&size=10")
