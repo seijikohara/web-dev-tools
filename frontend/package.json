@@ -16,7 +16,7 @@
     "bcryptjs": "^2.4.3",
     "core-js": "^3.8.1",
     "crypto-js": "^4.0.0",
-    "dayjs": "^1.9.7",
+    "dayjs": "^1.10.2",
     "json-to-ts": "^1.7.0",
     "json-tree-view-vue3": "^0.1.14",
     "primeflex": "^2.0.0",
