@@ -118,12 +118,11 @@ export default defineComponent({
       totalRecords: 0,
       entities: [] as Content[],
     });
-    const apiService = new ApiService();
 
     const onPage = async (event: PageEvent) => {
       state.page = event.page;
       state.size = event.rows;
-      const pagedEntities = await apiService.getHtmlEntities(
+      const pagedEntities = await ApiService.getHtmlEntities(
         state.searchWord,
         state.page,
         state.size

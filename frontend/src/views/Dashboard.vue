@@ -113,12 +113,11 @@ const bowserResult = uaParser.getResult();
 export default defineComponent({
   components: { Card, Panel, DataTable, Column, JsonTreeView },
   async setup() {
-    const apiService = new ApiService();
-    const ipInfo = await apiService.getIpAddress();
-    const httpHeaders = await apiService.getHttpHeader();
+    const ipInfo = await ApiService.getIpAddress();
+    const httpHeaders = await ApiService.getHttpHeader();
     const ipAddress = ipInfo.ipAddress;
-    const geo = await apiService.getGeo(ipAddress);
-    const rdap = await apiService.getRdap(ipAddress);
+    const geo = await ApiService.getGeo(ipAddress);
+    const rdap = await ApiService.getRdap(ipAddress);
     return {
       userAgent,
       browserInformation: {
