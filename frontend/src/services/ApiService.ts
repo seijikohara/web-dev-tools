@@ -61,27 +61,23 @@ export type Sort = {
   empty: boolean;
 };
 
-export default class ApiService {
+export default {
   async getIpAddress(): Promise<IpInfo> {
     const response = await api.get("ip");
     return response.data as IpInfo;
-  }
-
+  },
   async getHttpHeader(): Promise<HttpHeaders> {
     const response = await api.get("http-headers");
     return response.data as HttpHeaders;
-  }
-
+  },
   async getGeo(ipAddress: string): Promise<unknown> {
     const response = await api.get(`geo/${ipAddress}`);
     return response.data;
-  }
-
+  },
   async getRdap(ipAddress: string): Promise<unknown> {
     const response = await api.get(`rdap/${ipAddress}`);
     return response.data;
-  }
-
+  },
   async getHtmlEntities(
     name: string,
     page: number,
@@ -95,5 +91,5 @@ export default class ApiService {
       },
     });
     return response.data;
-  }
-}
+  },
+};
