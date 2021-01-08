@@ -7,6 +7,7 @@ import inet.ipaddr.IPAddress
 import inet.ipaddr.IPAddressString
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import net.relaxism.devtools.webdevtools.utils.JsonUtils
+import net.relaxism.devtools.webdevtools.utils.PathUtils
 import org.slf4j.Logger
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
@@ -71,7 +72,11 @@ class RdapClient(
 
     fun getRdapByIpAddress(ipAddressString: String): Mono<Map<String, Any?>> {
         val ipAddress = IPAddressString(ipAddressString).address
-        val uri = "${ipRangeMap[ipAddress] ?: defaultRdapURI}/ip/$ipAddressString"
+        val uri = PathUtils.concatenate(
+            (ipRangeMap[ipAddress] ?: defaultRdapURI).toString(),
+            "ip",
+            ipAddressString
+        )
         logger.info("[RDAP] $uri")
         return webClient.get()
             .uri(uri)
