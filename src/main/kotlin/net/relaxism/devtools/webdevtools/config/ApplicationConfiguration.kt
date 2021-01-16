@@ -8,7 +8,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.Resource
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.client.HttpClient
 
 @Configuration
 @EnableConfigurationProperties(ApplicationProperties::class)
@@ -22,6 +24,11 @@ class ApplicationConfiguration(
             logger.info("External Request to ${clientRequest.method()} ${clientRequest.url()} headers=${clientRequest.headers()}")
             next.exchange(clientRequest)
         }
+        .clientConnector(
+            ReactorClientHttpConnector(
+                HttpClient.create().followRedirect(true)
+            )
+        )
         .build();
 
 }
