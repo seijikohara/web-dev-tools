@@ -76,6 +76,14 @@ const routes: Array<RouteRecordRaw> = [
       menu: true,
     },
   },
+  {
+    path: "/markdown-editor",
+    name: "Markdown Editor",
+    component: () => import("@/views/MarkdownEditor.vue"),
+    meta: {
+      menu: true,
+    },
+  },
 ];
 
 const history = when(process.env.VUE_APP_HISTORY_MODE)
