@@ -22,7 +22,7 @@
     "dompurify": "^2.2.6",
     "json-to-ts": "^1.7.0",
     "json-tree-view-vue3": "^0.1.14",
-    "marked": "^1.2.9",
+    "marked": "^2.0.0",
     "primeflex": "^2.0.0",
     "primeicons": "^4.1.0",
     "primevue": "^3.1.2",
