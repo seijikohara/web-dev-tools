@@ -1,12 +1,12 @@
-import com.moowork.gradle.node.npm.NpmTask
+import com.github.gradle.node.npm.task.NpmTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.github.node-gradle.node") version "2.2.4"
-    id("org.springframework.boot") version "2.4.1"
-    id("io.spring.dependency-management") version "1.0.10.RELEASE"
-    kotlin("jvm") version "1.4.21"
-    kotlin("plugin.spring") version "1.4.21"
+    id("com.github.node-gradle.node") version "3.0.1"
+    id("org.springframework.boot") version "2.4.5"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    kotlin("jvm") version "1.5.0"
+    kotlin("plugin.spring") version "1.5.0"
 }
 
 group = "net.relaxism.devtools"
@@ -23,16 +23,16 @@ repositories {
     mavenCentral()
 }
 
-val kotestVersion = "4.3.1"
+val kotestVersion = "4.4.3"
 
 dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.github.seancfoley:ipaddress:5.3.3")
-    implementation("com.google.guava:guava:30.0-jre")
+    implementation("com.google.guava:guava:30.1.1-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
@@ -50,7 +50,7 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
     testImplementation("io.kotest:kotest-extensions-spring:${kotestVersion}")
-    testImplementation("com.ninja-squad:springmockk:3.0.0")
+    testImplementation("com.ninja-squad:springmockk:3.0.1")
 }
 
 tasks.withType<Test> {
@@ -70,17 +70,15 @@ tasks.withType<KotlinCompile> {
  */
 
 node {
-    version = "12.19.0"
-    npmVersion = "6.14.8"
-    download = true
+    version.set("14.16.1")
+    npmVersion.set("6.14.13")
+    download.set(true)
 }
 
 // Task for installing frontend dependencies in web
 val npmInstallDependencies by tasks.registering(NpmTask::class) {
-    setArgs(listOf("install"))
-    setExecOverrides(closureOf<ExecSpec> {
-        setWorkingDir("./frontend")
-    })
+    args.set(listOf("install"))
+    workingDir.set(File("./frontend"))
 }
 
 // Task for executing build:gradle in web
@@ -88,10 +86,8 @@ val npmRunBuild by tasks.registering(NpmTask::class) {
     // Before buildWeb can run, installDependencies must run
     dependsOn(npmInstallDependencies)
 
-    setArgs(listOf("run", "build", "--", "--dest", "../src/main/resources/static"))
-    setExecOverrides(closureOf<ExecSpec> {
-        setWorkingDir("./frontend")
-    })
+    args.set(listOf("run", "build", "--", "--dest", "../src/main/resources/static"))
+    workingDir.set(File("./frontend"))
 }
 
 
