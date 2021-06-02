@@ -19,7 +19,7 @@
     "core-js": "^3.11.1",
     "crypto-js": "^4.0.0",
     "dayjs": "^1.10.4",
-    "dompurify": "^2.2.8",
+    "dompurify": "^2.2.9",
     "json-to-ts": "^1.7.0",
     "json-tree-view-vue3": "^0.1.14",
     "marked": "^2.0.3",
