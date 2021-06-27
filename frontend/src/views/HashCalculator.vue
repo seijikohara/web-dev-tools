@@ -16,7 +16,11 @@
               :headerStyle="{ width: '150px' }"
               :sortable="true"
             />
-            <Column field="value" header="Value" />
+            <Column header="Value">
+              <template #body="slotProps">
+                <code>{{ slotProps.data.value }}</code>
+              </template>
+            </Column>
           </DataTable>
         </div>
       </div>
