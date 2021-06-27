@@ -3,10 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.github.node-gradle.node") version "3.1.0"
-    id("org.springframework.boot") version "2.5.0"
+    id("org.springframework.boot") version "2.5.2"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.5.10"
-    kotlin("plugin.spring") version "1.5.10"
+    kotlin("jvm") version "1.5.20"
+    kotlin("plugin.spring") version "1.5.20"
 }
 
 group = "net.relaxism.devtools"
@@ -68,7 +68,7 @@ tasks.withType<KotlinCompile> {
  */
 
 node {
-    version.set("14.17.0")
+    version.set("14.17.1")
     npmVersion.set("6.14.13")
     download.set(true)
 }
