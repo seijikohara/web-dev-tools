@@ -242,22 +242,22 @@ export default defineComponent({
     mode: {
       type: String,
       default: "text",
-      required: true,
+      required: false,
     },
     theme: {
       type: String,
       default: "chrome",
-      required: true,
+      required: false,
     },
     width: {
       type: String,
       default: "100%",
-      required: true,
+      required: false,
     },
     height: {
       type: String,
       default: "100%",
-      required: true,
+      required: false,
     },
     value: {
       type: String,
