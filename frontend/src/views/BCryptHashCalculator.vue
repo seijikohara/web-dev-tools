@@ -15,7 +15,7 @@
         </div>
         <div class="p-field">
           <Fieldset legend="Hashed password">
-            <span>{{ hashedValue }}</span>
+            <code>{{ hashedValue }}</code>
           </Fieldset>
         </div>
       </div>
