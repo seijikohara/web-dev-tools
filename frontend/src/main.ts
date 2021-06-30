@@ -6,9 +6,12 @@ import router from "./router";
 
 import "@/assets/scss/layout.scss";
 
+import PrimeVue from "primevue/config";
+
 const app = createApp(App);
 app.use(store);
 app.use(router);
+app.use(PrimeVue, { ripple: true, inputStyle: "filled" });
 
 const gaMeasurementId = process.env.VUE_APP_GA_MEASUREMENT_ID;
 if (gaMeasurementId) {
@@ -20,5 +23,3 @@ if (gaMeasurementId) {
 }
 
 app.mount("#app");
-
-app.config.globalProperties.$primevue = { ripple: true };
