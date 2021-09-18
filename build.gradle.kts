@@ -2,11 +2,11 @@ import com.github.gradle.node.npm.task.NpmTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.github.node-gradle.node") version "3.1.0"
-    id("org.springframework.boot") version "2.5.2"
+    id("com.github.node-gradle.node") version "3.1.1"
+    id("org.springframework.boot") version "2.5.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.5.20"
-    kotlin("plugin.spring") version "1.5.20"
+    kotlin("jvm") version "1.5.30"
+    kotlin("plugin.spring") version "1.5.30"
 }
 
 group = "net.relaxism.devtools"
@@ -46,13 +46,9 @@ dependencies {
     }
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("com.squareup.okhttp3:mockwebserver")
-    testImplementation("io.kotest:kotest-runner-junit5:4.6.0")
+    testImplementation("io.kotest:kotest-runner-junit5:4.6.3")
     testImplementation("io.kotest:kotest-extensions-spring:4.4.3")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile> {
@@ -62,14 +58,18 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 
 /**
  * Node.js
  */
 
 node {
-    version.set("14.17.1")
-    npmVersion.set("6.14.13")
+    version.set("14.17.5")
+    npmVersion.set("6.14.15")
     download.set(true)
 }
 
