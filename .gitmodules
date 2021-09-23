@@ -1,3 +1,4 @@
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/seijikohara/web-dev-tools-vue3.git
+	branch = main
