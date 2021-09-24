@@ -26,7 +26,7 @@ repositories {
 dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.github.seancfoley:ipaddress:5.3.3")
-    implementation("com.google.guava:guava:30.1.1-jre")
+    implementation("com.google.guava:guava:31.0-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
