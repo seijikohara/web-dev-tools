@@ -7,7 +7,7 @@ object JsonUtils {
 
     private val DEFAULT_OBJECT_MAPPER = ObjectMapper()
 
-    fun fromJson(value: String?): Map<String, Any?> = fromJson(DEFAULT_OBJECT_MAPPER, value);
+    fun fromJson(value: String?): Map<String, Any?> = fromJson(DEFAULT_OBJECT_MAPPER, value)
 
     fun fromJson(objectMapper: ObjectMapper, value: String?): Map<String, Any?> {
         if (value.isNullOrBlank())
@@ -19,7 +19,7 @@ object JsonUtils {
 
     fun toJson(objectMapper: ObjectMapper, value: Any?): String {
         if (value == null) {
-            return "";
+            return ""
         }
         return objectMapper.writeValueAsString(value)
     }

@@ -41,7 +41,12 @@ class HtmlEntityServiceSpec(
             val pageable: Pageable = PageRequest.of(0, 10, Sort.by(Sort.Order.asc("id")))
 
             every { htmlEntityRepository.countByNameContaining(name = any()) } returns Mono.just(2L)
-            every { htmlEntityRepository.findByNameContaining(name = any(), pageable = any()) } returns Flux.just(
+            every {
+                htmlEntityRepository.findByNameContaining(
+                    name = any(),
+                    pageable = any()
+                )
+            } returns Flux.just(
                 entity1,
                 entity2
             )

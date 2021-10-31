@@ -4,7 +4,7 @@ object PathUtils {
 
     fun concatenate(vararg paths: String): String {
         if (paths.isEmpty()) {
-            return "";
+            return ""
         }
 
         val hasSlashHead = paths[0].startsWith('/')

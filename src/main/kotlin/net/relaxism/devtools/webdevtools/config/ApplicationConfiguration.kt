@@ -29,7 +29,7 @@ class ApplicationConfiguration(
                 HttpClient.create().followRedirect(true)
             )
         )
-        .build();
+        .build()
 
 }
 
