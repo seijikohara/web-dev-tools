@@ -53,11 +53,10 @@ class RdapClient(
     }
 
     private fun resolveJson(json: String): RangeMap<IPAddress, URI> {
-        val jsonMap = JsonUtils.fromJson(json)
-        val services = jsonMap["services"] as List<List<List<String>>>
+        val rdapFileStructure = JsonUtils.fromJson(json, RdapFileStructure::class.java)
 
         val ipRangeMapBuilder = ImmutableRangeMap.builder<IPAddress, URI>()
-        services.forEach { service ->
+        rdapFileStructure?.services?.forEach { service ->
             val cidrList = service[0]
             val rdapURI = URI.create(service[1][0])
             cidrList.forEach { cidr ->
@@ -87,5 +86,12 @@ class RdapClient(
                     .switchIfEmpty(Mono.defer { Mono.just(mapOf()) })
             }
     }
+
+    data class RdapFileStructure(
+        val description: String,
+        val publication: String,
+        val services: List<List<List<String>>>,
+        val version: String
+    )
 
 }
