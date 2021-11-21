@@ -5,6 +5,12 @@ import io.kotest.matchers.shouldBe
 
 class JsonUtilsSpec : StringSpec() {
     init {
+        "JSON to Object" {
+            JsonUtils.fromJson(null, TestData::class.java) shouldBe null
+            JsonUtils.fromJson("{}", TestData::class.java) shouldBe TestData(0)
+            JsonUtils.fromJson("{ \"a\": 1 }", TestData::class.java) shouldBe TestData(1)
+        }
+
         "JSON to Map" {
             JsonUtils.fromJson(null) shouldBe mapOf()
             JsonUtils.fromJson("{}") shouldBe mapOf()
@@ -17,4 +23,8 @@ class JsonUtilsSpec : StringSpec() {
             JsonUtils.toJson(mapOf("a" to 1)) shouldBe "{\"a\":1}"
         }
     }
+
+    data class TestData(
+        val a: Int
+    )
 }

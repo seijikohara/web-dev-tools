@@ -5,7 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper
 
 object JsonUtils {
 
-    private val DEFAULT_OBJECT_MAPPER = ObjectMapper()
+    private val DEFAULT_OBJECT_MAPPER = ObjectMapper().findAndRegisterModules()
+
+    fun <T> fromJson(value: String?, valueType: Class<T>): T? =
+        fromJson(DEFAULT_OBJECT_MAPPER, value, valueType)
+
+    fun <T> fromJson(objectMapper: ObjectMapper, value: String?, valueType: Class<T>): T? {
+        if (value.isNullOrBlank())
+            return null
+        return objectMapper.readValue(value, valueType)
+    }
 
     fun fromJson(value: String?): Map<String, Any?> = fromJson(DEFAULT_OBJECT_MAPPER, value)
 
