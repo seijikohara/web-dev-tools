@@ -17,7 +17,7 @@
 
 ### サーバサイド
 
-- [Java 11](https://openjdk.java.net/projects/jdk/11/)
+- [Java 17](https://openjdk.java.net/projects/jdk/17/)
 - [Kotlin](https://kotlinlang.org/)
 - [Spring Boot 2](https://spring.io/projects/spring-boot)
   - [WebFlux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux)
