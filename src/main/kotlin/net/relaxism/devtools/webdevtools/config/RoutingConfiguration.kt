@@ -22,7 +22,7 @@ class RoutingConfiguration(
     fun apiRouter() = router {
         val apiBasePath = applicationProperties.apiBasePath
         accept(MediaType.ALL).nest {
-            GET("/", indexHandler::getIndex)
+            GET("/*", indexHandler::getIndex)
             GET("${apiBasePath}/ip", ipApiHandler::getIp)
             GET("${apiBasePath}/rdap/{ip}", rdapApiHandler::getRdap)
             GET("${apiBasePath}/geo/{ip}", geoApiHandler::getGeo)
