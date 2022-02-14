@@ -17,6 +17,9 @@
   "stack": "heroku-20",
   "buildpacks": [
     {
+      "url": "https://github.com/seijikohara/heroku-buildpack-submodules.git"
+    },
+    {
       "url": "heroku/gradle"
     }
   ]
