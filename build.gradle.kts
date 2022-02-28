@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("project-report")
-    id("com.github.node-gradle.node") version "3.2.0"
-    id("org.springframework.boot") version "2.6.3"
+    id("com.github.node-gradle.node") version "3.2.1"
+    id("org.springframework.boot") version "2.6.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
@@ -53,7 +53,7 @@ dependencies {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
         exclude(module = "mockito-core")
     }
-    testImplementation("com.ninja-squad:springmockk:3.1.0")
+    testImplementation("com.ninja-squad:springmockk:3.1.1")
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.0")
     testImplementation("io.kotest:kotest-assertions-core:${kotestVersion}")
