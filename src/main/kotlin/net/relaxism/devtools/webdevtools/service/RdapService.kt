@@ -9,6 +9,6 @@ class RdapService(
     @Autowired private val rdapClient: RdapClient
 ) {
 
-    fun getRdapByIpAddress(ipAddress: String) = rdapClient.getRdapByIpAddress(ipAddress)
+    suspend fun getRdapByIpAddress(ipAddress: String) = rdapClient.getRdapByIpAddress(ipAddress)
 
 }

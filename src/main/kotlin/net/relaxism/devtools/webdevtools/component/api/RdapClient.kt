@@ -5,6 +5,7 @@ import com.google.common.collect.Range
 import com.google.common.collect.RangeMap
 import inet.ipaddr.IPAddress
 import inet.ipaddr.IPAddressString
+import kotlinx.coroutines.coroutineScope
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import net.relaxism.devtools.webdevtools.utils.JsonUtils
 import net.relaxism.devtools.webdevtools.utils.PathUtils
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
-import reactor.core.publisher.Mono
+import org.springframework.web.reactive.function.client.awaitBody
 import java.io.BufferedReader
 import java.io.InputStream
 import java.net.URI
@@ -69,7 +70,7 @@ class RdapClient(
         return ipRangeMapBuilder.build()
     }
 
-    fun getRdapByIpAddress(ipAddressString: String): Mono<Map<String, Any?>> {
+    suspend fun getRdapByIpAddress(ipAddressString: String): Map<String, Any?> = coroutineScope {
         val ipAddress = IPAddressString(ipAddressString).address
         val uri = PathUtils.concatenate(
             (ipRangeMap[ipAddress] ?: defaultRdapURI).toString(),
@@ -77,14 +78,13 @@ class RdapClient(
             ipAddressString
         )
         logger.info("[RDAP] $uri")
-        return webClient.get()
+
+        val jsonString = webClient.get()
             .uri(uri)
             .accept(MediaType.APPLICATION_JSON)
-            .exchangeToMono { response ->
-                response.bodyToMono(String::class.java)
-                    .map { responseBody -> JsonUtils.fromJson(responseBody) }
-                    .switchIfEmpty(Mono.defer { Mono.just(mapOf()) })
-            }
+            .retrieve()
+            .awaitBody<String>()
+        JsonUtils.fromJson(jsonString)
     }
 
     data class RdapFileStructure(

@@ -12,7 +12,6 @@ object PathUtils {
         return (if (hasSlashHead) "/" else "") +
             paths.joinToString("/") { it.trim('/') } +
             (if (hasSlashTail) "/" else "")
-
     }
 
 }

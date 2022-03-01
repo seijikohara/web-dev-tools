@@ -14,7 +14,6 @@ class IpApiHandlerSpec(
 ) : StringSpec() {
 
     init {
-
         "get response" {
             val ipAddress = "192.0.2.1"
 
@@ -28,7 +27,6 @@ class IpApiHandlerSpec(
                 .expectBody()
                 .json("{\"ipAddress\":\"${ipAddress}\",\"hostName\":\"localhost\"}")
         }
-
     }
 
 }

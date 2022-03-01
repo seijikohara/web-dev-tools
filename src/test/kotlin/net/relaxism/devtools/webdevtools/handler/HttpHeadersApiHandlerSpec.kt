@@ -16,7 +16,6 @@ class HttpHeadersApiHandlerSpec(
 ) : StringSpec() {
 
     init {
-
         "get response" {
             val customHeaderName = "Custom-Header"
             val customHeaderValue1 = "value1"
@@ -35,7 +34,6 @@ class HttpHeadersApiHandlerSpec(
                 .jsonPath("$.headers[5].name").isEqualTo(customHeaderName)
                 .jsonPath("$.headers[5].value").isEqualTo(customHeaderValue2)
         }
-
     }
 
 }

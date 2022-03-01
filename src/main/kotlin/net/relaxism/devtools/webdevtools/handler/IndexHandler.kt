@@ -6,17 +6,17 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
-import reactor.core.publisher.Mono
+import org.springframework.web.reactive.function.server.bodyValueAndAwait
 
 @Component
 class IndexHandler(
     @Autowired private val applicationProperties: ApplicationProperties
 ) {
 
-    fun getIndex(request: ServerRequest): Mono<ServerResponse> {
+    suspend fun getIndex(request: ServerRequest): ServerResponse {
         return ServerResponse.ok()
             .contentType(MediaType.TEXT_HTML)
-            .bodyValue(applicationProperties.indexFile)
+            .bodyValueAndAwait(applicationProperties.indexFile)
     }
 
 }

@@ -11,17 +11,15 @@ class GeoIpClientSpec(
     @Autowired private val geoIpClient: GeoIpClient,
 ) : StringSpec() {
 
-    private val objectMapper = ObjectMapper()
+    private val objectMapper = ObjectMapper().findAndRegisterModules()
 
     init {
-
         "get : success" {
             @Suppress("BlockingMethodInNonBlockingContext")
             mapToJson(
-                geoIpClient.getGeoByIpAddress("0.0.0.0").block()
+                geoIpClient.getGeoByIpAddress("0.0.0.0")
             ) shouldBe "{\"status\":\"fail\",\"message\":\"reserved range\",\"query\":\"0.0.0.0\"}"
         }
-
     }
 
     private fun mapToJson(map: Map<String, Any?>?): String {

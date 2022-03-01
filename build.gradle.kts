@@ -28,6 +28,8 @@ val kotlinxCoroutines = "1.6.0"
 val kotestVersion = "5.1.0"
 
 dependencies {
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.github.seancfoley:ipaddress:5.3.3")
     implementation("com.google.guava:guava:31.0.1-jre")
@@ -36,7 +38,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinxCoroutines}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${kotlinxCoroutines}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${kotlinxCoroutines}")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
@@ -60,6 +63,7 @@ dependencies {
     testImplementation("io.kotest:kotest-property:${kotestVersion}")
     testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
     testImplementation("io.projectreactor:reactor-test")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:${kotlinxCoroutines}")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${kotlinxCoroutines}")
 }
 

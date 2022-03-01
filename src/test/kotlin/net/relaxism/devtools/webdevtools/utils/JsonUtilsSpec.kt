@@ -4,6 +4,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
 class JsonUtilsSpec : StringSpec() {
+
     init {
         "JSON to Object" {
             JsonUtils.fromJson(null, TestData::class.java) shouldBe null
@@ -27,4 +28,5 @@ class JsonUtilsSpec : StringSpec() {
     data class TestData(
         val a: Int
     )
+
 }

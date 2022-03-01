@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
-import org.springframework.web.reactive.function.server.router
+import org.springframework.web.reactive.function.server.coRouter
 
 @Configuration
-class RoutingConfiguration(
+class RoutingConfig(
     @Autowired private val applicationProperties: ApplicationProperties,
     @Autowired private val indexHandler: IndexHandler,
     @Autowired private val ipApiHandler: IpApiHandler,
@@ -19,7 +19,7 @@ class RoutingConfiguration(
 ) {
 
     @Bean
-    fun apiRouter() = router {
+    fun apiRouter() = coRouter {
         val apiBasePath = applicationProperties.apiBasePath
         accept(MediaType.ALL).nest {
             GET("/*", indexHandler::getIndex)

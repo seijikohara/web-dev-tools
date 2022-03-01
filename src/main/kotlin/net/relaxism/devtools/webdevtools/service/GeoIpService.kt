@@ -9,6 +9,6 @@ class GeoIpService(
     @Autowired private val geoIpClient: GeoIpClient
 ) {
 
-    fun getGeoFromIpAddress(ipAddress: String) = geoIpClient.getGeoByIpAddress(ipAddress)
+    suspend fun getGeoFromIpAddress(ipAddress: String) = geoIpClient.getGeoByIpAddress(ipAddress)
 
 }

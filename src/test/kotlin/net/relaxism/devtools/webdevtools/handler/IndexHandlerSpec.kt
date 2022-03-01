@@ -12,7 +12,6 @@ class IndexHandlerSpec(
 ) : StringSpec() {
 
     init {
-
         "get response" {
             webTestClient.get()
                 .uri("/")
@@ -20,7 +19,6 @@ class IndexHandlerSpec(
                 .expectStatus().isOk
                 .expectHeader().contentType(MediaType.TEXT_HTML)
         }
-
     }
 
 }
