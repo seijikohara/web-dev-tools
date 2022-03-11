@@ -25,18 +25,19 @@ repositories {
 }
 
 val kotlinxCoroutines = "1.6.0"
-val kotestVersion = "5.1.0"
+val kotestVersion = "5.2.1"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.github.seancfoley:ipaddress:5.3.3")
-    implementation("com.google.guava:guava:31.0.1-jre")
+    implementation("com.google.guava:guava:31.1-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${kotlinxCoroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinxCoroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${kotlinxCoroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${kotlinxCoroutines}")
