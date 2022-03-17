@@ -1,6 +1,6 @@
 # web-dev-tools
 
-[![GitHub Actions](https://github.com/seijikohara/web-dev-tools/workflows/CI/badge.svg)](https://github.com/seijikohara/web-dev-tools/actions)
+[![GitHub Actions](https://github.com/seijikohara/web-dev-tools/actions/workflows/main.yml/badge.svg)](https://github.com/seijikohara/web-dev-tools/actions)
 ![GitHub language count](https://img.shields.io/github/languages/count/seijikohara/web-dev-tools)
 ![GitHub top language](https://img.shields.io/github/languages/top/seijikohara/web-dev-tools)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/seijikohara/web-dev-tools)
@@ -8,14 +8,14 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/seijikohara/web-dev-tools/tree/main)
 
-## 利用するフレームワーク・ライブラリ
+## Frameworks and libraries
 
-### ビルドツール
+### Build tool
 
 - [Gradle](https://docs.gradle.org/current/userguide/userguide.html)
   - Kotlin DSL
 
-### サーバサイド
+### Backend
 
 - [Java 17](https://openjdk.java.net/projects/jdk/17/)
 - [Kotlin](https://kotlinlang.org/)
@@ -27,7 +27,7 @@
 - [SpringMockK](https://github.com/Ninja-Squad/springmockk)
 - [H2](https://www.h2database.com/html/main.html)
 
-### フロントエンド
+### Frontend
 
 - [Node.js](https://nodejs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
