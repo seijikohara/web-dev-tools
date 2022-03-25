@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("project-report")
     id("com.github.node-gradle.node") version "3.2.1"
-    id("org.springframework.boot") version "2.6.4"
+    id("org.springframework.boot") version "2.6.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
@@ -31,7 +31,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.github.seancfoley:ipaddress:5.3.3")
+    implementation("com.github.seancfoley:ipaddress:5.3.4")
     implementation("com.google.guava:guava:31.1-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
