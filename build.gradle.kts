@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("project-report")
-    id("com.github.node-gradle.node") version "3.2.1"
+    id("com.github.node-gradle.node") version "3.3.0"
     id("org.springframework.boot") version "2.7.0"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.6.21"
@@ -24,7 +24,7 @@ repositories {
     mavenCentral()
 }
 
-val kotlinxCoroutines = "1.6.1"
+val kotlinxCoroutines = "1.6.2"
 val kotestVersion = "5.3.0"
 
 dependencies {
