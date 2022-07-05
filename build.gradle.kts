@@ -5,7 +5,7 @@ plugins {
     id("project-report")
     id("com.github.node-gradle.node") version "3.3.0"
     id("org.springframework.boot") version "2.7.1"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("io.spring.dependency-management") version "1.0.12.RELEASE"
     kotlin("jvm") version "1.7.0"
     kotlin("plugin.spring") version "1.7.0"
 }
@@ -25,7 +25,7 @@ repositories {
 }
 
 val kotlinxCoroutines = "1.6.3"
-val kotestVersion = "5.3.1"
+val kotestVersion = "5.3.2"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
