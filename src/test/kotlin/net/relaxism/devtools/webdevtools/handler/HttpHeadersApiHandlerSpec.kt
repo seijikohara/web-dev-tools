@@ -3,8 +3,8 @@ package net.relaxism.devtools.webdevtools.handler
 import io.kotest.core.spec.style.StringSpec
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 
@@ -12,7 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class HttpHeadersApiHandlerSpec(
     @Autowired private val applicationProperties: ApplicationProperties,
     @Autowired private val webTestClient: WebTestClient,
-    @LocalServerPort private val localServerPort: Int
+    @Value("\${local.server.port}") private val localServerPort: Int
 ) : StringSpec() {
 
     init {
