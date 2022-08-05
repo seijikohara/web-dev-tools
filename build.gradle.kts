@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("project-report")
     id("com.github.node-gradle.node") version "3.4.0"
-    id("org.springframework.boot") version "2.7.1"
+    id("org.springframework.boot") version "2.7.2"
     id("io.spring.dependency-management") version "1.0.12.RELEASE"
     kotlin("jvm") version "1.7.10"
     kotlin("plugin.spring") version "1.7.10"
@@ -24,8 +24,8 @@ repositories {
     mavenCentral()
 }
 
-val kotlinxCoroutines = "1.6.3"
-val kotestVersion = "5.3.2"
+val kotlinxCoroutines = "1.6.4"
+val kotestVersion = "5.4.1"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
@@ -59,7 +59,7 @@ dependencies {
     }
     testImplementation("com.ninja-squad:springmockk:3.1.1")
     testImplementation("com.squareup.okhttp3:mockwebserver")
-    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.1")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
     testImplementation("io.kotest:kotest-assertions-core:${kotestVersion}")
     testImplementation("io.kotest:kotest-property:${kotestVersion}")
     testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
