@@ -19,22 +19,22 @@
 
 - [Java 17](https://openjdk.java.net/projects/jdk/17/)
 - [Kotlin](https://kotlinlang.org/)
+  - [Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
 - [Spring Boot 2](https://spring.io/projects/spring-boot)
-  - [WebFlux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux)
 - [R2DBC](https://r2dbc.io/)
 - [Flyway](https://flywaydb.org/)
+- [H2](https://www.h2database.com/html/main.html)
 - [Kotest](https://kotest.io/)
 - [SpringMockK](https://github.com/Ninja-Squad/springmockk)
-- [H2](https://www.h2database.com/html/main.html)
 
 ### Frontend
 
 - [Node.js](https://nodejs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
-  - [ESLint](https://eslint.org/) - Code linter
-  - [Prettier](https://prettier.io/) - Formatter
+  - [ESLint](https://eslint.org/)
+  - [Prettier](https://prettier.io/)
 - [Vue.js](https://v3.vuejs.org/)
   - [Vue Router](https://next.router.vuejs.org/)
-  - [Vuex](https://vuex.vuejs.org/guide/)
+  - [Pinia](https://pinia.vuejs.org/)
   - [Vue CLI](https://cli.vuejs.org/)
   - [PrimeVUE](https://www.primefaces.org/primevue/)
