@@ -25,7 +25,7 @@ repositories {
 }
 
 val kotlinxCoroutines = "1.6.4"
-val kotestVersion = "5.4.2"
+val kotestVersion = "5.5.0"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
