@@ -1,0 +1,6 @@
+**/.github/
+.idea/
+build/
+db/
+frontend/node_modules/
+src/main/resources/static/
