@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("project-report")
-    id("com.github.node-gradle.node") version "3.4.0"
+    id("com.github.node-gradle.node") version "3.5.0"
     id("org.springframework.boot") version "2.7.4"
-    id("io.spring.dependency-management") version "1.0.14.RELEASE"
+    id("io.spring.dependency-management") version "1.1.0"
     kotlin("jvm") version "1.7.20"
     kotlin("plugin.spring") version "1.7.20"
 }
@@ -25,7 +25,7 @@ repositories {
 }
 
 val kotlinxCoroutines = "1.6.4"
-val kotestVersion = "5.4.2"
+val kotestVersion = "5.5.1"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
