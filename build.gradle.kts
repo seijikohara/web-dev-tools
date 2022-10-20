@@ -85,7 +85,7 @@ tasks.withType<Test> {
  */
 
 node {
-    version.set("16.17.1")
+    version.set("18.11.0")
     npmVersion.set("8.19.2")
     download.set(true)
 }
