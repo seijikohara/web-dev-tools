@@ -3,13 +3,9 @@
   "description": "Web Development Tools",
   "env": {
     "GRADLE_TASK": "herokuStage",
-    "NEW_RELIC_APP_NAME": "web-dev-tools",
     "SPRING_PROFILES_ACTIVE": "production"
   },
   "addons": [
-    {
-      "plan": "newrelic"
-    },
     {
       "plan": "papertrail"
     }
