@@ -4,10 +4,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("project-report")
     id("com.github.node-gradle.node") version "3.5.0"
-    id("org.springframework.boot") version "2.7.5"
+    id("org.springframework.boot") version "3.0.0"
     id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.7.20"
-    kotlin("plugin.spring") version "1.7.20"
+    kotlin("jvm") version "1.7.21"
+    kotlin("plugin.spring") version "1.7.21"
+    id("com.github.ben-manes.versions") version "0.44.0"
 }
 
 group = "net.relaxism.devtools"
@@ -25,7 +26,7 @@ repositories {
 }
 
 val kotlinxCoroutines = "1.6.4"
-val kotestVersion = "5.5.3"
+val kotestVersion = "5.5.4"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
@@ -57,7 +58,7 @@ dependencies {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
         exclude(module = "mockito-core")
     }
-    testImplementation("com.ninja-squad:springmockk:3.1.1")
+    testImplementation("com.ninja-squad:springmockk:3.1.2")
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
     testImplementation("io.kotest:kotest-assertions-core:${kotestVersion}")
