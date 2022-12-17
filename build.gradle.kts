@@ -25,7 +25,7 @@ repositories {
     mavenCentral()
 }
 
-val kotlinxCoroutines = "1.6.4"
+val kotlinxCoroutinesVersion = "1.6.4"
 val kotestVersion = "5.5.4"
 
 dependencies {
@@ -38,10 +38,10 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${kotlinxCoroutines}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinxCoroutines}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${kotlinxCoroutines}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${kotlinxCoroutines}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${kotlinxCoroutinesVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinxCoroutinesVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${kotlinxCoroutinesVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${kotlinxCoroutinesVersion}")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
@@ -65,8 +65,8 @@ dependencies {
     testImplementation("io.kotest:kotest-property:${kotestVersion}")
     testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
     testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:${kotlinxCoroutines}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${kotlinxCoroutines}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:${kotlinxCoroutinesVersion}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${kotlinxCoroutinesVersion}")
 }
 
 tasks.withType<KotlinCompile> {
