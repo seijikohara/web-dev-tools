@@ -20,15 +20,17 @@ class RoutingConfig(
 
     @Bean
     fun apiRouter() = coRouter {
-        val apiBasePath = applicationProperties.apiBasePath
         accept(MediaType.ALL).nest {
             GET("/*", indexHandler::getIndex)
-            GET("${apiBasePath}/ip", ipApiHandler::getIp)
-            GET("${apiBasePath}/rdap/{ip}", rdapApiHandler::getRdap)
-            GET("${apiBasePath}/geo/{ip}", geoApiHandler::getGeo)
-            GET("${apiBasePath}/http-headers", httpHeadersApiHandler::getHttpHeaders)
-            GET("${apiBasePath}/html-entities", htmlEntitiesApiHandler::getHtmlEntities)
+            (applicationProperties.apiBasePath).nest {
+                GET("/ip", ipApiHandler::getIp)
+                GET("/rdap/{ip}", rdapApiHandler::getRdap)
+                GET("/geo/{ip}", geoApiHandler::getGeo)
+                GET("/http-headers", httpHeadersApiHandler::getHttpHeaders)
+                GET("/html-entities", htmlEntitiesApiHandler::getHtmlEntities)
+            }
         }
+
     }
 
 }
