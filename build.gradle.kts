@@ -1,5 +1,6 @@
 import com.github.gradle.node.npm.task.NpmTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("project-report")
@@ -80,8 +81,8 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.getByName<Jar>("jar") {
-    enabled = false
+tasks.withType<BootJar> {
+    archiveFileName.set("app.jar")
 }
 
 /**
