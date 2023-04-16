@@ -90,8 +90,8 @@ tasks.withType<BootJar> {
  */
 
 node {
-    version.set("18.11.0")
-    npmVersion.set("8.19.2")
+    version.set("18.15.0")
+    npmVersion.set("9.6.4")
     download.set(true)
 }
 
@@ -106,7 +106,7 @@ val npmRunBuild by tasks.registering(NpmTask::class) {
     // Before buildWeb can run, installDependencies must run
     dependsOn(npmInstallDependencies)
 
-    args.set(listOf("run", "build", "--", "--dest", "../src/main/resources/static"))
+    args.set(listOf("run", "build-only", "--", "--outDir", "../src/main/resources/static"))
     workingDir.set(File("./frontend"))
 }
 
