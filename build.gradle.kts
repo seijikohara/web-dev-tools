@@ -5,10 +5,10 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 plugins {
     id("project-report")
     id("com.github.node-gradle.node") version "3.5.1"
-    id("org.springframework.boot") version "3.0.4"
+    id("org.springframework.boot") version "3.0.5"
     id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.8.10"
-    kotlin("plugin.spring") version "1.8.10"
+    kotlin("jvm") version "1.8.20"
+    kotlin("plugin.spring") version "1.8.20"
     id("com.github.ben-manes.versions") version "0.46.0"
 }
 
@@ -27,7 +27,7 @@ repositories {
 }
 
 val kotlinxCoroutinesVersion = "1.6.4"
-val kotestVersion = "5.5.5"
+val kotestVersion = "5.6.0"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
