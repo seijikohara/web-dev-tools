@@ -4,11 +4,11 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("project-report")
-    id("com.github.node-gradle.node") version "3.5.1"
-    id("org.springframework.boot") version "3.0.5"
+    id("com.github.node-gradle.node") version "5.0.0"
+    id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
     kotlin("jvm") version "1.8.20"
-    kotlin("plugin.spring") version "1.8.20"
+    kotlin("plugin.spring") version "1.8.21"
     id("com.github.ben-manes.versions") version "0.46.0"
 }
 
@@ -26,8 +26,8 @@ repositories {
     mavenCentral()
 }
 
-val kotlinxCoroutinesVersion = "1.6.4"
-val kotestVersion = "5.6.0"
+val kotlinxCoroutinesVersion = "1.7.1"
+val kotestVersion = "5.6.2"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
@@ -61,7 +61,7 @@ dependencies {
     }
     testImplementation("com.ninja-squad:springmockk:4.0.2")
     testImplementation("com.squareup.okhttp3:mockwebserver")
-    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
     testImplementation("io.kotest:kotest-assertions-core:${kotestVersion}")
     testImplementation("io.kotest:kotest-property:${kotestVersion}")
     testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
@@ -90,8 +90,8 @@ tasks.withType<BootJar> {
  */
 
 node {
-    version.set("18.15.0")
-    npmVersion.set("9.6.4")
+    version.set("18.16.0")
+    npmVersion.set("9.6.6")
     download.set(true)
 }
 
