@@ -7,7 +7,7 @@ plugins {
     id("com.github.node-gradle.node") version "5.0.0"
     id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.8.20"
+    kotlin("jvm") version "1.8.21"
     kotlin("plugin.spring") version "1.8.21"
     id("com.github.ben-manes.versions") version "0.46.0"
 }
