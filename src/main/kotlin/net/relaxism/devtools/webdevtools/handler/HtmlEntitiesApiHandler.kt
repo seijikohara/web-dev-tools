@@ -13,7 +13,9 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 
 @Component
-class HtmlEntitiesApiHandler(@Autowired private val htmlEntityService: HtmlEntityService) {
+class HtmlEntitiesApiHandler(
+    @Autowired private val htmlEntityService: HtmlEntityService
+) {
 
     suspend fun getHtmlEntities(request: ServerRequest): ServerResponse {
         val name = request.queryParam("name").orElse("")

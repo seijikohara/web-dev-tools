@@ -30,7 +30,6 @@ class RoutingConfig(
                 GET("/html-entities", htmlEntitiesApiHandler::getHtmlEntities)
             }
         }
-
     }
 
 }
