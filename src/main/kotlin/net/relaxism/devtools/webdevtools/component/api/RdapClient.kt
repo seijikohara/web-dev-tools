@@ -20,7 +20,6 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.net.URI
 
-@Suppress("UnstableApiUsage")
 @Component
 class RdapClient(
     @Autowired private val logger: Logger,
@@ -28,24 +27,21 @@ class RdapClient(
     @Autowired private val webClient: WebClient
 ) : InitializingBean {
 
-    private lateinit var ipRangeMap: RangeMap<IPAddress, URI>
-    private lateinit var defaultRdapURI: URI
+    private lateinit var rdapUriByIpAddressRange: RangeMap<IPAddress, URI>
 
     override fun afterPropertiesSet() {
         val ipv4RdapJsonResource = applicationProperties.network.rdap.ipv4
         logger.info("[RDAP] Load IPV4 definition : $ipv4RdapJsonResource")
-        val ipv4RangeMap = resolveJson(inputStreamToString(ipv4RdapJsonResource.inputStream))
+        val rdapUriByIpV4AddressRange = resolveJson(inputStreamToString(ipv4RdapJsonResource.inputStream))
 
         val ipv6RdapJsonResource = applicationProperties.network.rdap.ipv6
         logger.info("[RDAP] Load IPV6 definition : $ipv6RdapJsonResource")
-        val ipv6RangeMap = resolveJson(inputStreamToString(ipv6RdapJsonResource.inputStream))
+        val rdapUriByIpV6AddressRange = resolveJson(inputStreamToString(ipv6RdapJsonResource.inputStream))
 
-        val allIPAddressRangeMap = ImmutableRangeMap.builder<IPAddress, URI>()
-            .putAll(ipv4RangeMap)
-            .putAll(ipv6RangeMap)
+        rdapUriByIpAddressRange = ImmutableRangeMap.builder<IPAddress, URI>()
+            .putAll(rdapUriByIpV4AddressRange)
+            .putAll(rdapUriByIpV6AddressRange)
             .build()
-        ipRangeMap = allIPAddressRangeMap
-        defaultRdapURI = allIPAddressRangeMap.asMapOfRanges().values.distinct().sorted()[0]
     }
 
     private fun inputStreamToString(inputStream: InputStream): String {
@@ -72,11 +68,14 @@ class RdapClient(
 
     suspend fun getRdapByIpAddress(ipAddressString: String): Map<String, Any?> = coroutineScope {
         val ipAddress = IPAddressString(ipAddressString).address
-        val uri = PathUtils.concatenate(
-            (ipRangeMap[ipAddress] ?: defaultRdapURI).toString(),
-            "ip",
-            ipAddressString
-        )
+        val rdapUri = rdapUriByIpAddressRange[ipAddress]
+
+        if (rdapUri == null) {
+            logger.warn("[RDAP] Not found RDAP URI for $ipAddressString")
+            throw NotFoundRdapUriException("Not found RDAP URI for $ipAddressString")
+        }
+
+        val uri = PathUtils.concatenate(rdapUriByIpAddressRange[ipAddress].toString(), "ip", ipAddressString)
         logger.info("[RDAP] $uri")
 
         val jsonString = webClient.get()
@@ -93,5 +92,7 @@ class RdapClient(
         val services: List<List<List<String>>>,
         val version: String
     )
+
+    class NotFoundRdapUriException(message: String) : RuntimeException(message)
 
 }
