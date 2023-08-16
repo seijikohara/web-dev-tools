@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
-class HtmlEntityService(@Autowired private val htmlEntityRepository: HtmlEntityRepository) {
+class HtmlEntityService(
+    @Autowired private val htmlEntityRepository: HtmlEntityRepository
+) {
 
     suspend fun findAll(): Flow<HtmlEntity> = htmlEntityRepository.findAll().asFlow()
 

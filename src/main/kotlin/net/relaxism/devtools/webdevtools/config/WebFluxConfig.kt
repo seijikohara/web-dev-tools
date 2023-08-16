@@ -6,7 +6,9 @@ import org.springframework.web.reactive.config.CorsRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
 
 @Configuration
-class WebFluxConfig(@Autowired val applicationProperties: ApplicationProperties) : WebFluxConfigurer {
+class WebFluxConfig(
+    @Autowired val applicationProperties: ApplicationProperties
+) : WebFluxConfigurer {
 
     override fun addCorsMappings(corsRegistry: CorsRegistry) {
         val corsProperties = applicationProperties.cors
