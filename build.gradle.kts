@@ -4,7 +4,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("project-report")
-    id("com.github.node-gradle.node") version "6.0.0"
+    id("com.github.node-gradle.node") version "7.0.0"
     id("org.springframework.boot") version "3.1.2"
     id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version "1.9.0"
