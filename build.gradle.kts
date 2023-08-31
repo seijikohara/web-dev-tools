@@ -91,8 +91,8 @@ tasks.withType<BootJar> {
  */
 
 node {
-    version.set("18.16.0")
-    npmVersion.set("9.6.6")
+    version.set("18.17.1")
+    npmVersion.set("10.0.0")
     download.set(true)
 }
 
