@@ -1,6 +1,9 @@
 package net.relaxism.devtools.webdevtools.service
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitSingle
 import net.relaxism.devtools.webdevtools.repository.HtmlEntity
@@ -19,11 +22,12 @@ class HtmlEntityService(
 
     suspend fun findAll(): Flow<HtmlEntity> = htmlEntityRepository.findAll().asFlow()
 
-    suspend fun findByNameContaining(name: String, pageable: Pageable): Page<HtmlEntity> {
-        return Mono.zip(
-            htmlEntityRepository.findByNameContaining(name, pageable).collectList(),
-            htmlEntityRepository.countByNameContaining(name)
-        ).map { PageImpl(it.t1, pageable, it.t2) }
-            .awaitSingle()
+    suspend fun findByNameContaining(name: String, pageable: Pageable): Page<HtmlEntity> = coroutineScope {
+        val countDeferred = async { htmlEntityRepository.countByNameContaining(name).awaitSingle() }
+        val entitiesDeferred = async { htmlEntityRepository.findByNameContaining(name, pageable).asFlow().toList() }
+        val count = countDeferred.await()
+        val entities = entitiesDeferred.await()
+        PageImpl(entities, pageable, count)
     }
+
 }
