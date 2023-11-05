@@ -4,12 +4,12 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("project-report")
-    id("com.github.node-gradle.node") version "7.0.0"
-    id("org.springframework.boot") version "3.1.4"
+    id("com.github.node-gradle.node") version "7.0.1"
+    id("org.springframework.boot") version "3.1.5"
     id("io.spring.dependency-management") version "1.1.3"
-    kotlin("jvm") version "1.9.10"
-    kotlin("plugin.spring") version "1.9.10"
-    id("com.github.ben-manes.versions") version "0.48.0"
+    kotlin("jvm") version "1.9.20"
+    kotlin("plugin.spring") version "1.9.20"
+    id("com.github.ben-manes.versions") version "0.49.0"
 }
 
 group = "net.relaxism.devtools"
@@ -27,14 +27,14 @@ repositories {
 }
 
 val kotlinxCoroutinesVersion = "1.7.3"
-val kotestVersion = "5.7.2"
+val kotestVersion = "5.8.0"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.github.seancfoley:ipaddress:5.4.0")
-    implementation("com.google.guava:guava:32.1.2-jre")
+    implementation("com.google.guava:guava:32.1.3-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -91,8 +91,8 @@ tasks.withType<BootJar> {
  */
 
 node {
-    version.set("18.17.1")
-    npmVersion.set("10.0.0")
+    version.set("20.9.0")
+    npmVersion.set("10.2.3")
     download.set(true)
 }
 
