@@ -12,7 +12,7 @@
 
 ### Backend
 
-- [Java 17](https://openjdk.java.net/projects/jdk/17/)
+- [Java 21](https://openjdk.org/projects/jdk/21/)
 - [Kotlin](https://kotlinlang.org/)
   - [Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
 - [Gradle](https://docs.gradle.org/current/userguide/userguide.html)
