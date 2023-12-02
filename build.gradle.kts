@@ -5,11 +5,11 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 plugins {
     id("project-report")
     id("com.github.node-gradle.node") version "7.0.1"
-    id("org.springframework.boot") version "3.1.5"
-    id("io.spring.dependency-management") version "1.1.3"
-    kotlin("jvm") version "1.9.20"
-    kotlin("plugin.spring") version "1.9.20"
-    id("com.github.ben-manes.versions") version "0.49.0"
+    id("org.springframework.boot") version "3.2.0"
+    id("io.spring.dependency-management") version "1.1.4"
+    kotlin("jvm") version "1.9.21"
+    kotlin("plugin.spring") version "1.9.21"
+    id("com.github.ben-manes.versions") version "0.50.0"
 }
 
 group = "net.relaxism.devtools"
@@ -55,10 +55,6 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     runtimeOnly("io.r2dbc:r2dbc-h2")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
-        exclude(module = "mockito-core")
-    }
     testImplementation("com.ninja-squad:springmockk:4.0.2")
     testImplementation("com.squareup.okhttp3:mockwebserver")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
@@ -69,6 +65,7 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:${kotlinxCoroutinesVersion}")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${kotlinxCoroutinesVersion}")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<KotlinCompile> {
