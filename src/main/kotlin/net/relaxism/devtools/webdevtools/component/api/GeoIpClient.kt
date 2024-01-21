@@ -18,7 +18,7 @@ class GeoIpClient(
 ) {
 
     suspend fun getGeoByIpAddress(ipAddressString: String): Map<String, Any?> = coroutineScope {
-        val uri = "${applicationProperties.network.geo.uri}/${ipAddressString}"
+        val uri = "${applicationProperties.network.geo.uri}/${ipAddressString}/json"
         logger.info("[GEO] $uri")
 
         val jsonString = webClient.get()

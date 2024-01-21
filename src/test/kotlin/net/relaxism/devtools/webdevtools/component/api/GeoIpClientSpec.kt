@@ -17,7 +17,7 @@ class GeoIpClientSpec(
     init {
         "get : success" {
             runTest {
-                JSONObject(geoIpClient.getGeoByIpAddress("1.1.1.1")).toString() shouldContainJsonKey "$.status"
+                JSONObject(geoIpClient.getGeoByIpAddress("1.1.1.1")).toString() shouldContainJsonKey "$.ip"
             }
         }
     }
