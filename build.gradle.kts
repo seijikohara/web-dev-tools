@@ -33,7 +33,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.github.seancfoley:ipaddress:5.4.0")
+    implementation("com.github.seancfoley:ipaddress:5.4.2")
     implementation("com.google.guava:guava:33.0.0-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
