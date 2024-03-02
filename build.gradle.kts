@@ -4,17 +4,20 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("project-report")
-    id("com.github.node-gradle.node") version "7.0.1"
-    id("org.springframework.boot") version "3.2.2"
+    id("com.github.node-gradle.node") version "7.0.2"
+    id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.1.4"
-    kotlin("jvm") version "1.9.21"
-    kotlin("plugin.spring") version "1.9.21"
-    id("com.github.ben-manes.versions") version "0.50.0"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.spring") version "1.9.22"
+    id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 group = "net.relaxism.devtools"
 version = "1.0.0"
-java.sourceCompatibility = JavaVersion.VERSION_21
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+}
 
 configurations {
     compileOnly {
@@ -26,15 +29,15 @@ repositories {
     mavenCentral()
 }
 
-val kotlinxCoroutinesVersion = "1.7.3"
+val kotlinxCoroutinesVersion = "1.8.0"
 val kotestVersion = "5.8.0"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.github.seancfoley:ipaddress:5.4.0")
-    implementation("com.google.guava:guava:33.0.0-jre")
+    implementation("com.github.seancfoley:ipaddress:5.4.2")
+    implementation("com.google.guava:guava:32.1.3-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
