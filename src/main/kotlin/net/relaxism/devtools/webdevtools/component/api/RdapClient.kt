@@ -6,8 +6,9 @@ import com.google.common.collect.RangeMap
 import inet.ipaddr.IPAddress
 import inet.ipaddr.IPAddressString
 import kotlinx.coroutines.coroutineScope
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
-import net.relaxism.devtools.webdevtools.utils.JsonUtils
 import net.relaxism.devtools.webdevtools.utils.PathUtils
 import org.slf4j.Logger
 import org.springframework.beans.factory.InitializingBean
@@ -50,10 +51,10 @@ class RdapClient(
     }
 
     private fun resolveJson(json: String): RangeMap<IPAddress, URI> {
-        val rdapFileStructure = JsonUtils.fromJson(json, RdapFileStructure::class.java)
+        val rdapFileStructure = Json.decodeFromString<RdapFileStructure>(json)
 
         val ipRangeMapBuilder = ImmutableRangeMap.builder<IPAddress, URI>()
-        rdapFileStructure?.services?.forEach { service ->
+        rdapFileStructure.services.forEach { service ->
             val cidrList = service[0]
             val rdapURI = URI.create(service[1][0])
             cidrList.forEach { cidr ->
@@ -83,9 +84,10 @@ class RdapClient(
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody<String>()
-        JsonUtils.fromJson(jsonString)
+        Json.decodeFromString(jsonString)
     }
 
+    @Serializable
     data class RdapFileStructure(
         val description: String,
         val publication: String,

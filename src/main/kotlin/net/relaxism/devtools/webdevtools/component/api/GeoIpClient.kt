@@ -1,8 +1,8 @@
 package net.relaxism.devtools.webdevtools.component.api
 
 import kotlinx.coroutines.coroutineScope
+import kotlinx.serialization.json.Json
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
-import net.relaxism.devtools.webdevtools.utils.JsonUtils
 import org.slf4j.Logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -26,7 +26,7 @@ class GeoIpClient(
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody<String>()
-        JsonUtils.fromJson(jsonString)
+        Json.decodeFromString(jsonString)
     }
 
 }
