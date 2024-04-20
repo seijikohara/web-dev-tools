@@ -35,6 +35,7 @@ dependencies {
     implementation("com.github.seancfoley:ipaddress:5.5.1")
     implementation("com.google.guava:guava:33.4.6-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+    implementation("org.crac:crac")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
