@@ -5,10 +5,10 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 plugins {
     id("project-report")
     id("com.github.node-gradle.node") version "7.0.2"
-    id("org.springframework.boot") version "3.2.4"
-    id("io.spring.dependency-management") version "1.1.4"
-    kotlin("jvm") version "1.9.23"
-    kotlin("plugin.spring") version "1.9.23"
+    id("org.springframework.boot") version "3.3.1"
+    id("io.spring.dependency-management") version "1.1.6"
+    kotlin("jvm") version "2.0.0"
+    kotlin("plugin.spring") version "2.0.0"
     id("com.github.ben-manes.versions") version "0.51.0"
 }
 
@@ -29,15 +29,15 @@ repositories {
     mavenCentral()
 }
 
-val kotlinxCoroutinesVersion = "1.8.0"
-val kotestVersion = "5.8.1"
+val kotlinxCoroutinesVersion = "1.8.1"
+val kotestVersion = "5.9.1"
 
 dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.github.seancfoley:ipaddress:5.5.0")
-    implementation("com.google.guava:guava:33.1.0-jre")
+    implementation("com.google.guava:guava:33.2.1-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -60,7 +60,7 @@ dependencies {
 
     testImplementation("com.ninja-squad:springmockk:4.0.2")
     testImplementation("com.squareup.okhttp3:mockwebserver")
-    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.3.0")
     testImplementation("io.kotest:kotest-assertions-core:${kotestVersion}")
     testImplementation("io.kotest:kotest-assertions-json:${kotestVersion}")
     testImplementation("io.kotest:kotest-property:${kotestVersion}")
