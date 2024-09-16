@@ -24,7 +24,7 @@ repositories {
     mavenCentral()
 }
 
-val kotlinxCoroutinesVersion = "1.8.1"
+val kotlinxCoroutinesVersion = "1.9.0"
 val kotestVersion = "5.9.1"
 
 dependencies {
