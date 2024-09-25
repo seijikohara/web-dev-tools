@@ -4,7 +4,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 plugins {
     id("project-report")
     id("com.github.node-gradle.node") version "7.0.2"
-    id("org.springframework.boot") version "3.3.3"
+    id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
     kotlin("jvm") version "2.0.20"
     kotlin("plugin.spring") version "2.0.20"
@@ -24,7 +24,7 @@ repositories {
     mavenCentral()
 }
 
-val kotlinxCoroutinesVersion = "1.8.1"
+val kotlinxCoroutinesVersion = "1.9.0"
 val kotestVersion = "5.9.1"
 
 dependencies {
@@ -32,7 +32,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.github.seancfoley:ipaddress:5.5.1")
-    implementation("com.google.guava:guava:33.3.0-jre")
+    implementation("com.google.guava:guava:33.3.1-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
