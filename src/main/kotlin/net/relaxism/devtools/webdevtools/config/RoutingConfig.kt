@@ -1,6 +1,11 @@
 package net.relaxism.devtools.webdevtools.config
 
-import net.relaxism.devtools.webdevtools.handler.*
+import net.relaxism.devtools.webdevtools.handler.GeoApiHandler
+import net.relaxism.devtools.webdevtools.handler.HtmlEntitiesApiHandler
+import net.relaxism.devtools.webdevtools.handler.HttpHeadersApiHandler
+import net.relaxism.devtools.webdevtools.handler.IndexHandler
+import net.relaxism.devtools.webdevtools.handler.IpApiHandler
+import net.relaxism.devtools.webdevtools.handler.RdapApiHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
