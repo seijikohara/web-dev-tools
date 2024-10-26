@@ -1,6 +1,10 @@
 name: CI
 
-on: push
+on:
+  workflow_run:
+    workflows: ["Format with Spotless"]
+    types:
+      - completed
 
 jobs:
   build:
