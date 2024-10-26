@@ -8,9 +8,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class IndexHandlerSpec(
-    @Autowired private val webTestClient: WebTestClient
+    @Autowired private val webTestClient: WebTestClient,
 ) : StringSpec() {
-
     init {
         "get response" {
             webTestClient.get()
@@ -20,5 +19,4 @@ class IndexHandlerSpec(
                 .expectHeader().contentType(MediaType.TEXT_HTML)
         }
     }
-
 }

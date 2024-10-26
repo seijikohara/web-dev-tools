@@ -14,16 +14,16 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 
 @Component
 class HtmlEntitiesApiHandler(
-    @Autowired private val htmlEntityService: HtmlEntityService
+    @Autowired private val htmlEntityService: HtmlEntityService,
 ) {
-
     suspend fun getHtmlEntities(request: ServerRequest): ServerResponse {
         val name = request.queryParam("name").orElse("")
-        val pageable: Pageable = PageRequest.of(
-            request.queryParam("page").map { Integer.parseInt(it) }.orElse(0),
-            request.queryParam("size").map { Integer.parseInt(it) }.orElse(50),
-            Sort.by(Sort.Order.asc("id"))
-        )
+        val pageable: Pageable =
+            PageRequest.of(
+                request.queryParam("page").map { Integer.parseInt(it) }.orElse(0),
+                request.queryParam("size").map { Integer.parseInt(it) }.orElse(50),
+                Sort.by(Sort.Order.asc("id")),
+            )
         val pageHtmlEntities = htmlEntityService.findByNameContaining(name, pageable)
 
         return ServerResponse.ok()
@@ -37,12 +37,12 @@ class HtmlEntitiesApiHandler(
                             it.code2,
                             it.standard,
                             it.dtd,
-                            it.description
+                            it.description,
                         )
                     },
                     pageHtmlEntities.pageable,
-                    pageHtmlEntities.totalElements
-                )
+                    pageHtmlEntities.totalElements,
+                ),
             )
     }
 
@@ -55,7 +55,6 @@ class HtmlEntitiesApiHandler(
         val description: String?,
     ) {
         val entityReference: String
-            get() = "&#${code};" + if (code2 != null) "&#${code2};" else ""
+            get() = "&#$code;" + if (code2 != null) "&#$code2;" else ""
     }
-
 }

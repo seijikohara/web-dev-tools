@@ -13,7 +13,6 @@ class RdapServiceSpec(
     @MockkBean private val rdapClient: RdapClient,
     @Autowired private val rdapService: RdapService,
 ) : StringSpec() {
-
     init {
         "getRdapByIpAddress" {
             val ipAddress = "192.0.2.1"
@@ -26,5 +25,4 @@ class RdapServiceSpec(
             rdapService.getRdapByIpAddress(ipAddress) shouldBe expected
         }
     }
-
 }

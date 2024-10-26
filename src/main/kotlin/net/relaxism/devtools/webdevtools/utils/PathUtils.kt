@@ -1,7 +1,6 @@
 package net.relaxism.devtools.webdevtools.utils
 
 object PathUtils {
-
     fun concatenate(vararg paths: String): String {
         if (paths.isEmpty()) {
             return ""
@@ -13,5 +12,4 @@ object PathUtils {
             paths.joinToString("/") { it.trim('/') } +
             (if (hasSlashTail) "/" else "")
     }
-
 }

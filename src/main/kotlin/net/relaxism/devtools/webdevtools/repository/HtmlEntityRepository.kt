@@ -22,9 +22,10 @@ data class HtmlEntity(
 
 @Repository
 interface HtmlEntityRepository : ReactiveCrudRepository<HtmlEntity, Long> {
-
     fun countByNameContaining(name: String): Mono<Long>
 
-    fun findByNameContaining(name: String, pageable: Pageable): Flux<HtmlEntity>
-
+    fun findByNameContaining(
+        name: String,
+        pageable: Pageable,
+    ): Flux<HtmlEntity>
 }

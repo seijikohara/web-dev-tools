@@ -14,9 +14,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class GeoApiHandlerSpec(
     @MockkBean private val geoIpService: GeoIpService,
     @Autowired private val applicationProperties: ApplicationProperties,
-    @Autowired private val webTestClient: WebTestClient
+    @Autowired private val webTestClient: WebTestClient,
 ) : StringSpec() {
-
     init {
         val ipAddress = "192.0.2.1"
 
@@ -26,7 +25,7 @@ class GeoApiHandlerSpec(
             } returns mapOf<String, Any?>("key1" to "value1")
 
             webTestClient.get()
-                .uri("${applicationProperties.apiBasePath}/geo/${ipAddress}")
+                .uri("${applicationProperties.apiBasePath}/geo/$ipAddress")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk
@@ -35,5 +34,4 @@ class GeoApiHandlerSpec(
                 .json("{\"geo\":{\"key1\":\"value1\"}}")
         }
     }
-
 }

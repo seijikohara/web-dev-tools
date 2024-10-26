@@ -12,9 +12,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class HttpHeadersApiHandlerSpec(
     @Autowired private val applicationProperties: ApplicationProperties,
     @Autowired private val webTestClient: WebTestClient,
-    @Value("\${local.server.port}") private val localServerPort: Int
+    @Value("\${local.server.port}") private val localServerPort: Int,
 ) : StringSpec() {
-
     init {
         "get response" {
             val customHeaderName = "Custom-Header"
@@ -28,12 +27,11 @@ class HttpHeadersApiHandlerSpec(
                 .expectStatus().isOk
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                .jsonPath("$.headers[2].value").isEqualTo("localhost:${localServerPort}")
+                .jsonPath("$.headers[2].value").isEqualTo("localhost:$localServerPort")
                 .jsonPath("$.headers[4].name").isEqualTo(customHeaderName)
                 .jsonPath("$.headers[4].value").isEqualTo(customHeaderValue1)
                 .jsonPath("$.headers[5].name").isEqualTo(customHeaderName)
                 .jsonPath("$.headers[5].value").isEqualTo(customHeaderValue2)
         }
     }
-
 }

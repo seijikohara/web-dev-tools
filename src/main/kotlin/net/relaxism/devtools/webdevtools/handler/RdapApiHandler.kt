@@ -12,9 +12,8 @@ import org.springframework.web.reactive.function.server.buildAndAwait
 
 @Component
 class RdapApiHandler(
-    @Autowired private val rdapService: RdapService
+    @Autowired private val rdapService: RdapService,
 ) {
-
     suspend fun getRdap(request: ServerRequest): ServerResponse {
         val ipAddress = request.pathVariable("ip")
         return try {
@@ -29,5 +28,4 @@ class RdapApiHandler(
     }
 
     data class Response(val rdap: Map<String, Any?>?)
-
 }

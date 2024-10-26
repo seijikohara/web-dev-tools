@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest
 class GeoIpClientSpec(
     @Autowired private val geoIpClient: GeoIpClient,
 ) : StringSpec() {
-
     init {
         "get : success" {
             runTest {
@@ -19,5 +18,4 @@ class GeoIpClientSpec(
             }
         }
     }
-
 }

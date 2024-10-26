@@ -16,17 +16,19 @@ import org.springframework.stereotype.Service
 
 @Service
 class HtmlEntityService(
-    @Autowired private val htmlEntityRepository: HtmlEntityRepository
+    @Autowired private val htmlEntityRepository: HtmlEntityRepository,
 ) {
-
     suspend fun findAll(): Flow<HtmlEntity> = htmlEntityRepository.findAll().asFlow()
 
-    suspend fun findByNameContaining(name: String, pageable: Pageable): Page<HtmlEntity> = coroutineScope {
-        val countDeferred = async { htmlEntityRepository.countByNameContaining(name).awaitSingle() }
-        val entitiesDeferred = async { htmlEntityRepository.findByNameContaining(name, pageable).asFlow().toList() }
-        val count = countDeferred.await()
-        val entities = entitiesDeferred.await()
-        PageImpl(entities, pageable, count)
-    }
-
+    suspend fun findByNameContaining(
+        name: String,
+        pageable: Pageable,
+    ): Page<HtmlEntity> =
+        coroutineScope {
+            val countDeferred = async { htmlEntityRepository.countByNameContaining(name).awaitSingle() }
+            val entitiesDeferred = async { htmlEntityRepository.findByNameContaining(name, pageable).asFlow().toList() }
+            val count = countDeferred.await()
+            val entities = entitiesDeferred.await()
+            PageImpl(entities, pageable, count)
+        }
 }

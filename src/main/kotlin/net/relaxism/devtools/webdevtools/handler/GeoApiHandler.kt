@@ -10,9 +10,8 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 
 @Component
 class GeoApiHandler(
-    @Autowired private val geoIpService: GeoIpService
+    @Autowired private val geoIpService: GeoIpService,
 ) {
-
     suspend fun getGeo(request: ServerRequest): ServerResponse {
         val ipAddress = request.pathVariable("ip")
         val clientResponse = geoIpService.getGeoFromIpAddress(ipAddress)
@@ -23,5 +22,4 @@ class GeoApiHandler(
     }
 
     data class Response(val geo: Map<String, Any?>?)
-
 }

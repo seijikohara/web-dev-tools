@@ -22,19 +22,18 @@ class RoutingConfig(
     @Autowired private val httpHeadersApiHandler: HttpHeadersApiHandler,
     @Autowired private val htmlEntitiesApiHandler: HtmlEntitiesApiHandler,
 ) {
-
     @Bean
-    fun apiRouter() = coRouter {
-        accept(MediaType.ALL).nest {
-            GET("/*", indexHandler::getIndex)
-            (applicationProperties.apiBasePath).nest {
-                GET("/ip", ipApiHandler::getIp)
-                GET("/rdap/{ip}", rdapApiHandler::getRdap)
-                GET("/geo/{ip}", geoApiHandler::getGeo)
-                GET("/http-headers", httpHeadersApiHandler::getHttpHeaders)
-                GET("/html-entities", htmlEntitiesApiHandler::getHtmlEntities)
+    fun apiRouter() =
+        coRouter {
+            accept(MediaType.ALL).nest {
+                GET("/*", indexHandler::getIndex)
+                (applicationProperties.apiBasePath).nest {
+                    GET("/ip", ipApiHandler::getIp)
+                    GET("/rdap/{ip}", rdapApiHandler::getRdap)
+                    GET("/geo/{ip}", geoApiHandler::getGeo)
+                    GET("/http-headers", httpHeadersApiHandler::getHttpHeaders)
+                    GET("/html-entities", htmlEntitiesApiHandler::getHtmlEntities)
+                }
             }
         }
-    }
-
 }

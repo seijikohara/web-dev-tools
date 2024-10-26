@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest
 class RdapClientSpec(
     @Autowired private val rdapClient: RdapClient,
 ) : StringSpec() {
-
     init {
         "get : success" {
             runTest {
@@ -28,5 +27,4 @@ class RdapClientSpec(
             }
         }
     }
-
 }

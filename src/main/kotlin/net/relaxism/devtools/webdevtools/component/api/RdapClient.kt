@@ -24,9 +24,8 @@ import java.net.URI
 class RdapClient(
     @Autowired private val logger: Logger,
     @Autowired private val applicationProperties: ApplicationProperties,
-    @Autowired private val webClient: WebClient
+    @Autowired private val webClient: WebClient,
 ) : InitializingBean {
-
     private lateinit var rdapUriByIpAddressRange: RangeMap<IPAddress, URI>
 
     override fun afterPropertiesSet() {
@@ -38,10 +37,11 @@ class RdapClient(
         logger.info("[RDAP] Load IPV6 definition : $ipv6RdapJsonResource")
         val rdapUriByIpV6AddressRange = resolveJson(inputStreamToString(ipv6RdapJsonResource.inputStream))
 
-        rdapUriByIpAddressRange = ImmutableRangeMap.builder<IPAddress, URI>()
-            .putAll(rdapUriByIpV4AddressRange)
-            .putAll(rdapUriByIpV6AddressRange)
-            .build()
+        rdapUriByIpAddressRange =
+            ImmutableRangeMap.builder<IPAddress, URI>()
+                .putAll(rdapUriByIpV4AddressRange)
+                .putAll(rdapUriByIpV6AddressRange)
+                .build()
     }
 
     private fun inputStreamToString(inputStream: InputStream): String {
@@ -66,33 +66,34 @@ class RdapClient(
         return ipRangeMapBuilder.build()
     }
 
-    suspend fun getRdapByIpAddress(ipAddressString: String): Map<String, Any?> = coroutineScope {
-        val ipAddress = IPAddressString(ipAddressString).address
-        val rdapUri = rdapUriByIpAddressRange[ipAddress]
+    suspend fun getRdapByIpAddress(ipAddressString: String): Map<String, Any?> =
+        coroutineScope {
+            val ipAddress = IPAddressString(ipAddressString).address
+            val rdapUri = rdapUriByIpAddressRange[ipAddress]
 
-        if (rdapUri == null) {
-            logger.warn("[RDAP] Not found RDAP URI for $ipAddressString")
-            throw NotFoundRdapUriException("Not found RDAP URI for $ipAddressString")
+            if (rdapUri == null) {
+                logger.warn("[RDAP] Not found RDAP URI for $ipAddressString")
+                throw NotFoundRdapUriException("Not found RDAP URI for $ipAddressString")
+            }
+
+            val uri = PathUtils.concatenate(rdapUriByIpAddressRange[ipAddress].toString(), "ip", ipAddressString)
+            logger.info("[RDAP] $uri")
+
+            val jsonString =
+                webClient.get()
+                    .uri(uri)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .awaitBody<String>()
+            JsonUtils.fromJson(jsonString)
         }
-
-        val uri = PathUtils.concatenate(rdapUriByIpAddressRange[ipAddress].toString(), "ip", ipAddressString)
-        logger.info("[RDAP] $uri")
-
-        val jsonString = webClient.get()
-            .uri(uri)
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .awaitBody<String>()
-        JsonUtils.fromJson(jsonString)
-    }
 
     data class RdapFileStructure(
         val description: String,
         val publication: String,
         val services: List<List<List<String>>>,
-        val version: String
+        val version: String,
     )
 
     class NotFoundRdapUriException(message: String) : RuntimeException(message)
-
 }

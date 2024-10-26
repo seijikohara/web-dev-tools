@@ -18,9 +18,8 @@ import reactor.core.publisher.Mono
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class HtmlEntityServiceSpec(
     @MockkBean private val htmlEntityRepository: HtmlEntityRepository,
-    @Autowired private val htmlEntityService: HtmlEntityService
+    @Autowired private val htmlEntityService: HtmlEntityService,
 ) : StringSpec() {
-
     init {
         "findAll : success" {
             val entity1 = HtmlEntity(1, "name1", 1, 1, "standard1", "dtd1", "desc1")
@@ -44,12 +43,11 @@ class HtmlEntityServiceSpec(
             every {
                 htmlEntityRepository.findByNameContaining(
                     name = any(),
-                    pageable = any()
+                    pageable = any(),
                 )
             } returns Flux.just(entity1, entity2)
 
             htmlEntityService.findByNameContaining("a", pageable).toList() shouldBe listOf(entity1, entity2)
         }
     }
-
 }

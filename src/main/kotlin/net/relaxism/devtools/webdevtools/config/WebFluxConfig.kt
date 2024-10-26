@@ -7,9 +7,8 @@ import org.springframework.web.reactive.config.WebFluxConfigurer
 
 @Configuration
 class WebFluxConfig(
-    @Autowired val applicationProperties: ApplicationProperties
+    @Autowired val applicationProperties: ApplicationProperties,
 ) : WebFluxConfigurer {
-
     override fun addCorsMappings(corsRegistry: CorsRegistry) {
         val corsProperties = applicationProperties.cors
         corsRegistry.addMapping(corsProperties.mappingPathPattern)
@@ -17,5 +16,4 @@ class WebFluxConfig(
             .allowedMethods(*corsProperties.allowedMethods.toTypedArray())
             .maxAge(corsProperties.maxAge)
     }
-
 }

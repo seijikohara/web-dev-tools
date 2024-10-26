@@ -10,9 +10,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class IpApiHandlerSpec(
     @Autowired private val applicationProperties: ApplicationProperties,
-    @Autowired private val webTestClient: WebTestClient
+    @Autowired private val webTestClient: WebTestClient,
 ) : StringSpec() {
-
     init {
         "get response" {
             val ipAddress = "192.0.2.1"
@@ -28,5 +27,4 @@ class IpApiHandlerSpec(
                 .json("{\"ipAddress\":\"${ipAddress}\",\"hostName\":\"localhost\"}")
         }
     }
-
 }

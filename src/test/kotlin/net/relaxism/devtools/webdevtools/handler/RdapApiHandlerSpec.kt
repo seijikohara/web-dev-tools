@@ -14,9 +14,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class RdapApiHandlerSpec(
     @MockkBean private val rdapService: RdapService,
     @Autowired private val applicationProperties: ApplicationProperties,
-    @Autowired private val webTestClient: WebTestClient
+    @Autowired private val webTestClient: WebTestClient,
 ) : StringSpec() {
-
     init {
         val ipAddress = "192.0.2.1"
 
@@ -26,7 +25,7 @@ class RdapApiHandlerSpec(
             } returns mapOf<String, Any?>("key1" to "value1")
 
             webTestClient.get()
-                .uri("${applicationProperties.apiBasePath}/rdap/${ipAddress}")
+                .uri("${applicationProperties.apiBasePath}/rdap/$ipAddress")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk
@@ -35,5 +34,4 @@ class RdapApiHandlerSpec(
                 .json("{\"rdap\":{\"key1\":\"value1\"}}")
         }
     }
-
 }

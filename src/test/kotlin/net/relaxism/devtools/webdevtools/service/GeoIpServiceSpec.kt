@@ -11,9 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class GeoIpServiceSpec(
     @MockkBean private val geoIpClient: GeoIpClient,
-    @Autowired private val geoIpService: GeoIpService
+    @Autowired private val geoIpService: GeoIpService,
 ) : StringSpec() {
-
     init {
         "getGeoByIpAddress" {
             val ipAddress = "192.0.2.1"
@@ -26,5 +25,4 @@ class GeoIpServiceSpec(
             geoIpService.getGeoFromIpAddress(ipAddress) shouldBe expected
         }
     }
-
 }

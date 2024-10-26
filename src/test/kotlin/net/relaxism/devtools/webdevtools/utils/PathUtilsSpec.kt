@@ -8,7 +8,6 @@ import io.kotest.data.table
 import io.kotest.matchers.shouldBe
 
 class PathUtilsSpec : StringSpec() {
-
     init {
         "concatenate" {
             forAll(
@@ -19,11 +18,10 @@ class PathUtilsSpec : StringSpec() {
                     row(arrayOf("/a", "/b", "/c"), "/a/b/c"),
                     row(arrayOf("a/", "b/", "c/"), "a/b/c/"),
                     row(arrayOf("/a/", "/b/", "/c/"), "/a/b/c/"),
-                )
+                ),
             ) { value: Array<String>, expected: String ->
                 PathUtils.concatenate(*value) shouldBe expected
             }
         }
     }
-
 }

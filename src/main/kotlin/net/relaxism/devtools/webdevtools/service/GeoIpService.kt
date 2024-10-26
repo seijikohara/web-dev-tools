@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class GeoIpService(
-    @Autowired private val geoIpClient: GeoIpClient
+    @Autowired private val geoIpClient: GeoIpClient,
 ) {
-
     suspend fun getGeoFromIpAddress(ipAddress: String) = geoIpClient.getGeoByIpAddress(ipAddress)
-
 }

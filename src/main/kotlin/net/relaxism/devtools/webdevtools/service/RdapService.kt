@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class RdapService(
-    @Autowired private val rdapClient: RdapClient
+    @Autowired private val rdapClient: RdapClient,
 ) {
-
     suspend fun getRdapByIpAddress(ipAddress: String) = rdapClient.getRdapByIpAddress(ipAddress)
-
 }

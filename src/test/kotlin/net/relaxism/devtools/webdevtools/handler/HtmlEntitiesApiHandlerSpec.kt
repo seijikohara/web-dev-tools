@@ -21,7 +21,6 @@ class HtmlEntitiesApiHandlerSpec(
     @Autowired private val applicationProperties: ApplicationProperties,
     @Autowired private val webTestClient: WebTestClient,
 ) : StringSpec() {
-
     init {
         "get response" {
             val entity1 = HtmlEntity(1, "name1", 1, 1, "standard1", "dtd1", "desc1")
@@ -30,11 +29,12 @@ class HtmlEntitiesApiHandlerSpec(
 
             coEvery {
                 htmlEntityService.findByNameContaining(name = any(), pageable = any())
-            } returns PageImpl(
-                listOf(entity1, entity2),
-                pageable,
-                2
-            )
+            } returns
+                PageImpl(
+                    listOf(entity1, entity2),
+                    pageable,
+                    2,
+                )
 
             webTestClient.get()
                 .uri("${applicationProperties.apiBasePath}/html-entities?name=&page=0&size=10")
@@ -48,5 +48,4 @@ class HtmlEntitiesApiHandlerSpec(
                 .jsonPath("$.totalElements").isEqualTo(2)
         }
     }
-
 }

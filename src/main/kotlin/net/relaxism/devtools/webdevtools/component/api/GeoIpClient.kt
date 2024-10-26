@@ -14,19 +14,19 @@ import org.springframework.web.reactive.function.client.awaitBody
 class GeoIpClient(
     @Autowired private val logger: Logger,
     @Autowired private val applicationProperties: ApplicationProperties,
-    @Autowired private val webClient: WebClient
+    @Autowired private val webClient: WebClient,
 ) {
+    suspend fun getGeoByIpAddress(ipAddressString: String): Map<String, Any?> =
+        coroutineScope {
+            val uri = "${applicationProperties.network.geo.uri}/$ipAddressString/json"
+            logger.info("[GEO] $uri")
 
-    suspend fun getGeoByIpAddress(ipAddressString: String): Map<String, Any?> = coroutineScope {
-        val uri = "${applicationProperties.network.geo.uri}/${ipAddressString}/json"
-        logger.info("[GEO] $uri")
-
-        val jsonString = webClient.get()
-            .uri(uri)
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .awaitBody<String>()
-        JsonUtils.fromJson(jsonString)
-    }
-
+            val jsonString =
+                webClient.get()
+                    .uri(uri)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .awaitBody<String>()
+            JsonUtils.fromJson(jsonString)
+        }
 }
