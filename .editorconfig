@@ -9,5 +9,5 @@ trim_trailing_whitespace = true
 [*.md]
 trim_trailing_whitespace = false
 
-[{*.gradle,*.java,*.kt,*.kts,*.xml}]
+[*.{kt,kts,xml}]
 indent_size = 4
