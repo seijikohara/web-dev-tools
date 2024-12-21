@@ -95,8 +95,8 @@ spotless {
  */
 
 node {
-    version.set("20.9.0")
-    npmVersion.set("10.2.3")
+    version.set("22.12.0")
+    npmVersion.set("11.0.0")
     download.set(true)
 }
 
