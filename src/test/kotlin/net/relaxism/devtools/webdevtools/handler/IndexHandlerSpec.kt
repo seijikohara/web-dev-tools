@@ -12,11 +12,14 @@ class IndexHandlerSpec(
 ) : StringSpec() {
     init {
         "get response" {
-            webTestClient.get()
+            webTestClient
+                .get()
                 .uri("/")
                 .exchange()
-                .expectStatus().isOk
-                .expectHeader().contentType(MediaType.TEXT_HTML)
+                .expectStatus()
+                .isOk
+                .expectHeader()
+                .contentType(MediaType.TEXT_HTML)
         }
     }
 }

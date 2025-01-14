@@ -26,7 +26,8 @@ class HtmlEntitiesApiHandler(
             )
         val pageHtmlEntities = htmlEntityService.findByNameContaining(name, pageable)
 
-        return ServerResponse.ok()
+        return ServerResponse
+            .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValueAndAwait(
                 PageImpl(

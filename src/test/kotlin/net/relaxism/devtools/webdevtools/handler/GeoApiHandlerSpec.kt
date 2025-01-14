@@ -24,12 +24,15 @@ class GeoApiHandlerSpec(
                 geoIpService.getGeoFromIpAddress(ipAddress)
             } returns mapOf<String, Any?>("key1" to "value1")
 
-            webTestClient.get()
+            webTestClient
+                .get()
                 .uri("${applicationProperties.apiBasePath}/geo/$ipAddress")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectStatus()
+                .isOk
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .json("{\"geo\":{\"key1\":\"value1\"}}")
         }

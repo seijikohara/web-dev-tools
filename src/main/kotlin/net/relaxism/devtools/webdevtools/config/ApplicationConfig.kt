@@ -18,17 +18,16 @@ class ApplicationConfiguration(
 ) {
     @Bean
     fun webClient(): WebClient =
-        WebClient.builder()
+        WebClient
+            .builder()
             .filter { clientRequest, next ->
                 logger.info("External Request to ${clientRequest.method()} ${clientRequest.url()} headers=${clientRequest.headers()}")
                 next.exchange(clientRequest)
-            }
-            .clientConnector(
+            }.clientConnector(
                 ReactorClientHttpConnector(
                     HttpClient.create().followRedirect(true),
                 ),
-            )
-            .build()
+            ).build()
 }
 
 @ConfigurationProperties(prefix = "application")
@@ -49,8 +48,13 @@ data class ApplicationProperties(
         val rdap: RdapProperties,
         val geo: GeoProperties,
     ) {
-        data class RdapProperties(val ipv4: Resource, val ipv6: Resource)
+        data class RdapProperties(
+            val ipv4: Resource,
+            val ipv6: Resource,
+        )
 
-        data class GeoProperties(val uri: String)
+        data class GeoProperties(
+            val uri: String,
+        )
     }
 }

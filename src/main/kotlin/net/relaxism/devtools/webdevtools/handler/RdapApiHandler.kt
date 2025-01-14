@@ -18,14 +18,18 @@ class RdapApiHandler(
         val ipAddress = request.pathVariable("ip")
         return try {
             val clientResponse = rdapService.getRdapByIpAddress(ipAddress)
-            ServerResponse.ok()
+            ServerResponse
+                .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValueAndAwait(Response(rdap = clientResponse))
         } catch (e: RdapClient.NotFoundRdapUriException) {
-            ServerResponse.notFound()
+            ServerResponse
+                .notFound()
                 .buildAndAwait()
         }
     }
 
-    data class Response(val rdap: Map<String, Any?>?)
+    data class Response(
+        val rdap: Map<String, Any?>?,
+    )
 }

@@ -16,13 +16,16 @@ class IpApiHandlerSpec(
         "get response" {
             val ipAddress = "192.0.2.1"
 
-            webTestClient.get()
+            webTestClient
+                .get()
                 .uri("${applicationProperties.apiBasePath}/ip")
                 .header("X-Forwarded-For", ipAddress)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectStatus()
+                .isOk
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .json("{\"ipAddress\":\"${ipAddress}\",\"hostName\":\"localhost\"}")
         }

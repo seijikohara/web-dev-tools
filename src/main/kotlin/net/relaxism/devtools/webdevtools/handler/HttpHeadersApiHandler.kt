@@ -18,12 +18,18 @@ class HttpHeadersApiHandler {
 
         val response = Response(headers)
 
-        return ServerResponse.ok()
+        return ServerResponse
+            .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValueAndAwait(response)
     }
 
-    data class Response(val headers: List<Header>) {
-        data class Header(val name: String, val value: String)
+    data class Response(
+        val headers: List<Header>,
+    ) {
+        data class Header(
+            val name: String,
+            val value: String,
+        )
     }
 }
