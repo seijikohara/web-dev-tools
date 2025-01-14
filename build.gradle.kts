@@ -5,10 +5,10 @@ plugins {
     id("project-report")
     id("com.github.node-gradle.node") version "7.1.0"
     id("org.springframework.boot") version "3.4.1"
-    id("io.spring.dependency-management") version "1.1.6"
+    id("io.spring.dependency-management") version "1.1.7"
     kotlin("jvm") version "2.0.21"
     kotlin("plugin.spring") version "2.0.21"
-    id("com.diffplug.spotless") version "6.25.0"
+    id("com.diffplug.spotless") version "7.0.1"
     id("com.github.ben-manes.versions") version "0.51.0"
 }
 
@@ -25,7 +25,7 @@ repositories {
     mavenCentral()
 }
 
-val kotlinxCoroutinesVersion = "1.9.0"
+val kotlinxCoroutinesVersion = "1.10.1"
 val kotestVersion = "5.9.1"
 
 dependencies {
@@ -33,7 +33,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.github.seancfoley:ipaddress:5.5.1")
-    implementation("com.google.guava:guava:33.3.1-jre")
+    implementation("com.google.guava:guava:33.4.0-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
