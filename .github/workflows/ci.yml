@@ -1,13 +1,40 @@
 name: CI
 
 on:
-  workflow_run:
-    workflows: ["Format with Spotless"]
-    types:
-      - completed
+  push:
+
+permissions:
+  contents: write
 
 jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensure full history is available for commit
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: gradle
+      - name: Run Spotless Apply
+        run: ./gradlew spotlessApply --no-daemon
+      - name: Commit changes if any
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          if ! git diff --cached --exit-code; then
+            git commit -m "Apply code formatting with Spotless"
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
+    needs: format
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -24,6 +51,7 @@ jobs:
         run: ./gradlew clean npmRunBuild build --no-daemon
   build-docker:
     if: github.ref == 'refs/heads/main'
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
