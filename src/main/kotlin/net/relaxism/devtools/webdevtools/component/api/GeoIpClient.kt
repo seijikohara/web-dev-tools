@@ -22,7 +22,8 @@ class GeoIpClient(
             logger.info("[GEO] $uri")
 
             val jsonString =
-                webClient.get()
+                webClient
+                    .get()
                     .uri(uri)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()

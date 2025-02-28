@@ -11,7 +11,8 @@ class WebFluxConfig(
 ) : WebFluxConfigurer {
     override fun addCorsMappings(corsRegistry: CorsRegistry) {
         val corsProperties = applicationProperties.cors
-        corsRegistry.addMapping(corsProperties.mappingPathPattern)
+        corsRegistry
+            .addMapping(corsProperties.mappingPathPattern)
             .allowedOrigins(*corsProperties.allowedOrigins.toTypedArray())
             .allowedMethods(*corsProperties.allowedMethods.toTypedArray())
             .maxAge(corsProperties.maxAge)

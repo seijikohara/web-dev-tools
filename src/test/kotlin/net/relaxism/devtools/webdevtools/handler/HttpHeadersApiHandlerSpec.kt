@@ -19,19 +19,27 @@ class HttpHeadersApiHandlerSpec(
             val customHeaderName = "Custom-Header"
             val customHeaderValue1 = "value1"
             val customHeaderValue2 = "value2"
-            webTestClient.get()
+            webTestClient
+                .get()
                 .uri("${applicationProperties.apiBasePath}/http-headers")
                 .header(customHeaderName, customHeaderValue1, customHeaderValue2)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectStatus()
+                .isOk
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                .jsonPath("$.headers[2].value").isEqualTo("localhost:$localServerPort")
-                .jsonPath("$.headers[4].name").isEqualTo(customHeaderName)
-                .jsonPath("$.headers[4].value").isEqualTo(customHeaderValue1)
-                .jsonPath("$.headers[5].name").isEqualTo(customHeaderName)
-                .jsonPath("$.headers[5].value").isEqualTo(customHeaderValue2)
+                .jsonPath("$.headers[2].value")
+                .isEqualTo("localhost:$localServerPort")
+                .jsonPath("$.headers[4].name")
+                .isEqualTo(customHeaderName)
+                .jsonPath("$.headers[4].value")
+                .isEqualTo(customHeaderValue1)
+                .jsonPath("$.headers[5].name")
+                .isEqualTo(customHeaderName)
+                .jsonPath("$.headers[5].value")
+                .isEqualTo(customHeaderValue2)
         }
     }
 }

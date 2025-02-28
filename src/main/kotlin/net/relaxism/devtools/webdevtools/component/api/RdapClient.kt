@@ -38,7 +38,8 @@ class RdapClient(
         val rdapUriByIpV6AddressRange = resolveJson(inputStreamToString(ipv6RdapJsonResource.inputStream))
 
         rdapUriByIpAddressRange =
-            ImmutableRangeMap.builder<IPAddress, URI>()
+            ImmutableRangeMap
+                .builder<IPAddress, URI>()
                 .putAll(rdapUriByIpV4AddressRange)
                 .putAll(rdapUriByIpV6AddressRange)
                 .build()
@@ -80,7 +81,8 @@ class RdapClient(
             logger.info("[RDAP] $uri")
 
             val jsonString =
-                webClient.get()
+                webClient
+                    .get()
                     .uri(uri)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
@@ -95,5 +97,7 @@ class RdapClient(
         val version: String,
     )
 
-    class NotFoundRdapUriException(message: String) : RuntimeException(message)
+    class NotFoundRdapUriException(
+        message: String,
+    ) : RuntimeException(message)
 }

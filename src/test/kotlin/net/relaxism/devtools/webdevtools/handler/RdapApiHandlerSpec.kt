@@ -24,12 +24,15 @@ class RdapApiHandlerSpec(
                 rdapService.getRdapByIpAddress(ipAddress)
             } returns mapOf<String, Any?>("key1" to "value1")
 
-            webTestClient.get()
+            webTestClient
+                .get()
                 .uri("${applicationProperties.apiBasePath}/rdap/$ipAddress")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectStatus()
+                .isOk
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .json("{\"rdap\":{\"key1\":\"value1\"}}")
         }

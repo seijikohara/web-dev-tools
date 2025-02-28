@@ -16,10 +16,13 @@ class GeoApiHandler(
         val ipAddress = request.pathVariable("ip")
         val clientResponse = geoIpService.getGeoFromIpAddress(ipAddress)
 
-        return ServerResponse.ok()
+        return ServerResponse
+            .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValueAndAwait(Response(geo = clientResponse))
     }
 
-    data class Response(val geo: Map<String, Any?>?)
+    data class Response(
+        val geo: Map<String, Any?>?,
+    )
 }

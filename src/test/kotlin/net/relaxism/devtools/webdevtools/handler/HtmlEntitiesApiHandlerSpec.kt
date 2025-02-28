@@ -36,16 +36,22 @@ class HtmlEntitiesApiHandlerSpec(
                     2,
                 )
 
-            webTestClient.get()
+            webTestClient
+                .get()
                 .uri("${applicationProperties.apiBasePath}/html-entities?name=&page=0&size=10")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectStatus()
+                .isOk
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                .jsonPath("$.content[0].name").isEqualTo(entity1.name)
-                .jsonPath("$.content[1].name").isEqualTo(entity2.name)
-                .jsonPath("$.totalElements").isEqualTo(2)
+                .jsonPath("$.content[0].name")
+                .isEqualTo(entity1.name)
+                .jsonPath("$.content[1].name")
+                .isEqualTo(entity2.name)
+                .jsonPath("$.totalElements")
+                .isEqualTo(2)
         }
     }
 }
