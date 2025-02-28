@@ -4,12 +4,12 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 plugins {
     id("project-report")
     id("com.github.node-gradle.node") version "7.1.0"
-    id("org.springframework.boot") version "3.4.1"
+    id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("jvm") version "2.0.21"
     kotlin("plugin.spring") version "2.0.21"
-    id("com.diffplug.spotless") version "7.0.1"
-    id("com.github.ben-manes.versions") version "0.51.0"
+    id("com.diffplug.spotless") version "7.0.2"
+    id("com.github.ben-manes.versions") version "0.52.0"
 }
 
 group = "net.relaxism.devtools"
