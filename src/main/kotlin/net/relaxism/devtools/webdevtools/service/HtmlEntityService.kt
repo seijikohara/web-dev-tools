@@ -8,7 +8,6 @@ import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitSingle
 import net.relaxism.devtools.webdevtools.repository.HtmlEntity
 import net.relaxism.devtools.webdevtools.repository.HtmlEntityRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class HtmlEntityService(
-    @Autowired private val htmlEntityRepository: HtmlEntityRepository,
+    private val htmlEntityRepository: HtmlEntityRepository,
 ) {
     suspend fun findAll(): Flow<HtmlEntity> = htmlEntityRepository.findAll().asFlow()
 

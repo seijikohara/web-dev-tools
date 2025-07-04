@@ -11,7 +11,6 @@ import net.relaxism.devtools.webdevtools.utils.JsonUtils
 import net.relaxism.devtools.webdevtools.utils.PathUtils
 import org.slf4j.Logger
 import org.springframework.beans.factory.InitializingBean
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
@@ -22,9 +21,9 @@ import java.net.URI
 
 @Component
 class RdapClient(
-    @Autowired private val logger: Logger,
-    @Autowired private val applicationProperties: ApplicationProperties,
-    @Autowired private val webClient: WebClient,
+    private val logger: Logger,
+    private val applicationProperties: ApplicationProperties,
+    private val webClient: WebClient,
 ) : InitializingBean {
     private lateinit var rdapUriByIpAddressRange: RangeMap<IPAddress, URI>
 

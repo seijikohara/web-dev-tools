@@ -1,7 +1,6 @@
 package net.relaxism.devtools.webdevtools.handler
 
 import net.relaxism.devtools.webdevtools.service.GeoIpService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -10,7 +9,7 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 
 @Component
 class GeoApiHandler(
-    @Autowired private val geoIpService: GeoIpService,
+    private val geoIpService: GeoIpService,
 ) {
     suspend fun getGeo(request: ServerRequest): ServerResponse {
         val ipAddress = request.pathVariable("ip")
