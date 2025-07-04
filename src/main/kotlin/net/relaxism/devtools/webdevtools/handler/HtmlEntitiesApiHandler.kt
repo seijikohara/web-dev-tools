@@ -1,7 +1,6 @@
 package net.relaxism.devtools.webdevtools.handler
 
 import net.relaxism.devtools.webdevtools.service.HtmlEntityService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -14,7 +13,7 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 
 @Component
 class HtmlEntitiesApiHandler(
-    @Autowired private val htmlEntityService: HtmlEntityService,
+    private val htmlEntityService: HtmlEntityService,
 ) {
     suspend fun getHtmlEntities(request: ServerRequest): ServerResponse {
         val name = request.queryParam("name").orElse("")

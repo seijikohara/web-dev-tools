@@ -1,7 +1,6 @@
 package net.relaxism.devtools.webdevtools.config
 
 import org.slf4j.Logger
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -14,7 +13,7 @@ import reactor.netty.http.client.HttpClient
 @Configuration
 @EnableConfigurationProperties(ApplicationProperties::class)
 class ApplicationConfiguration(
-    @Autowired private val logger: Logger,
+    private val logger: Logger,
 ) {
     @Bean
     fun webClient(): WebClient =
