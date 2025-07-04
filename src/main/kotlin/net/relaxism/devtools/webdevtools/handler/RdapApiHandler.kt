@@ -1,6 +1,6 @@
 package net.relaxism.devtools.webdevtools.handler
 
-import net.relaxism.devtools.webdevtools.component.api.RdapClient
+import net.relaxism.devtools.webdevtools.repository.api.RdapApiRepository
 import net.relaxism.devtools.webdevtools.service.RdapService
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -21,7 +21,7 @@ class RdapApiHandler(
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValueAndAwait(Response(rdap = clientResponse))
-        } catch (e: RdapClient.NotFoundRdapUriException) {
+        } catch (e: RdapApiRepository.NotFoundRdapUriException) {
             ServerResponse
                 .notFound()
                 .buildAndAwait()

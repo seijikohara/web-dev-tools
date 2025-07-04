@@ -5,7 +5,6 @@ import io.kotest.core.spec.style.StringSpec
 import io.mockk.coEvery
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import net.relaxism.devtools.webdevtools.service.RdapService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -13,8 +12,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RdapApiHandlerSpec(
     @MockkBean private val rdapService: RdapService,
-    @Autowired private val applicationProperties: ApplicationProperties,
-    @Autowired private val webTestClient: WebTestClient,
+    private val applicationProperties: ApplicationProperties,
+    private val webTestClient: WebTestClient,
 ) : StringSpec() {
     init {
         val ipAddress = "192.0.2.1"

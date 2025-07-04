@@ -7,7 +7,6 @@ import io.mockk.every
 import kotlinx.coroutines.flow.toList
 import net.relaxism.devtools.webdevtools.repository.HtmlEntity
 import net.relaxism.devtools.webdevtools.repository.HtmlEntityRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -18,7 +17,7 @@ import reactor.core.publisher.Mono
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class HtmlEntityServiceSpec(
     @MockkBean private val htmlEntityRepository: HtmlEntityRepository,
-    @Autowired private val htmlEntityService: HtmlEntityService,
+    private val htmlEntityService: HtmlEntityService,
 ) : StringSpec() {
     init {
         "findAll : success" {

@@ -6,7 +6,6 @@ import io.mockk.coEvery
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import net.relaxism.devtools.webdevtools.repository.HtmlEntity
 import net.relaxism.devtools.webdevtools.service.HtmlEntityService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -18,8 +17,8 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HtmlEntitiesApiHandlerSpec(
     @MockkBean private val htmlEntityService: HtmlEntityService,
-    @Autowired private val applicationProperties: ApplicationProperties,
-    @Autowired private val webTestClient: WebTestClient,
+    private val applicationProperties: ApplicationProperties,
+    private val webTestClient: WebTestClient,
 ) : StringSpec() {
     init {
         "get response" {

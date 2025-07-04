@@ -1,4 +1,4 @@
-package net.relaxism.devtools.webdevtools.component.api
+package net.relaxism.devtools.webdevtools.repository.api
 
 import com.google.common.collect.ImmutableRangeMap
 import com.google.common.collect.Range
@@ -12,15 +12,15 @@ import net.relaxism.devtools.webdevtools.utils.PathUtils
 import org.slf4j.Logger
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.http.MediaType
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
 import java.io.BufferedReader
 import java.io.InputStream
 import java.net.URI
 
-@Component
-class RdapClient(
+@Repository
+class RdapApiRepository(
     private val logger: Logger,
     private val applicationProperties: ApplicationProperties,
     private val webClient: WebClient,
