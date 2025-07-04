@@ -7,5 +7,10 @@ import org.springframework.stereotype.Service
 class RdapService(
     private val rdapApiRepository: RdapApiRepository,
 ) {
-    suspend fun getRdapByIpAddress(ipAddress: String) = rdapApiRepository.getRdapByIpAddress(ipAddress)
+    // Expression body function with validation using scope functions and Elvis operator
+    suspend fun getRdapByIpAddress(ipAddress: String) =
+        ipAddress
+            .takeIf { it.isNotBlank() }
+            ?.run { rdapApiRepository.getRdapByIpAddress(this) }
+            ?: throw IllegalArgumentException("IP address cannot be blank")
 }

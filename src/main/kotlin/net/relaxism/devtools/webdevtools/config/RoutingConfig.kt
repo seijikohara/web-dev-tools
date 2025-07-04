@@ -26,7 +26,7 @@ class RoutingConfig(
         coRouter {
             accept(MediaType.ALL).nest {
                 GET("/*", indexHandler::getIndex)
-                (applicationProperties.apiBasePath).nest {
+                applicationProperties.apiBasePath.nest {
                     GET("/ip", ipApiHandler::getIp)
                     GET("/rdap/{ip}", rdapApiHandler::getRdap)
                     GET("/geo/{ip}", geoApiHandler::getGeo)

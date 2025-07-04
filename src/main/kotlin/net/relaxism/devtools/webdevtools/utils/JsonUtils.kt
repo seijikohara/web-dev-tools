@@ -11,27 +11,31 @@ import kotlinx.serialization.json.JsonPrimitive
 object JsonUtils {
     val json = Json { ignoreUnknownKeys = true }
 
-    inline fun <reified T> fromJson(value: String?): T? = 
-        value?.takeUnless { it.isBlank() }?.let { json.decodeFromString(it) }
+    inline fun <reified T> fromJson(value: String?): T? = value?.takeUnless { it.isBlank() }?.let { json.decodeFromString(it) }
 
-    fun fromJson(value: String?): Map<String, Any?> = 
-        value?.takeUnless { it.isBlank() }?.let { 
-            json.decodeFromString<Map<String, JsonElement>>(it)
+    fun fromJson(value: String?): Map<String, Any?> =
+        value?.takeUnless { it.isBlank() }?.let {
+            json
+                .decodeFromString<Map<String, JsonElement>>(it)
                 .mapValues { (_, v) -> v.toPrimitive() }
         } ?: emptyMap()
 
     inline fun <reified T> toJson(value: T): String = json.encodeToString(value)
 
-    private fun JsonElement.toPrimitive(): Any? = when (this) {
-        is JsonNull -> null
-        is JsonPrimitive -> 
-            if (isString) content 
-            else content.toBooleanStrictOrNull() 
-                ?: content.toIntOrNull() 
-                ?: content.toLongOrNull() 
-                ?: content.toDoubleOrNull() 
-                ?: content
-        is JsonArray -> map { it.toPrimitive() }
-        is JsonObject -> mapValues { (_, v) -> v.toPrimitive() }
-    }
+    private fun JsonElement.toPrimitive(): Any? =
+        when (this) {
+            is JsonNull -> null
+            is JsonPrimitive ->
+                if (isString) {
+                    content
+                } else {
+                    content.toBooleanStrictOrNull()
+                        ?: content.toIntOrNull()
+                        ?: content.toLongOrNull()
+                        ?: content.toDoubleOrNull()
+                        ?: content
+                }
+            is JsonArray -> map { it.toPrimitive() }
+            is JsonObject -> mapValues { (_, v) -> v.toPrimitive() }
+        }
 }

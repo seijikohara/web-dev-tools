@@ -30,10 +30,6 @@ val kotlinxCoroutinesVersion = "1.10.2"
 val kotestVersion = "5.9.1"
 
 dependencies {
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
     implementation("com.github.seancfoley:ipaddress:5.5.1")
     implementation("com.google.guava:guava:33.4.8-jre")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
@@ -44,6 +40,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$kotlinxCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$kotlinxCoroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")

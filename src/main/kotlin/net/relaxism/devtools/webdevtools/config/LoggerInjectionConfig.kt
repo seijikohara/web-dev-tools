@@ -14,9 +14,9 @@ class LoggerInjectionConfig {
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     fun logger(injectionPoint: InjectionPoint): Logger =
-        LoggerFactory.getLogger(
+        (
             injectionPoint.methodParameter?.containingClass
                 ?: injectionPoint.field?.declaringClass
-                ?: throw BeanCreationException("Cannot find type for Logger"),
-        )
+                ?: throw BeanCreationException("Cannot find type for Logger")
+        ).let(LoggerFactory::getLogger)
 }

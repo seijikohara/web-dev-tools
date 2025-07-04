@@ -5,7 +5,6 @@ import com.google.common.collect.Range
 import com.google.common.collect.RangeMap
 import inet.ipaddr.IPAddress
 import inet.ipaddr.IPAddressString
-import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.Serializable
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import net.relaxism.devtools.webdevtools.utils.JsonUtils
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Repository
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
-import java.io.BufferedReader
 import java.io.InputStream
 import java.net.URI
 
@@ -29,66 +27,54 @@ class RdapApiRepository(
     private lateinit var rdapUriByIpAddressRange: RangeMap<IPAddress, URI>
 
     override fun afterPropertiesSet() {
-        val ipv4RdapJsonResource = applicationProperties.network.rdap.ipv4
-        logger.info("[RDAP] Load IPV4 definition : $ipv4RdapJsonResource")
-        val rdapUriByIpV4AddressRange = resolveJson(inputStreamToString(ipv4RdapJsonResource.inputStream))
-
-        val ipv6RdapJsonResource = applicationProperties.network.rdap.ipv6
-        logger.info("[RDAP] Load IPV6 definition : $ipv6RdapJsonResource")
-        val rdapUriByIpV6AddressRange = resolveJson(inputStreamToString(ipv6RdapJsonResource.inputStream))
-
         rdapUriByIpAddressRange =
+            listOf(
+                applicationProperties.network.rdap.ipv4 to "IPV4",
+                applicationProperties.network.rdap.ipv6 to "IPV6",
+            ).fold(ImmutableRangeMap.builder<IPAddress, URI>()) { builder, (resource, type) ->
+                logger.info("[RDAP] Load $type definition : $resource")
+                builder.putAll(resolveJson(resource.inputStream.readText()))
+                builder
+            }.build()
+    }
+
+    private fun InputStream.readText(): String = reader().use { it.readText() }
+
+    private fun resolveJson(json: String): RangeMap<IPAddress, URI> =
+        JsonUtils.fromJson<RdapFileStructure>(json)?.let { rdapFileStructure ->
             ImmutableRangeMap
                 .builder<IPAddress, URI>()
-                .putAll(rdapUriByIpV4AddressRange)
-                .putAll(rdapUriByIpV6AddressRange)
-                .build()
+                .apply {
+                    rdapFileStructure.services.forEach { service ->
+                        val rdapURI = URI.create(service[1][0])
+                        service[0].forEach { cidr ->
+                            val ipAddress = IPAddressString(cidr).address
+                            put(Range.closed(ipAddress.lower, ipAddress.upper), rdapURI)
+                        }
+                    }
+                }.build()
+        } ?: ImmutableRangeMap.of()
+
+    suspend fun getRdapByIpAddress(ipAddressString: String): Map<String, Any?> {
+        val ipAddress = IPAddressString(ipAddressString).address
+        val rdapUri =
+            rdapUriByIpAddressRange[ipAddress]
+                ?: run {
+                    logger.warn("[RDAP] Not found RDAP URI for $ipAddressString")
+                    throw NotFoundRdapUriException("Not found RDAP URI for $ipAddressString")
+                }
+
+        val uri = PathUtils.concatenate(rdapUri.toString(), "ip", ipAddressString)
+        logger.info("[RDAP] $uri")
+
+        return webClient
+            .get()
+            .uri(uri)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .awaitBody<String>()
+            .let(JsonUtils::fromJson)
     }
-
-    private fun inputStreamToString(inputStream: InputStream): String {
-        val reader = BufferedReader(inputStream.reader())
-        reader.use { return it.readText() }
-    }
-
-    private fun resolveJson(json: String): RangeMap<IPAddress, URI> {
-        val rdapFileStructure = JsonUtils.fromJson<RdapFileStructure>(json)
-
-        val ipRangeMapBuilder = ImmutableRangeMap.builder<IPAddress, URI>()
-        rdapFileStructure?.services?.forEach { service ->
-            val cidrList = service[0]
-            val rdapURI = URI.create(service[1][0])
-            cidrList.forEach { cidr ->
-                val ipAddress = IPAddressString(cidr).address
-                val lowerIPAddress = ipAddress.lower
-                val upperIPAddress = ipAddress.upper
-                ipRangeMapBuilder.put(Range.closed(lowerIPAddress, upperIPAddress), rdapURI)
-            }
-        }
-        return ipRangeMapBuilder.build()
-    }
-
-    suspend fun getRdapByIpAddress(ipAddressString: String): Map<String, Any?> =
-        coroutineScope {
-            val ipAddress = IPAddressString(ipAddressString).address
-            val rdapUri = rdapUriByIpAddressRange[ipAddress]
-
-            if (rdapUri == null) {
-                logger.warn("[RDAP] Not found RDAP URI for $ipAddressString")
-                throw NotFoundRdapUriException("Not found RDAP URI for $ipAddressString")
-            }
-
-            val uri = PathUtils.concatenate(rdapUriByIpAddressRange[ipAddress].toString(), "ip", ipAddressString)
-            logger.info("[RDAP] $uri")
-
-            val jsonString =
-                webClient
-                    .get()
-                    .uri(uri)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .awaitBody<String>()
-            JsonUtils.fromJson(jsonString)
-        }
 
     @Serializable
     data class RdapFileStructure(

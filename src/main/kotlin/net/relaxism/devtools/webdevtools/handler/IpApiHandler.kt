@@ -10,6 +10,8 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 class IpApiHandler {
     suspend fun getIp(request: ServerRequest): ServerResponse {
         val remoteAddress = request.remoteAddress()
+
+        // Use scope functions and Elvis operator for cleaner extraction
         val remoteIpAddress =
             request
                 .headers()
@@ -18,13 +20,14 @@ class IpApiHandler {
                 ?.first()
                 ?.trim()
                 ?: remoteAddress.map { it.address.hostAddress }.orElse(null)
+
         val remoteHostname = remoteAddress.map { it.address.canonicalHostName }.orElse(null)
 
-        val response = Response(remoteIpAddress, remoteHostname)
+        // Use expression body for response creation
         return ServerResponse
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValueAndAwait(response)
+            .bodyValueAndAwait(Response(remoteIpAddress, remoteHostname))
     }
 
     data class Response(

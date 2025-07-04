@@ -11,13 +11,13 @@ import reactor.core.publisher.Mono
 
 @Table
 data class HtmlEntity(
-    @Id @Column var id: Long?,
-    @Column var name: String,
-    @Column var code: Long,
-    @Column var code2: Long?,
-    @Column var standard: String?,
-    @Column var dtd: String?,
-    @Column var description: String?,
+    @Id @Column val id: Long? = null,
+    @Column val name: String,
+    @Column val code: Long,
+    @Column val code2: Long? = null,
+    @Column val standard: String? = null,
+    @Column val dtd: String? = null,
+    @Column val description: String? = null,
 )
 
 @Repository

@@ -11,15 +11,16 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 class GeoApiHandler(
     private val geoIpService: GeoIpService,
 ) {
-    suspend fun getGeo(request: ServerRequest): ServerResponse {
-        val ipAddress = request.pathVariable("ip")
-        val clientResponse = geoIpService.getGeoFromIpAddress(ipAddress)
-
-        return ServerResponse
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValueAndAwait(Response(geo = clientResponse))
-    }
+    suspend fun getGeo(request: ServerRequest): ServerResponse =
+        request
+            .pathVariable("ip")
+            .let { ipAddress -> geoIpService.getGeoFromIpAddress(ipAddress) }
+            .let { clientResponse ->
+                ServerResponse
+                    .ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValueAndAwait(Response(geo = clientResponse))
+            }
 
     data class Response(
         val geo: Map<String, Any?>?,

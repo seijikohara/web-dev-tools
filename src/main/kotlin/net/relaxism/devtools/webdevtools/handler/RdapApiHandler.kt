@@ -13,20 +13,25 @@ import org.springframework.web.reactive.function.server.buildAndAwait
 class RdapApiHandler(
     private val rdapService: RdapService,
 ) {
-    suspend fun getRdap(request: ServerRequest): ServerResponse {
-        val ipAddress = request.pathVariable("ip")
-        return try {
-            val clientResponse = rdapService.getRdapByIpAddress(ipAddress)
-            ServerResponse
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValueAndAwait(Response(rdap = clientResponse))
-        } catch (e: RdapApiRepository.NotFoundRdapUriException) {
-            ServerResponse
-                .notFound()
-                .buildAndAwait()
-        }
-    }
+    suspend fun getRdap(request: ServerRequest): ServerResponse =
+        request
+            .pathVariable("ip")
+            .let { ipAddress ->
+                try {
+                    rdapService
+                        .getRdapByIpAddress(ipAddress)
+                        .let { clientResponse ->
+                            ServerResponse
+                                .ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValueAndAwait(Response(rdap = clientResponse))
+                        }
+                } catch (e: RdapApiRepository.NotFoundRdapUriException) {
+                    ServerResponse
+                        .notFound()
+                        .buildAndAwait()
+                }
+            }
 
     data class Response(
         val rdap: Map<String, Any?>?,
