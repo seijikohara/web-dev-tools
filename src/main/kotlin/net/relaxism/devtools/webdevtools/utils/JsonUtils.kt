@@ -1,48 +1,37 @@
 package net.relaxism.devtools.webdevtools.utils
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 object JsonUtils {
-    private val DEFAULT_OBJECT_MAPPER = ObjectMapper().findAndRegisterModules()
+    val json = Json { ignoreUnknownKeys = true }
 
-    fun <T> fromJson(
-        value: String?,
-        valueType: Class<T>,
-    ): T? = fromJson(DEFAULT_OBJECT_MAPPER, value, valueType)
+    inline fun <reified T> fromJson(value: String?): T? = 
+        value?.takeUnless { it.isBlank() }?.let { json.decodeFromString(it) }
 
-    fun <T> fromJson(
-        objectMapper: ObjectMapper,
-        value: String?,
-        valueType: Class<T>,
-    ): T? {
-        if (value.isNullOrBlank()) {
-            return null
-        }
-        return objectMapper.readValue(value, valueType)
-    }
+    fun fromJson(value: String?): Map<String, Any?> = 
+        value?.takeUnless { it.isBlank() }?.let { 
+            json.decodeFromString<Map<String, JsonElement>>(it)
+                .mapValues { (_, v) -> v.toPrimitive() }
+        } ?: emptyMap()
 
-    fun fromJson(value: String?): Map<String, Any?> = fromJson(DEFAULT_OBJECT_MAPPER, value)
+    inline fun <reified T> toJson(value: T): String = json.encodeToString(value)
 
-    fun fromJson(
-        objectMapper: ObjectMapper,
-        value: String?,
-    ): Map<String, Any?> {
-        if (value.isNullOrBlank()) {
-            return mapOf()
-        }
-        return objectMapper.readValue(value, object : TypeReference<Map<String, Any?>>() {})
-    }
-
-    fun toJson(value: Any?): String = toJson(DEFAULT_OBJECT_MAPPER, value)
-
-    fun toJson(
-        objectMapper: ObjectMapper,
-        value: Any?,
-    ): String {
-        if (value == null) {
-            return ""
-        }
-        return objectMapper.writeValueAsString(value)
+    private fun JsonElement.toPrimitive(): Any? = when (this) {
+        is JsonNull -> null
+        is JsonPrimitive -> 
+            if (isString) content 
+            else content.toBooleanStrictOrNull() 
+                ?: content.toIntOrNull() 
+                ?: content.toLongOrNull() 
+                ?: content.toDoubleOrNull() 
+                ?: content
+        is JsonArray -> map { it.toPrimitive() }
+        is JsonObject -> mapValues { (_, v) -> v.toPrimitive() }
     }
 }

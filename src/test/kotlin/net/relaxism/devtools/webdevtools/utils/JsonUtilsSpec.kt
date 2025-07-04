@@ -6,19 +6,20 @@ import io.kotest.data.headers
 import io.kotest.data.row
 import io.kotest.data.table
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.Serializable
 
 class JsonUtilsSpec : StringSpec() {
     init {
         "JSON to Object" {
             forAll(
                 table(
-                    headers("value", "valueType", "expected"),
-                    row(null, TestData::class.java, null),
-                    row("{}", TestData::class.java, TestData(0)),
-                    row("{ \"a\": 1 }", TestData::class.java, TestData(1)),
+                    headers("value", "expected"),
+                    row(null, null),
+                    row("{}", TestData(0)),
+                    row("{ \"a\": 1 }", TestData(1)),
                 ),
-            ) { value: String?, valueType: Class<*>, expected: Any? ->
-                JsonUtils.fromJson(value, valueType) shouldBe expected
+            ) { value: String?, expected: TestData? ->
+                JsonUtils.fromJson<TestData>(value) shouldBe expected
             }
         }
 
@@ -35,21 +36,21 @@ class JsonUtilsSpec : StringSpec() {
             }
         }
 
-        "Map to JSON" {
+        "Object to JSON" {
             forAll(
                 table(
                     headers("value", "expected"),
-                    row(null, ""),
-                    row(mapOf<String, Any>(), "{}"),
-                    row(mapOf("a" to 1), "{\"a\":1}"),
+                    row(TestData(0), "{}"),
+                    row(TestData(1), "{\"a\":1}"),
                 ),
-            ) { value: Any?, expected: String ->
+            ) { value: TestData, expected: String ->
                 JsonUtils.toJson(value) shouldBe expected
             }
         }
     }
 
+    @Serializable
     data class TestData(
-        val a: Int,
+        val a: Int = 0,
     )
 }
