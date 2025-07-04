@@ -2,14 +2,15 @@ package net.relaxism.devtools.webdevtools.utils
 
 object PathUtils {
     fun concatenate(vararg paths: String): String {
-        if (paths.isEmpty()) {
-            return ""
-        }
+        if (paths.isEmpty()) return ""
 
-        val hasSlashHead = paths[0].startsWith('/')
-        val hasSlashTail = paths[paths.size - 1].endsWith('/')
-        return (if (hasSlashHead) "/" else "") +
-            paths.joinToString("/") { it.trim('/') } +
-            (if (hasSlashTail) "/" else "")
+        val cleanPaths = paths.map { it.trim('/') }
+        val result = cleanPaths.joinToString("/")
+
+        return buildString {
+            if (paths.first().startsWith('/')) append('/')
+            append(result)
+            if (paths.last().endsWith('/')) append('/')
+        }
     }
 }
