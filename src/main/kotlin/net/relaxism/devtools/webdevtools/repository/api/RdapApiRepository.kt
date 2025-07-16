@@ -64,16 +64,17 @@ class RdapApiRepository(
                     throw NotFoundRdapUriException("Not found RDAP URI for $ipAddressString")
                 }
 
-        val uri = PathUtils.concatenate(rdapUri.toString(), "ip", ipAddressString)
-        logger.info("[RDAP] $uri")
+        val path = PathUtils.concatenate("/", "ip", ipAddressString)
+        val fullUri = rdapUri.resolve(path)
+        logger.info("[RDAP] $fullUri")
 
         return webClient
             .get()
-            .uri(uri)
+            .uri(fullUri)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody<String>()
-            .let(JsonUtils::fromJson)
+            .let { JsonUtils.fromJson<Map<String, Any?>>(it) ?: emptyMap() }
     }
 
     @Serializable

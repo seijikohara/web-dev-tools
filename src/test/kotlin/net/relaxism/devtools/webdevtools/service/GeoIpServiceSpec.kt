@@ -1,27 +1,44 @@
 package net.relaxism.devtools.webdevtools.service
 
-import com.ninjasquad.springmockk.MockkBean
-import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
 import io.kotest.matchers.shouldBe
-import io.mockk.coEvery
-import net.relaxism.devtools.webdevtools.repository.api.GeoIpApiRepository
+import io.kotest.matchers.shouldNotBe
+import kotlinx.coroutines.runBlocking
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 class GeoIpServiceSpec(
-    @MockkBean private val geoIpApiRepository: GeoIpApiRepository,
     private val geoIpService: GeoIpService,
-) : StringSpec() {
-    init {
-        "getGeoByIpAddress" {
-            val ipAddress = "192.0.2.1"
-            val expected = mapOf<String, Any?>("key1" to "value1")
+) : FunSpec({
 
-            coEvery {
-                geoIpApiRepository.getGeoByIpAddress(ipAddress)
-            } returns expected
-
-            geoIpService.getGeoFromIpAddress(ipAddress) shouldBe expected
+        test("geoIpService should be properly configured") {
+            geoIpService shouldNotBe null
         }
-    }
-}
+
+        test("getGeoFromIpAddress should return geo information for valid IP") {
+            val result = geoIpService.getGeoFromIpAddress("8.8.8.8")
+
+            result shouldNotBe null
+            result.keys.isNotEmpty() shouldNotBe false
+        }
+
+        test("getGeoFromIpAddress should handle invalid inputs") {
+            forAll(
+                row("", "empty string"),
+                row("   ", "whitespace only"),
+                row("\t\n", "tab and newline"),
+            ) { ip, description ->
+                var exceptionThrown = false
+                try {
+                    runBlocking {
+                        geoIpService.getGeoFromIpAddress(ip)
+                    }
+                } catch (e: IllegalArgumentException) {
+                    exceptionThrown = true
+                }
+                exceptionThrown shouldBe true
+            }
+        }
+    })

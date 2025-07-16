@@ -1,9 +1,14 @@
 package net.relaxism.devtools.webdevtools.handler
 
 import com.ninjasquad.springmockk.MockkBean
-import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.coEvery
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
+import net.relaxism.devtools.webdevtools.repository.api.RdapApiRepository
 import net.relaxism.devtools.webdevtools.service.RdapService
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
@@ -11,29 +16,54 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RdapApiHandlerSpec(
-    @MockkBean private val rdapService: RdapService,
-    private val applicationProperties: ApplicationProperties,
     private val webTestClient: WebTestClient,
-) : StringSpec() {
-    init {
-        val ipAddress = "192.0.2.1"
+    private val applicationProperties: ApplicationProperties,
+    @MockkBean private val mockRdapService: RdapService,
+) : FunSpec({
 
-        "get response" {
-            coEvery {
-                rdapService.getRdapByIpAddress(ipAddress)
-            } returns mapOf<String, Any?>("key1" to "value1")
+        test("getRdap should handle various IP addresses") {
+            forAll(
+                row("8.8.8.8", mapOf("handle" to "8.8.8.8", "country" to "US"), "public IPv4"),
+                row("1.1.1.1", mapOf("handle" to "1.1.1.1", "country" to "US"), "Cloudflare DNS IPv4"),
+            ) { ip, mockResponse, description ->
+                coEvery { mockRdapService.getRdapByIpAddress(ip) } returns mockResponse
 
-            webTestClient
-                .get()
-                .uri("${applicationProperties.apiBasePath}/rdap/$ipAddress")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus()
-                .isOk
-                .expectHeader()
-                .contentType(MediaType.APPLICATION_JSON)
-                .expectBody()
-                .json("{\"rdap\":{\"key1\":\"value1\"}}")
+                webTestClient
+                    .get()
+                    .uri("${applicationProperties.apiBasePath}/rdap/$ip")
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectHeader()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .expectBody()
+                    .jsonPath("$.rdap")
+                    .exists()
+                    .jsonPath("$.rdap.handle")
+                    .isEqualTo(mockResponse["handle"] as String)
+            }
         }
-    }
-}
+
+        test("getRdap should return 404 for unsupported IP ranges") {
+            forAll(
+                row("192.168.1.1", "private IPv4"),
+                row("10.0.0.1", "private IPv4 class A"),
+                row("172.16.0.1", "private IPv4 class B"),
+            ) { ip, description ->
+                coEvery { mockRdapService.getRdapByIpAddress(ip) } throws RdapApiRepository.NotFoundRdapUriException("Not found")
+
+                webTestClient
+                    .get()
+                    .uri("${applicationProperties.apiBasePath}/rdap/$ip")
+                    .exchange()
+                    .expectStatus()
+                    .isNotFound()
+            }
+        }
+
+        test("Response data class should have proper structure") {
+            val response = RdapApiHandler.Response(rdap = mapOf("handle" to "8.8.8.8"))
+            response.rdap shouldNotBe null
+            response.rdap!!["handle"] shouldBe "8.8.8.8"
+        }
+    })

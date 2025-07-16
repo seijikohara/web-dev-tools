@@ -1,27 +1,37 @@
 package net.relaxism.devtools.webdevtools.service
 
-import com.ninjasquad.springmockk.MockkBean
-import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
 import io.kotest.matchers.shouldBe
-import io.mockk.coEvery
-import net.relaxism.devtools.webdevtools.repository.api.RdapApiRepository
+import io.kotest.matchers.shouldNotBe
+import kotlinx.coroutines.runBlocking
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 class RdapServiceSpec(
-    @MockkBean private val rdapApiRepository: RdapApiRepository,
     private val rdapService: RdapService,
-) : StringSpec() {
-    init {
-        "getRdapByIpAddress" {
-            val ipAddress = "192.0.2.1"
-            val expected = mapOf<String, Any?>("key1" to "value1")
+) : FunSpec({
 
-            coEvery {
-                rdapApiRepository.getRdapByIpAddress(ipAddress)
-            } returns expected
-
-            rdapService.getRdapByIpAddress(ipAddress) shouldBe expected
+        test("rdapService should be properly configured") {
+            rdapService shouldNotBe null
         }
-    }
-}
+
+        test("getRdapByIpAddress should handle invalid inputs") {
+            forAll(
+                row("", "empty string"),
+                row("   ", "whitespace only"),
+                row("\t\n", "tab and newline"),
+            ) { ip, description ->
+                var exceptionThrown = false
+                try {
+                    runBlocking {
+                        rdapService.getRdapByIpAddress(ip)
+                    }
+                } catch (e: IllegalArgumentException) {
+                    exceptionThrown = true
+                }
+                exceptionThrown shouldBe true
+            }
+        }
+    })

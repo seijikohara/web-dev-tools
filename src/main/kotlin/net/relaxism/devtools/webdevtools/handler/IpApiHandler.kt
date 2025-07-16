@@ -19,6 +19,10 @@ class IpApiHandler {
                 ?.split(",")
                 ?.first()
                 ?.trim()
+                ?: request
+                    .headers()
+                    .firstHeader("X-Real-IP")
+                    ?.trim()
                 ?: remoteAddress.map { it.address.hostAddress }.orElse(null)
 
         val remoteHostname = remoteAddress.map { it.address.canonicalHostName }.orElse(null)
