@@ -17,7 +17,7 @@ class RdapApiRepositorySpec(
 
         test("getRdapByIpAddress mock response structure should be valid") {
             val mockResponse = mapOf("handle" to "8.8.8.8", "country" to "US")
-            
+
             // This is a unit test focusing on the response structure
             // Actual network calls would require external dependencies
             mockResponse shouldNotBe null
@@ -26,7 +26,7 @@ class RdapApiRepositorySpec(
 
         test("getRdapByIpAddress IPv6 mock response structure should be valid") {
             val mockResponse = mapOf("handle" to "2001:4860:4860::8888", "ipVersion" to "v6")
-            
+
             // This is a unit test focusing on the response structure
             mockResponse shouldNotBe null
             mockResponse.keys.isNotEmpty() shouldBe true

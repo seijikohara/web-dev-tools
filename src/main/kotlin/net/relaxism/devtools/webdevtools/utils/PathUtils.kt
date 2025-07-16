@@ -11,18 +11,18 @@ object PathUtils {
                 pathArray
                     .asSequence()
                     .map { it.replace(Regex("/+"), "/") }
-                    .filter { it.isNotEmpty() }
+                    .filter(String::isNotEmpty)
                     .map { it.trim('/') }
-                    .filter { it.isNotEmpty() }
+                    .filter(String::isNotEmpty)
                     .toList()
-                    .takeIf { it.isNotEmpty() }
+                    .takeIf(List<String>::isNotEmpty)
                     ?.joinToString("/")
                     ?.let { joinedPath ->
-                        listOfNotNull(
-                            "/".takeIf { hasLeadingSlash },
-                            joinedPath,
-                            "/".takeIf { hasTrailingSlash },
-                        ).joinToString("")
+                        buildList {
+                            if (hasLeadingSlash) add("/")
+                            add(joinedPath)
+                            if (hasTrailingSlash) add("/")
+                        }.joinToString("")
                     } ?: if (hasLeadingSlash) "/" else ""
             } ?: ""
 }

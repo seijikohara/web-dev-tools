@@ -14,42 +14,37 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 class HtmlEntitiesApiHandler(
     private val htmlEntityService: HtmlEntityService,
 ) {
-    suspend fun getHtmlEntities(request: ServerRequest): ServerResponse {
-        val name = request.queryParam("name").orElse("")
-
-        // Use scope functions for cleaner parameter extraction
-        val pageable =
+    suspend fun getHtmlEntities(request: ServerRequest): ServerResponse =
+        Pair(
+            request.queryParam("name").orElse(""),
             PageRequest.of(
                 request.queryParam("page").map(String::toInt).orElse(0),
                 request.queryParam("size").map(String::toInt).orElse(50),
                 Sort.by(Sort.Order.asc("id")),
-            )
-
-        // Use destructuring and functional approach
-        return htmlEntityService
-            .findByNameContaining(name, pageable)
-            .let { pageHtmlEntities ->
-                ServerResponse
-                    .ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValueAndAwait(
-                        PageImpl(
-                            pageHtmlEntities.content.map { entity ->
-                                Entity(
-                                    entity.name,
-                                    entity.code,
-                                    entity.code2,
-                                    entity.standard,
-                                    entity.dtd,
-                                    entity.description,
-                                )
-                            },
-                            pageHtmlEntities.pageable,
-                            pageHtmlEntities.totalElements,
-                        ),
+            ),
+        ).let { (name, pageable) ->
+            htmlEntityService.findByNameContaining(name, pageable)
+        }.let { pageHtmlEntities ->
+            PageImpl(
+                pageHtmlEntities.content.map { entity ->
+                    Entity(
+                        name = entity.name,
+                        code = entity.code,
+                        code2 = entity.code2,
+                        standard = entity.standard,
+                        dtd = entity.dtd,
+                        description = entity.description,
                     )
-            }
-    }
+                },
+                pageHtmlEntities.pageable,
+                pageHtmlEntities.totalElements,
+            )
+        }.let { responsePage ->
+            ServerResponse
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValueAndAwait(responsePage)
+        }
 
     data class Entity(
         val name: String,

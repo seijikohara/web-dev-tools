@@ -31,10 +31,30 @@ class HtmlEntitiesApiHandlerSpec(
                 )
 
             forAll(
-                row("${applicationProperties.apiBasePath}/html-entities", "", PageRequest.of(0, 50, Sort.by(Sort.Order.asc("id"))), "basic request"),
-                row("${applicationProperties.apiBasePath}/html-entities?page=0&size=10", "", PageRequest.of(0, 10, Sort.by(Sort.Order.asc("id"))), "pagination parameters"),
-                row("${applicationProperties.apiBasePath}/html-entities?name=amp", "amp", PageRequest.of(0, 50, Sort.by(Sort.Order.asc("id"))), "name filtering"),
-                row("${applicationProperties.apiBasePath}/html-entities?name=quot&page=0&size=5", "quot", PageRequest.of(0, 5, Sort.by(Sort.Order.asc("id"))), "combined parameters"),
+                row(
+                    "${applicationProperties.apiBasePath}/html-entities",
+                    "",
+                    PageRequest.of(0, 50, Sort.by(Sort.Order.asc("id"))),
+                    "basic request",
+                ),
+                row(
+                    "${applicationProperties.apiBasePath}/html-entities?page=0&size=10",
+                    "",
+                    PageRequest.of(0, 10, Sort.by(Sort.Order.asc("id"))),
+                    "pagination parameters",
+                ),
+                row(
+                    "${applicationProperties.apiBasePath}/html-entities?name=amp",
+                    "amp",
+                    PageRequest.of(0, 50, Sort.by(Sort.Order.asc("id"))),
+                    "name filtering",
+                ),
+                row(
+                    "${applicationProperties.apiBasePath}/html-entities?name=quot&page=0&size=5",
+                    "quot",
+                    PageRequest.of(0, 5, Sort.by(Sort.Order.asc("id"))),
+                    "combined parameters",
+                ),
             ) { uri, nameFilter, expectedPageable, description ->
                 val mockPage = PageImpl(mockEntities, expectedPageable, mockEntities.size.toLong())
                 coEvery { mockHtmlEntityService.findByNameContaining(nameFilter, expectedPageable) } returns mockPage

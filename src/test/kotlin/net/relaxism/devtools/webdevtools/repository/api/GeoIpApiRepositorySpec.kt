@@ -16,7 +16,7 @@ class GeoIpApiRepositorySpec(
 
         test("getGeoByIpAddress should return mock geo information structure") {
             val mockResponse = mapOf("country" to "US", "city" to "Mountain View")
-            
+
             // This is a unit test focusing on the response structure
             // Actual network calls would require external dependencies, so we test the data structure
             mockResponse shouldNotBe null

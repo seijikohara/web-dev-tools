@@ -15,7 +15,6 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Repository
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
-import java.io.InputStream
 import java.net.URI
 
 @Repository
@@ -33,49 +32,53 @@ class RdapApiRepository(
                 applicationProperties.network.rdap.ipv6 to "IPV6",
             ).fold(ImmutableRangeMap.builder<IPAddress, URI>()) { builder, (resource, type) ->
                 logger.info("[RDAP] Load $type definition : $resource")
-                builder.putAll(resolveJson(resource.inputStream.readText()))
+                resource.inputStream
+                    .reader()
+                    .use { it.readText() }
+                    .let { json ->
+                        JsonUtils.fromJson<RdapFileStructure>(json)?.let { rdapFileStructure ->
+                            ImmutableRangeMap
+                                .builder<IPAddress, URI>()
+                                .apply {
+                                    rdapFileStructure.services.forEach { service ->
+                                        val rdapURI = URI.create(service[1][0])
+                                        service[0].forEach { cidr ->
+                                            val ipAddress = IPAddressString(cidr).address
+                                            put(Range.closed(ipAddress.lower, ipAddress.upper), rdapURI)
+                                        }
+                                    }
+                                }.build()
+                        } ?: ImmutableRangeMap.of<IPAddress, URI>()
+                    }.let(builder::putAll)
                 builder
             }.build()
     }
 
-    private fun InputStream.readText(): String = reader().use { it.readText() }
-
-    private fun resolveJson(json: String): RangeMap<IPAddress, URI> =
-        JsonUtils.fromJson<RdapFileStructure>(json)?.let { rdapFileStructure ->
-            ImmutableRangeMap
-                .builder<IPAddress, URI>()
-                .apply {
-                    rdapFileStructure.services.forEach { service ->
-                        val rdapURI = URI.create(service[1][0])
-                        service[0].forEach { cidr ->
-                            val ipAddress = IPAddressString(cidr).address
-                            put(Range.closed(ipAddress.lower, ipAddress.upper), rdapURI)
-                        }
+    suspend fun getRdapByIpAddress(ipAddressString: String): Map<String, Any?> =
+        IPAddressString(ipAddressString)
+            .address
+            .let { ipAddress ->
+                rdapUriByIpAddressRange[ipAddress]
+                    ?: run {
+                        logger.warn("[RDAP] Not found RDAP URI for $ipAddressString")
+                        throw NotFoundRdapUriException("Not found RDAP URI for $ipAddressString")
                     }
-                }.build()
-        } ?: ImmutableRangeMap.of()
-
-    suspend fun getRdapByIpAddress(ipAddressString: String): Map<String, Any?> {
-        val ipAddress = IPAddressString(ipAddressString).address
-        val rdapUri =
-            rdapUriByIpAddressRange[ipAddress]
-                ?: run {
-                    logger.warn("[RDAP] Not found RDAP URI for $ipAddressString")
-                    throw NotFoundRdapUriException("Not found RDAP URI for $ipAddressString")
-                }
-
-        val path = PathUtils.concatenate("/", "ip", ipAddressString)
-        val fullUri = rdapUri.resolve(path)
-        logger.info("[RDAP] $fullUri")
-
-        return webClient
-            .get()
-            .uri(fullUri)
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .awaitBody<String>()
-            .let { JsonUtils.fromJson<Map<String, Any?>>(it) ?: emptyMap() }
-    }
+            }.let { rdapUri ->
+                PathUtils
+                    .concatenate("/", "ip", ipAddressString)
+                    .let { path -> rdapUri.resolve(path) }
+            }.also { fullUri ->
+                logger.info("[RDAP] $fullUri")
+            }.let { fullUri ->
+                webClient
+                    .get()
+                    .uri(fullUri)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .awaitBody<String>()
+            }.let { response ->
+                JsonUtils.fromJson<Map<String, Any?>>(response) ?: emptyMap()
+            }
 
     @Serializable
     data class RdapFileStructure(

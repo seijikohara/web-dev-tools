@@ -8,31 +8,30 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 
 @Component
 class IpApiHandler {
-    suspend fun getIp(request: ServerRequest): ServerResponse {
-        val remoteAddress = request.remoteAddress()
-
-        // Use scope functions and Elvis operator for cleaner extraction
-        val remoteIpAddress =
-            request
-                .headers()
-                .firstHeader("X-Forwarded-For")
-                ?.split(",")
-                ?.first()
-                ?.trim()
-                ?: request
-                    .headers()
-                    .firstHeader("X-Real-IP")
-                    ?.trim()
-                ?: remoteAddress.map { it.address.hostAddress }.orElse(null)
-
-        val remoteHostname = remoteAddress.map { it.address.canonicalHostName }.orElse(null)
-
-        // Use expression body for response creation
-        return ServerResponse
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValueAndAwait(Response(remoteIpAddress, remoteHostname))
-    }
+    suspend fun getIp(request: ServerRequest): ServerResponse =
+        Response(
+            ipAddress =
+                listOf(
+                    {
+                        request
+                            .headers()
+                            .firstHeader("X-Forwarded-For")
+                            ?.split(",")
+                            ?.first()
+                            ?.trim()
+                    },
+                    { request.headers().firstHeader("X-Real-IP")?.trim() },
+                    { request.remoteAddress().map { it.address.hostAddress }?.orElse(null) },
+                ).asSequence()
+                    .mapNotNull { it() }
+                    .firstOrNull(),
+            hostName = request.remoteAddress().map { it.address.canonicalHostName }?.orElse(null),
+        ).let { response ->
+            ServerResponse
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValueAndAwait(response)
+        }
 
     data class Response(
         val ipAddress: String?,

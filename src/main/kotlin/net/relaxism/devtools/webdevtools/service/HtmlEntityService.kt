@@ -24,19 +24,10 @@ class HtmlEntityService(
         pageable: Pageable,
     ): Page<HtmlEntity> =
         coroutineScope {
-            // Use destructuring declarations with parallel async operations
-            val (count, entities) =
-                listOf(
-                    async { htmlEntityRepository.countByNameContaining(name).awaitSingle() },
-                    async { htmlEntityRepository.findByNameContaining(name, pageable).asFlow().toList() },
-                ).let { deferreds ->
-                    // Use collection functions for cleaner code
-                    deferreds.map { it.await() }
-                }.let { results ->
-                    // Destructuring assignment
-                    results[0] as Long to results[1] as List<HtmlEntity>
-                }
+            val countDeferred = async { htmlEntityRepository.countByNameContaining(name).awaitSingle() }
+            val entitiesDeferred = async { htmlEntityRepository.findByNameContaining(name, pageable).asFlow().toList() }
 
-            PageImpl(entities, pageable, count)
+            (countDeferred.await() to entitiesDeferred.await())
+                .let { (count, entities) -> PageImpl(entities, pageable, count) }
         }
 }

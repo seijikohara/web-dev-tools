@@ -17,20 +17,22 @@ class RdapApiHandler(
         request
             .pathVariable("ip")
             .let { ipAddress ->
-                try {
-                    rdapService
-                        .getRdapByIpAddress(ipAddress)
-                        .let { clientResponse ->
+                runCatching { rdapService.getRdapByIpAddress(ipAddress) }
+                    .fold(
+                        onSuccess = { rdapData ->
                             ServerResponse
                                 .ok()
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .bodyValueAndAwait(Response(rdap = clientResponse))
-                        }
-                } catch (e: RdapApiRepository.NotFoundRdapUriException) {
-                    ServerResponse
-                        .notFound()
-                        .buildAndAwait()
-                }
+                                .bodyValueAndAwait(Response(rdap = rdapData))
+                        },
+                        onFailure = { exception ->
+                            when (exception) {
+                                is RdapApiRepository.NotFoundRdapUriException ->
+                                    ServerResponse.notFound().buildAndAwait()
+                                else -> throw exception
+                            }
+                        },
+                    )
             }
 
     data class Response(

@@ -14,16 +14,15 @@ class GeoIpApiRepository(
     private val applicationProperties: ApplicationProperties,
     private val webClient: WebClient,
 ) {
-    suspend fun getGeoByIpAddress(ipAddressString: String): Map<String, Any?> {
-        val uri = "${applicationProperties.network.geo.uri}/$ipAddressString/json"
-        logger.info("[GEO] $uri")
-
-        return webClient
-            .get()
-            .uri(uri)
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .awaitBody<String>()
-            .let(JsonUtils::fromJson)
-    }
+    suspend fun getGeoByIpAddress(ipAddressString: String): Map<String, Any?> =
+        "${applicationProperties.network.geo.uri}/$ipAddressString/json"
+            .also { uri -> logger.info("[GEO] $uri") }
+            .let { uri ->
+                webClient
+                    .get()
+                    .uri(uri)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .awaitBody<String>()
+            }.let(JsonUtils::fromJson)
 }
