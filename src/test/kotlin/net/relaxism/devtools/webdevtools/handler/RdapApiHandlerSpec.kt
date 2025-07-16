@@ -7,6 +7,7 @@ import io.kotest.data.row
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.coEvery
+import kotlinx.serialization.json.JsonPrimitive
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import net.relaxism.devtools.webdevtools.repository.api.RdapApiRepository
 import net.relaxism.devtools.webdevtools.service.RdapService
@@ -23,8 +24,8 @@ class RdapApiHandlerSpec(
 
         test("getRdap should handle various IP addresses") {
             forAll(
-                row("8.8.8.8", mapOf("handle" to "8.8.8.8", "country" to "US"), "public IPv4"),
-                row("1.1.1.1", mapOf("handle" to "1.1.1.1", "country" to "US"), "Cloudflare DNS IPv4"),
+                row("8.8.8.8", mapOf("handle" to JsonPrimitive("8.8.8.8"), "country" to JsonPrimitive("US")), "public IPv4"),
+                row("1.1.1.1", mapOf("handle" to JsonPrimitive("1.1.1.1"), "country" to JsonPrimitive("US")), "Cloudflare DNS IPv4"),
             ) { ip, mockResponse, description ->
                 coEvery { mockRdapService.getRdapByIpAddress(ip) } returns mockResponse
 
@@ -40,7 +41,7 @@ class RdapApiHandlerSpec(
                     .jsonPath("$.rdap")
                     .exists()
                     .jsonPath("$.rdap.handle")
-                    .isEqualTo(mockResponse["handle"] as String)
+                    .isEqualTo((mockResponse["handle"] as JsonPrimitive).content)
             }
         }
 
@@ -62,8 +63,8 @@ class RdapApiHandlerSpec(
         }
 
         test("Response data class should have proper structure") {
-            val response = RdapApiHandler.Response(rdap = mapOf("handle" to "8.8.8.8"))
+            val response = RdapApiHandler.Response(rdap = mapOf("handle" to JsonPrimitive("8.8.8.8")))
             response.rdap shouldNotBe null
-            response.rdap!!["handle"] shouldBe "8.8.8.8"
+            response.rdap!!["handle"] shouldBe JsonPrimitive("8.8.8.8")
         }
     })

@@ -8,6 +8,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.coEvery
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.JsonPrimitive
 import net.relaxism.devtools.webdevtools.repository.api.GeoIpApiRepository
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -22,14 +23,14 @@ class GeoIpServiceSpec(
         }
 
         test("getGeoFromIpAddress should return geo information for valid IP") {
-            val mockGeoData = mapOf("country" to "US", "city" to "Mountain View")
+            val mockGeoData = mapOf("country" to JsonPrimitive("US"), "city" to JsonPrimitive("Mountain View"))
             coEvery { mockGeoIpApiRepository.getGeoByIpAddress("8.8.8.8") } returns mockGeoData
 
             val result = geoIpService.getGeoFromIpAddress("8.8.8.8")
 
             result shouldNotBe null
             result shouldBe mockGeoData
-            result["country"] shouldBe "US"
+            result?.get("country") shouldBe JsonPrimitive("US")
         }
 
         test("getGeoFromIpAddress should handle invalid inputs") {

@@ -1,5 +1,7 @@
 package net.relaxism.devtools.webdevtools.handler
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 import net.relaxism.devtools.webdevtools.repository.api.RdapApiRepository
 import net.relaxism.devtools.webdevtools.service.RdapService
 import org.springframework.http.MediaType
@@ -35,7 +37,8 @@ class RdapApiHandler(
                     )
             }
 
+    @Serializable
     data class Response(
-        val rdap: Map<String, Any?>?,
+        val rdap: Map<String, JsonElement>?,
     )
 }

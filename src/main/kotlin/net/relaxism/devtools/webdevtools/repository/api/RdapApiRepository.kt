@@ -6,6 +6,7 @@ import com.google.common.collect.RangeMap
 import inet.ipaddr.IPAddress
 import inet.ipaddr.IPAddressString
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import net.relaxism.devtools.webdevtools.utils.JsonUtils
 import net.relaxism.devtools.webdevtools.utils.PathUtils
@@ -54,7 +55,7 @@ class RdapApiRepository(
             }.build()
     }
 
-    suspend fun getRdapByIpAddress(ipAddressString: String): Map<String, Any?> =
+    suspend fun getRdapByIpAddress(ipAddressString: String): Map<String, JsonElement> =
         IPAddressString(ipAddressString)
             .address
             .let { ipAddress ->
@@ -76,9 +77,7 @@ class RdapApiRepository(
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .awaitBody<String>()
-            }.let { response ->
-                JsonUtils.fromJson<Map<String, Any?>>(response) ?: emptyMap()
-            }
+            }.let(JsonUtils::fromJsonToElements)
 
     @Serializable
     data class RdapFileStructure(
