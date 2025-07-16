@@ -1,28 +1,52 @@
 package net.relaxism.devtools.webdevtools.service
 
 import com.ninjasquad.springmockk.MockkBean
-import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.coEvery
-import net.relaxism.devtools.webdevtools.component.api.RdapClient
-import org.springframework.beans.factory.annotation.Autowired
+import kotlinx.coroutines.runBlocking
+import net.relaxism.devtools.webdevtools.repository.api.RdapApiRepository
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 class RdapServiceSpec(
-    @MockkBean private val rdapClient: RdapClient,
-    @Autowired private val rdapService: RdapService,
-) : StringSpec() {
-    init {
-        "getRdapByIpAddress" {
-            val ipAddress = "192.0.2.1"
-            val expected = mapOf<String, Any?>("key1" to "value1")
+    private val rdapService: RdapService,
+    @MockkBean private val mockRdapApiRepository: RdapApiRepository,
+) : FunSpec({
 
-            coEvery {
-                rdapClient.getRdapByIpAddress(ipAddress)
-            } returns expected
-
-            rdapService.getRdapByIpAddress(ipAddress) shouldBe expected
+        test("rdapService should be properly configured") {
+            rdapService shouldNotBe null
         }
-    }
-}
+
+        test("getRdapByIpAddress should return rdap information for valid IP") {
+            val mockRdapData = mapOf("handle" to "8.8.8.8", "country" to "US")
+            coEvery { mockRdapApiRepository.getRdapByIpAddress("8.8.8.8") } returns mockRdapData
+
+            val result = rdapService.getRdapByIpAddress("8.8.8.8")
+
+            result shouldNotBe null
+            result shouldBe mockRdapData
+            result["handle"] shouldBe "8.8.8.8"
+        }
+
+        test("getRdapByIpAddress should handle invalid inputs") {
+            forAll(
+                row("", "empty string"),
+                row("   ", "whitespace only"),
+                row("\t\n", "tab and newline"),
+            ) { ip, description ->
+                var exceptionThrown = false
+                try {
+                    runBlocking {
+                        rdapService.getRdapByIpAddress(ip)
+                    }
+                } catch (e: IllegalArgumentException) {
+                    exceptionThrown = true
+                }
+                exceptionThrown shouldBe true
+            }
+        }
+    })

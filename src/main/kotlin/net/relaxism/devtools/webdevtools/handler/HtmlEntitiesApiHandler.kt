@@ -3,7 +3,6 @@ package net.relaxism.devtools.webdevtools.handler
 import net.relaxism.devtools.webdevtools.service.HtmlEntityService
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -15,36 +14,37 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 class HtmlEntitiesApiHandler(
     private val htmlEntityService: HtmlEntityService,
 ) {
-    suspend fun getHtmlEntities(request: ServerRequest): ServerResponse {
-        val name = request.queryParam("name").orElse("")
-        val pageable: Pageable =
+    suspend fun getHtmlEntities(request: ServerRequest): ServerResponse =
+        Pair(
+            request.queryParam("name").orElse(""),
             PageRequest.of(
-                request.queryParam("page").map { Integer.parseInt(it) }.orElse(0),
-                request.queryParam("size").map { Integer.parseInt(it) }.orElse(50),
+                request.queryParam("page").map(String::toInt).orElse(0),
+                request.queryParam("size").map(String::toInt).orElse(50),
                 Sort.by(Sort.Order.asc("id")),
+            ),
+        ).let { (name, pageable) ->
+            htmlEntityService.findByNameContaining(name, pageable)
+        }.let { pageHtmlEntities ->
+            PageImpl(
+                pageHtmlEntities.content.map { entity ->
+                    Entity(
+                        name = entity.name,
+                        code = entity.code,
+                        code2 = entity.code2,
+                        standard = entity.standard,
+                        dtd = entity.dtd,
+                        description = entity.description,
+                    )
+                },
+                pageHtmlEntities.pageable,
+                pageHtmlEntities.totalElements,
             )
-        val pageHtmlEntities = htmlEntityService.findByNameContaining(name, pageable)
-
-        return ServerResponse
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValueAndAwait(
-                PageImpl(
-                    pageHtmlEntities.content.map {
-                        Entity(
-                            it.name,
-                            it.code,
-                            it.code2,
-                            it.standard,
-                            it.dtd,
-                            it.description,
-                        )
-                    },
-                    pageHtmlEntities.pageable,
-                    pageHtmlEntities.totalElements,
-                ),
-            )
-    }
+        }.let { responsePage ->
+            ServerResponse
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValueAndAwait(responsePage)
+        }
 
     data class Entity(
         val name: String,
@@ -54,7 +54,8 @@ class HtmlEntitiesApiHandler(
         val dtd: String?,
         val description: String?,
     ) {
+        // Use Elvis operator for cleaner expression
         val entityReference: String
-            get() = "&#$code;" + if (code2 != null) "&#$code2;" else ""
+            get() = "&#$code;" + (code2?.let { "&#$it;" } ?: "")
     }
 }

@@ -26,8 +26,8 @@ class HtmlEntityService(
         coroutineScope {
             val countDeferred = async { htmlEntityRepository.countByNameContaining(name).awaitSingle() }
             val entitiesDeferred = async { htmlEntityRepository.findByNameContaining(name, pageable).asFlow().toList() }
-            val count = countDeferred.await()
-            val entities = entitiesDeferred.await()
-            PageImpl(entities, pageable, count)
+
+            (countDeferred.await() to entitiesDeferred.await())
+                .let { (count, entities) -> PageImpl(entities, pageable, count) }
         }
 }

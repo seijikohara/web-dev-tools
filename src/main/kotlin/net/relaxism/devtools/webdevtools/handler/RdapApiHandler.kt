@@ -1,6 +1,6 @@
 package net.relaxism.devtools.webdevtools.handler
 
-import net.relaxism.devtools.webdevtools.component.api.RdapClient
+import net.relaxism.devtools.webdevtools.repository.api.RdapApiRepository
 import net.relaxism.devtools.webdevtools.service.RdapService
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -13,20 +13,27 @@ import org.springframework.web.reactive.function.server.buildAndAwait
 class RdapApiHandler(
     private val rdapService: RdapService,
 ) {
-    suspend fun getRdap(request: ServerRequest): ServerResponse {
-        val ipAddress = request.pathVariable("ip")
-        return try {
-            val clientResponse = rdapService.getRdapByIpAddress(ipAddress)
-            ServerResponse
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValueAndAwait(Response(rdap = clientResponse))
-        } catch (e: RdapClient.NotFoundRdapUriException) {
-            ServerResponse
-                .notFound()
-                .buildAndAwait()
-        }
-    }
+    suspend fun getRdap(request: ServerRequest): ServerResponse =
+        request
+            .pathVariable("ip")
+            .let { ipAddress ->
+                runCatching { rdapService.getRdapByIpAddress(ipAddress) }
+                    .fold(
+                        onSuccess = { rdapData ->
+                            ServerResponse
+                                .ok()
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .bodyValueAndAwait(Response(rdap = rdapData))
+                        },
+                        onFailure = { exception ->
+                            when (exception) {
+                                is RdapApiRepository.NotFoundRdapUriException ->
+                                    ServerResponse.notFound().buildAndAwait()
+                                else -> throw exception
+                            }
+                        },
+                    )
+            }
 
     data class Response(
         val rdap: Map<String, Any?>?,

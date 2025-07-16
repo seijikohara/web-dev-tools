@@ -8,21 +8,22 @@ import org.springframework.web.reactive.function.server.bodyValueAndAwait
 
 @Component
 class HttpHeadersApiHandler {
-    suspend fun getHttpHeaders(request: ServerRequest): ServerResponse {
-        val headerNames = request.headers().asHttpHeaders().keys
-        val headers =
-            headerNames.flatMap { headerName ->
-                val headerValues = request.headers().header(headerName)
-                headerValues.map { headerValue -> Response.Header(headerName, headerValue) }
+    suspend fun getHttpHeaders(request: ServerRequest): ServerResponse =
+        request
+            .headers()
+            .asHttpHeaders()
+            .keys
+            .flatMap { headerName ->
+                request
+                    .headers()
+                    .header(headerName)
+                    .map { headerValue -> Response.Header(headerName, headerValue) }
+            }.let { headers ->
+                ServerResponse
+                    .ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValueAndAwait(Response(headers))
             }
-
-        val response = Response(headers)
-
-        return ServerResponse
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValueAndAwait(response)
-    }
 
     data class Response(
         val headers: List<Header>,

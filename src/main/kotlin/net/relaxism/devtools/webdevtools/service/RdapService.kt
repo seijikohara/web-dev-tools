@@ -1,11 +1,16 @@
 package net.relaxism.devtools.webdevtools.service
 
-import net.relaxism.devtools.webdevtools.component.api.RdapClient
+import net.relaxism.devtools.webdevtools.repository.api.RdapApiRepository
 import org.springframework.stereotype.Service
 
 @Service
 class RdapService(
-    private val rdapClient: RdapClient,
+    private val rdapApiRepository: RdapApiRepository,
 ) {
-    suspend fun getRdapByIpAddress(ipAddress: String) = rdapClient.getRdapByIpAddress(ipAddress)
+    // Expression body function with validation using scope functions and Elvis operator
+    suspend fun getRdapByIpAddress(ipAddress: String) =
+        ipAddress
+            .takeIf { it.isNotBlank() }
+            ?.run { rdapApiRepository.getRdapByIpAddress(this) }
+            ?: throw IllegalArgumentException("IP address cannot be blank")
 }

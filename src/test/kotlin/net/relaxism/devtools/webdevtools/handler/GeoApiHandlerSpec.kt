@@ -1,40 +1,50 @@
 package net.relaxism.devtools.webdevtools.handler
 
 import com.ninjasquad.springmockk.MockkBean
-import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
+import io.kotest.matchers.shouldNotBe
 import io.mockk.coEvery
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import net.relaxism.devtools.webdevtools.service.GeoIpService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GeoApiHandlerSpec(
-    @MockkBean private val geoIpService: GeoIpService,
-    @Autowired private val applicationProperties: ApplicationProperties,
-    @Autowired private val webTestClient: WebTestClient,
-) : StringSpec() {
-    init {
-        val ipAddress = "192.0.2.1"
+    private val webTestClient: WebTestClient,
+    private val applicationProperties: ApplicationProperties,
+    @MockkBean private val mockGeoIpService: GeoIpService,
+) : FunSpec({
 
-        "get response" {
-            coEvery {
-                geoIpService.getGeoFromIpAddress(ipAddress)
-            } returns mapOf<String, Any?>("key1" to "value1")
+        test("getGeo should return JSON response for various IPs") {
+            forAll(
+                row("8.8.8.8", mapOf("country" to "US", "city" to "Mountain View"), "IPv4 public DNS"),
+                row("1.1.1.1", mapOf("country" to "US", "city" to "San Francisco"), "IPv4 Cloudflare DNS"),
+            ) { ip, mockResponse, description ->
+                coEvery { mockGeoIpService.getGeoFromIpAddress(ip) } returns mockResponse
 
-            webTestClient
-                .get()
-                .uri("${applicationProperties.apiBasePath}/geo/$ipAddress")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus()
-                .isOk
-                .expectHeader()
-                .contentType(MediaType.APPLICATION_JSON)
-                .expectBody()
-                .json("{\"geo\":{\"key1\":\"value1\"}}")
+                webTestClient
+                    .get()
+                    .uri("${applicationProperties.apiBasePath}/geo/$ip")
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectHeader()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .expectBody()
+                    .jsonPath("$.geo")
+                    .exists()
+                    .jsonPath("$.geo.country")
+                    .isEqualTo(mockResponse["country"] as String)
+            }
         }
-    }
-}
+
+        test("Response data class should have proper structure") {
+            val response = GeoApiHandler.Response(geo = mapOf("country" to "US"))
+            response.geo shouldNotBe null
+            response.geo!!["country"] shouldNotBe null
+        }
+    })

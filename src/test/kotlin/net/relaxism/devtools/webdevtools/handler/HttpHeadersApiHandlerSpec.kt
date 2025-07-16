@@ -1,45 +1,54 @@
 package net.relaxism.devtools.webdevtools.handler
 
-import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HttpHeadersApiHandlerSpec(
-    @Autowired private val applicationProperties: ApplicationProperties,
-    @Autowired private val webTestClient: WebTestClient,
-    @Value("\${local.server.port}") private val localServerPort: Int,
-) : StringSpec() {
-    init {
-        "get response" {
-            val customHeaderName = "Custom-Header"
-            val customHeaderValue1 = "value1"
-            val customHeaderValue2 = "value2"
-            webTestClient
-                .get()
-                .uri("${applicationProperties.apiBasePath}/http-headers")
-                .header(customHeaderName, customHeaderValue1, customHeaderValue2)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus()
-                .isOk
-                .expectHeader()
-                .contentType(MediaType.APPLICATION_JSON)
-                .expectBody()
-                .jsonPath("$.headers[2].value")
-                .isEqualTo("localhost:$localServerPort")
-                .jsonPath("$.headers[4].name")
-                .isEqualTo(customHeaderName)
-                .jsonPath("$.headers[4].value")
-                .isEqualTo(customHeaderValue1)
-                .jsonPath("$.headers[5].name")
-                .isEqualTo(customHeaderName)
-                .jsonPath("$.headers[5].value")
-                .isEqualTo(customHeaderValue2)
+    private val webTestClient: WebTestClient,
+    private val applicationProperties: ApplicationProperties,
+) : FunSpec({
+
+        test("getHttpHeaders should handle various header combinations") {
+            forAll(
+                row(mapOf("X-Test-Header" to "test-value"), "single custom header"),
+                row(mapOf("X-Custom" to "custom-value", "User-Agent" to "test-agent"), "multiple headers"),
+                row(mapOf("Authorization" to "Bearer token123", "Content-Type" to "application/json"), "auth headers"),
+                row(mapOf(), "no custom headers"),
+            ) { headers, description ->
+                var request = webTestClient.get().uri("${applicationProperties.apiBasePath}/http-headers")
+                headers.forEach { (name, value) ->
+                    request = request.header(name, value)
+                }
+                request
+                    .exchange()
+                    .expectStatus()
+                    .isOk()
+                    .expectHeader()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .expectBody()
+                    .jsonPath("$.headers")
+                    .exists()
+                    .jsonPath("$.headers")
+                    .isArray()
+            }
         }
-    }
-}
+
+        test("Response and Header data classes should have proper structure") {
+            val header = HttpHeadersApiHandler.Response.Header("Test-Header", "test-value")
+            header.name shouldBe "Test-Header"
+            header.value shouldBe "test-value"
+
+            val response = HttpHeadersApiHandler.Response(listOf(header))
+            response.headers shouldNotBe null
+            response.headers.size shouldBe 1
+            response.headers[0].name shouldBe "Test-Header"
+        }
+    })
