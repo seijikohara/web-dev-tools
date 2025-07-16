@@ -8,6 +8,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.coEvery
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.JsonPrimitive
 import net.relaxism.devtools.webdevtools.repository.api.RdapApiRepository
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -22,14 +23,14 @@ class RdapServiceSpec(
         }
 
         test("getRdapByIpAddress should return rdap information for valid IP") {
-            val mockRdapData = mapOf("handle" to "8.8.8.8", "country" to "US")
+            val mockRdapData = mapOf("handle" to JsonPrimitive("8.8.8.8"), "country" to JsonPrimitive("US"))
             coEvery { mockRdapApiRepository.getRdapByIpAddress("8.8.8.8") } returns mockRdapData
 
             val result = rdapService.getRdapByIpAddress("8.8.8.8")
 
             result shouldNotBe null
             result shouldBe mockRdapData
-            result["handle"] shouldBe "8.8.8.8"
+            result["handle"] shouldBe JsonPrimitive("8.8.8.8")
         }
 
         test("getRdapByIpAddress should handle invalid inputs") {

@@ -45,4 +45,11 @@ object JsonUtils {
             } ?: emptyMap()
 
     inline fun <reified T> toJson(value: T): String = json.encodeToString(value)
+
+    fun fromJsonToElements(value: String?): Map<String, JsonElement> =
+        value
+            ?.takeUnless(String::isBlank)
+            ?.let { jsonString ->
+                json.decodeFromString<Map<String, JsonElement>>(jsonString)
+            } ?: emptyMap()
 }

@@ -1,5 +1,7 @@
 package net.relaxism.devtools.webdevtools.handler
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 import net.relaxism.devtools.webdevtools.service.GeoIpService
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -22,7 +24,8 @@ class GeoApiHandler(
                     .bodyValueAndAwait(Response(geo = clientResponse))
             }
 
+    @Serializable
     data class Response(
-        val geo: Map<String, Any?>?,
+        val geo: Map<String, JsonElement>?,
     )
 }

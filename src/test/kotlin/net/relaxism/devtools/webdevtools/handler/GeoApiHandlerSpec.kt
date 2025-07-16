@@ -6,6 +6,7 @@ import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldNotBe
 import io.mockk.coEvery
+import kotlinx.serialization.json.JsonPrimitive
 import net.relaxism.devtools.webdevtools.config.ApplicationProperties
 import net.relaxism.devtools.webdevtools.service.GeoIpService
 import org.springframework.boot.test.context.SpringBootTest
@@ -21,8 +22,8 @@ class GeoApiHandlerSpec(
 
         test("getGeo should return JSON response for various IPs") {
             forAll(
-                row("8.8.8.8", mapOf("country" to "US", "city" to "Mountain View"), "IPv4 public DNS"),
-                row("1.1.1.1", mapOf("country" to "US", "city" to "San Francisco"), "IPv4 Cloudflare DNS"),
+                row("8.8.8.8", mapOf("country" to JsonPrimitive("US"), "city" to JsonPrimitive("Mountain View")), "IPv4 public DNS"),
+                row("1.1.1.1", mapOf("country" to JsonPrimitive("US"), "city" to JsonPrimitive("San Francisco")), "IPv4 Cloudflare DNS"),
             ) { ip, mockResponse, description ->
                 coEvery { mockGeoIpService.getGeoFromIpAddress(ip) } returns mockResponse
 
@@ -38,12 +39,12 @@ class GeoApiHandlerSpec(
                     .jsonPath("$.geo")
                     .exists()
                     .jsonPath("$.geo.country")
-                    .isEqualTo(mockResponse["country"] as String)
+                    .isEqualTo((mockResponse["country"] as JsonPrimitive).content)
             }
         }
 
         test("Response data class should have proper structure") {
-            val response = GeoApiHandler.Response(geo = mapOf("country" to "US"))
+            val response = GeoApiHandler.Response(geo = mapOf("country" to JsonPrimitive("US")))
             response.geo shouldNotBe null
             response.geo!!["country"] shouldNotBe null
         }
