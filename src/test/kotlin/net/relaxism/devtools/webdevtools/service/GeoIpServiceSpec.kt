@@ -1,16 +1,20 @@
 package net.relaxism.devtools.webdevtools.service
 
+import com.ninjasquad.springmockk.MockkBean
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.mockk.coEvery
 import kotlinx.coroutines.runBlocking
+import net.relaxism.devtools.webdevtools.repository.api.GeoIpApiRepository
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 class GeoIpServiceSpec(
     private val geoIpService: GeoIpService,
+    @MockkBean private val mockGeoIpApiRepository: GeoIpApiRepository,
 ) : FunSpec({
 
         test("geoIpService should be properly configured") {
@@ -18,10 +22,14 @@ class GeoIpServiceSpec(
         }
 
         test("getGeoFromIpAddress should return geo information for valid IP") {
+            val mockGeoData = mapOf("country" to "US", "city" to "Mountain View")
+            coEvery { mockGeoIpApiRepository.getGeoByIpAddress("8.8.8.8") } returns mockGeoData
+
             val result = geoIpService.getGeoFromIpAddress("8.8.8.8")
 
             result shouldNotBe null
-            result.keys.isNotEmpty() shouldNotBe false
+            result shouldBe mockGeoData
+            result["country"] shouldBe "US"
         }
 
         test("getGeoFromIpAddress should handle invalid inputs") {
