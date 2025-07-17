@@ -1,13 +1,12 @@
 package net.relaxism.devtools.webdevtools.repository
 
+import kotlinx.coroutines.flow.Flow
 import org.springframework.data.annotation.Id
 import org.springframework.data.domain.Pageable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
-import org.springframework.data.repository.reactive.ReactiveCrudRepository
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Repository
-import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
 
 @Table
 data class HtmlEntity(
@@ -21,11 +20,11 @@ data class HtmlEntity(
 )
 
 @Repository
-interface HtmlEntityRepository : ReactiveCrudRepository<HtmlEntity, Long> {
-    fun countByNameContaining(name: String): Mono<Long>
+interface HtmlEntityRepository : CoroutineCrudRepository<HtmlEntity, Long> {
+    suspend fun countByNameContaining(name: String): Long
 
     fun findByNameContaining(
         name: String,
         pageable: Pageable,
-    ): Flux<HtmlEntity>
+    ): Flow<HtmlEntity>
 }
