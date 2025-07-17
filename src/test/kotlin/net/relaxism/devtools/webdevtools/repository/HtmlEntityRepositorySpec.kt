@@ -4,8 +4,8 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldNotBe
-import kotlinx.coroutines.reactive.awaitFirst
-import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.PageRequest
 
@@ -23,8 +23,7 @@ class HtmlEntityRepositorySpec(
             val entities =
                 htmlEntityRepository
                     .findByNameContaining("amp", pageable)
-                    .collectList()
-                    .awaitFirst()
+                    .toList()
 
             entities shouldNotBe null
             entities.should { list ->
@@ -33,10 +32,7 @@ class HtmlEntityRepositorySpec(
         }
 
         test("countByNameContaining should return count of entities matching the name pattern") {
-            val count =
-                htmlEntityRepository
-                    .countByNameContaining("amp")
-                    .awaitFirst()
+            val count = htmlEntityRepository.countByNameContaining("amp")
 
             count shouldNotBe null
             count shouldBeGreaterThan 0L
@@ -46,8 +42,7 @@ class HtmlEntityRepositorySpec(
             val entities =
                 htmlEntityRepository
                     .findAll()
-                    .collectList()
-                    .awaitFirst()
+                    .toList()
 
             entities shouldNotBe null
             entities.size shouldBeGreaterThan 0
@@ -57,14 +52,10 @@ class HtmlEntityRepositorySpec(
             val firstEntity =
                 htmlEntityRepository
                     .findAll()
-                    .take(1)
-                    .awaitFirstOrNull()
+                    .firstOrNull()
 
             if (firstEntity != null && firstEntity.id != null) {
-                val foundEntity =
-                    htmlEntityRepository
-                        .findById(firstEntity.id!!)
-                        .awaitFirstOrNull()
+                val foundEntity = htmlEntityRepository.findById(firstEntity.id!!)
 
                 foundEntity shouldNotBe null
                 foundEntity!!.id shouldNotBe null
