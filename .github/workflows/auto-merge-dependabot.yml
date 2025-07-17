@@ -1,82 +1,22 @@
 name: Auto-Merge Dependabot PRs
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
-      - synchronize
-      - reopened
-      - ready_for_review
 
 jobs:
   auto-merge-dependabot-prs:
     name: Auto-Merge Dependabot Dependency PR
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]' && github.event.pull_request.draft == false
+    if: github.actor == 'dependabot[bot]'
     permissions:
-      contents: write
       pull-requests: write
 
     steps:
-      - name: Check GitHub CLI availability
-        run: gh --version
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-
-      - name: Configure Git identity
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-          cache: gradle
-
-      - name: Build
-        run: ./gradlew clean npmRunBuild build --no-daemon
-
-      - name: Check if rebase is needed
-        id: check-rebase
-        run: |
-          git fetch origin ${{ github.event.pull_request.base.ref }}
-          BASE_SHA=$(git rev-parse origin/${{ github.event.pull_request.base.ref }})
-          PR_BASE_SHA=$(git merge-base HEAD origin/${{ github.event.pull_request.base.ref }})
-          if [ "$BASE_SHA" != "$PR_BASE_SHA" ]; then
-            echo "rebase_needed=true" >> $GITHUB_OUTPUT
-          else
-            echo "rebase_needed=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Rebase PR branch
-        if: steps.check-rebase.outputs.rebase_needed == 'true'
-        run: git rebase origin/${{ github.event.pull_request.base.ref }}
-
-      - name: Commit build artifacts
-        run: |
-          git add -A
-          git commit -m "chore: update package with latest dependency changes" || echo "No package changes to commit"
-
-      - name: Push changes
-        run: git push --force-with-lease
-
-      - name: Approve and enable auto-merge
+      - name: Comment to trigger Dependabot merge
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          gh pr merge "$PR_URL" --auto --merge
-
-      - name: Summarize workflow outcome
-        run: |
-          echo "### ✅ Dependency Update PR Processed Successfully" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- PR: [${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})" >> $GITHUB_STEP_SUMMARY
-          echo "- Lint, build, test, and package steps completed." >> $GITHUB_STEP_SUMMARY
-          echo "- Rebase required: \`${{ steps.check-rebase.outputs.rebase_needed }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- PR approved and auto-merge enabled." >> $GITHUB_STEP_SUMMARY
+          gh pr comment $PR_NUMBER --body "@dependabot merge"
