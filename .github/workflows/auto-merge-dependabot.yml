@@ -29,9 +29,9 @@ jobs:
           token: ${{ steps.generate_token.outputs.token }}
           fetch-depth: 0  # Ensure full history is available for commit
       
-      - name: Comment to trigger Dependabot merge
+      - name: Auto-merge Dependabot PR
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          gh pr comment $PR_NUMBER --body "@dependabot merge"
+          gh pr merge $PR_NUMBER --squash --auto
