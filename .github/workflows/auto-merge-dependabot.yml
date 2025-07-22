@@ -14,9 +14,16 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.DEV_AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.DEV_AUTOMATION_PRIVATE_KEY }}
+      
       - name: Comment to trigger Dependabot merge
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           gh pr comment $PR_NUMBER --body "@dependabot merge"
