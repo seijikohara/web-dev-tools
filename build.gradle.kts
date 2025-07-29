@@ -2,15 +2,20 @@ import com.github.gradle.node.npm.task.NpmTask
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    id("project-report")
-    id("com.github.node-gradle.node") version "7.1.0"
-    id("org.springframework.boot") version "3.5.3"
-    id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.spring") version "2.2.0"
-    kotlin("plugin.serialization") version "2.2.0"
-    id("com.diffplug.spotless") version "7.2.1"
-    id("com.github.ben-manes.versions") version "0.52.0"
+    // Kotlin
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.kotlin.serialization)
+
+    // Spring
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+
+    // Build tools
+    alias(libs.plugins.node.gradle)
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.versions)
+    alias(libs.plugins.project.report)
 }
 
 group = "com.github.seijikohara.devtools"
@@ -26,44 +31,49 @@ repositories {
     mavenCentral()
 }
 
-val kotlinxCoroutinesVersion = "1.10.2"
-val kotestVersion = "5.9.1"
-
 dependencies {
-    implementation("com.github.seancfoley:ipaddress:5.5.1")
-    implementation("com.google.guava:guava:33.4.8-jre")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-    implementation("org.flywaydb:flyway-core")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$kotlinxCoroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$kotlinxCoroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$kotlinxCoroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    // Kotlin
+    implementation(libs.kotlin.reflect)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.reactive)
+    implementation(libs.kotlinx.coroutines.reactor)
 
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    // Spring Boot
+    implementation(libs.spring.boot.starter.webflux)
+    implementation(libs.spring.boot.starter.actuator)
+    implementation(libs.spring.boot.starter.data.r2dbc)
+    implementation(libs.spring.boot.starter.jdbc)
 
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    // Reactor
+    implementation(libs.reactor.kotlin.extensions)
 
-    runtimeOnly("com.h2database:h2")
-    runtimeOnly("io.r2dbc:r2dbc-h2")
+    // Database
+    implementation(libs.flyway.core)
 
-    testImplementation("com.ninja-squad:springmockk:4.0.2")
-    testImplementation("com.squareup.okhttp3:mockwebserver:5.1.0")
-    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.3.0")
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest:kotest-assertions-json:$kotestVersion")
-    testImplementation("io.kotest:kotest-property:$kotestVersion")
-    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-    testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:$kotlinxCoroutinesVersion")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // Libraries
+    implementation(libs.guava)
+    implementation(libs.ipaddress)
+
+    // Development
+    developmentOnly(libs.spring.boot.devtools)
+    annotationProcessor(libs.spring.boot.configuration.processor)
+
+    // Runtime
+    runtimeOnly(libs.h2)
+    runtimeOnly(libs.r2dbc.h2)
+
+    // Testing
+    testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.reactor.test)
+    testImplementation(libs.springmockk)
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotest.assertions.json)
+    testImplementation(libs.kotest.property)
+    testImplementation(libs.kotest.extensions.spring)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.kotlinx.coroutines.debug)
 }
 
 kotlin {
@@ -94,8 +104,8 @@ spotless {
  */
 
 node {
-    version.set("22.12.0")
-    npmVersion.set("11.0.0")
+    version.set(libs.versions.nodejs.get())
+    npmVersion.set(libs.versions.npm.get())
     download.set(true)
 }
 
