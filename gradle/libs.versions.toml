@@ -2,7 +2,7 @@
 kotlin = "2.2.0"
 node-gradle = "7.1.0"
 spotless = "7.2.1"
-versions = "0.52.0"
+versions = "0.53.0"
 
 spring-boot = "3.5.4"
 spring-dependency-management = "1.1.7"
