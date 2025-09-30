@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.2.0"
+kotlin = "2.2.20"
 node-gradle = "7.1.0"
 spotless = "7.2.1"
 versions = "0.52.0"
