@@ -21,18 +21,12 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
       - name: Generate GitHub App Token
         id: generate_token
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ vars.DEV_AUTOMATION_APP_ID }}
           private-key: ${{ secrets.DEV_AUTOMATION_PRIVATE_KEY }}
-          repositories: ${{ github.repository }}
 
       - name: Fetch Dependabot metadata
         id: metadata
@@ -52,7 +46,7 @@ jobs:
             --body "🚨 Security vulnerability detected (CVSS: ${{ steps.metadata.outputs.cvss }}). Skipping auto-merge for manual review."
           exit 1
         env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Auto-approve and merge
         run: |
@@ -66,14 +60,14 @@ jobs:
           gh pr review ${{ github.event.pull_request.number }} --approve \
             --body "✅ Auto-approved ${{ steps.metadata.outputs.update-type }} update for ${{ steps.metadata.outputs.dependency-names }}"
 
-          # Enable auto-merge
-          gh pr merge ${{ github.event.pull_request.number }} --auto --squash
+          # Enable auto-merge with rebase
+          gh pr merge ${{ github.event.pull_request.number }} --auto --rebase
 
           # Add success comment
           gh pr comment ${{ github.event.pull_request.number }} \
-            --body "🚀 Auto-merge enabled for this ${{ steps.metadata.outputs.update-type }} update. Will merge once all checks pass."
+            --body "🚀 Auto-merge enabled for this ${{ steps.metadata.outputs.update-type }} update. Will rebase and merge once all checks pass."
         env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Handle failures
         if: failure()
@@ -82,4 +76,4 @@ jobs:
           gh pr comment ${{ github.event.pull_request.number }} \
             --body "❌ Auto-merge failed. Please check the workflow logs and consider manual review."
         env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
