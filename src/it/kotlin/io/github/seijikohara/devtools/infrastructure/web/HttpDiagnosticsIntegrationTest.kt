@@ -25,45 +25,47 @@ class HttpDiagnosticsIntegrationTest(
     private val webTestClient: WebTestClient,
 ) : FunSpec({
 
-    test("GET /api/http-headers should return request headers") {
-        val response =
-            webTestClient
-                .get()
-                .uri("/api/http-headers")
-                .header("X-Custom-Header", "test-value")
-                .exchange()
-                .expectStatus().isOk
-                .expectBody<HttpHeadersResponseDto>()
-                .returnResult()
-                .responseBody
+        test("GET /api/http-headers should return request headers") {
+            val response =
+                webTestClient
+                    .get()
+                    .uri("/api/http-headers")
+                    .header("X-Custom-Header", "test-value")
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody<HttpHeadersResponseDto>()
+                    .returnResult()
+                    .responseBody
 
-        response shouldNotBe null
-        response!!.headers.shouldNotBeEmpty()
+            response shouldNotBe null
+            response!!.headers.shouldNotBeEmpty()
 
-        // Verify that the custom header is included in the response
-        response.headers shouldContain
-            HttpHeadersResponseDto.HttpHeaderDto(
-                name = "X-Custom-Header",
-                value = "test-value",
-            )
-    }
+            // Verify that the custom header is included in the response
+            response.headers shouldContain
+                HttpHeadersResponseDto.HttpHeaderDto(
+                    name = "X-Custom-Header",
+                    value = "test-value",
+                )
+        }
 
-    test("GET /api/http-headers should include WebTestClient headers") {
-        val response =
-            webTestClient
-                .get()
-                .uri("/api/http-headers")
-                .exchange()
-                .expectStatus().isOk
-                .expectBody<HttpHeadersResponseDto>()
-                .returnResult()
-                .responseBody
+        test("GET /api/http-headers should include WebTestClient headers") {
+            val response =
+                webTestClient
+                    .get()
+                    .uri("/api/http-headers")
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody<HttpHeadersResponseDto>()
+                    .returnResult()
+                    .responseBody
 
-        response shouldNotBe null
-        response!!.headers.shouldNotBeEmpty()
+            response shouldNotBe null
+            response!!.headers.shouldNotBeEmpty()
 
-        // WebTestClient should send Request ID header
-        val headerNames = response.headers.map { it.name }
-        headerNames shouldContain "WebTestClient-Request-Id"
-    }
-})
+            // WebTestClient should send Request ID header
+            val headerNames = response.headers.map { it.name }
+            headerNames shouldContain "WebTestClient-Request-Id"
+        }
+    })

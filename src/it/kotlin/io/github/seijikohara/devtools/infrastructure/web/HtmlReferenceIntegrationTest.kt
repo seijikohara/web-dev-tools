@@ -26,99 +26,105 @@ class HtmlReferenceIntegrationTest(
     private val webTestClient: WebTestClient,
 ) : FunSpec({
 
-    test("GET /api/html-entities should return paginated results") {
-        val response =
-            webTestClient
-                .get()
-                .uri("/api/html-entities?name=&page=0&size=10")
-                .exchange()
-                .expectStatus().isOk
-                .expectBody<HtmlEntitySearchResponseDto>()
-                .returnResult()
-                .responseBody
+        test("GET /api/html-entities should return paginated results") {
+            val response =
+                webTestClient
+                    .get()
+                    .uri("/api/html-entities?name=&page=0&size=10")
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody<HtmlEntitySearchResponseDto>()
+                    .returnResult()
+                    .responseBody
 
-        response shouldNotBe null
-        response!!.content.shouldNotBeEmpty()
-        response.totalElements shouldBeGreaterThan 0
-        response.page shouldBe 0
-        response.size shouldBe 10
-    }
-
-    test("GET /api/html-entities should filter by name") {
-        val response =
-            webTestClient
-                .get()
-                .uri("/api/html-entities?name=nbsp&page=0&size=10")
-                .exchange()
-                .expectStatus().isOk
-                .expectBody<HtmlEntitySearchResponseDto>()
-                .returnResult()
-                .responseBody
-
-        response shouldNotBe null
-        response!!.content.shouldNotBeEmpty()
-
-        // All returned content should have "nbsp" in their name
-        response.content.forEach { item ->
-            item.name.contains("nbsp", ignoreCase = true) shouldBe true
+            response shouldNotBe null
+            response!!.content.shouldNotBeEmpty()
+            response.totalElements shouldBeGreaterThan 0
+            response.page shouldBe 0
+            response.size shouldBe 10
         }
-    }
 
-    test("GET /api/html-entities should handle pagination") {
-        val firstPage =
-            webTestClient
-                .get()
-                .uri("/api/html-entities?name=&page=0&size=5")
-                .exchange()
-                .expectStatus().isOk
-                .expectBody<HtmlEntitySearchResponseDto>()
-                .returnResult()
-                .responseBody
+        test("GET /api/html-entities should filter by name") {
+            val response =
+                webTestClient
+                    .get()
+                    .uri("/api/html-entities?name=nbsp&page=0&size=10")
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody<HtmlEntitySearchResponseDto>()
+                    .returnResult()
+                    .responseBody
 
-        val secondPage =
-            webTestClient
-                .get()
-                .uri("/api/html-entities?name=&page=1&size=5")
-                .exchange()
-                .expectStatus().isOk
-                .expectBody<HtmlEntitySearchResponseDto>()
-                .returnResult()
-                .responseBody
+            response shouldNotBe null
+            response!!.content.shouldNotBeEmpty()
 
-        firstPage shouldNotBe null
-        secondPage shouldNotBe null
-
-        // Different pages should have different content
-        firstPage!!.content.size shouldBe 5
-        secondPage!!.content.size shouldBe 5
-
-        // First item of first page should have a lower code value than first item of second page
-        if (firstPage.content.isNotEmpty() && secondPage.content.isNotEmpty()) {
-            firstPage.content.first().code shouldBeLessThan secondPage.content.first().code
+            // All returned content should have "nbsp" in their name
+            response.content.forEach { item ->
+                item.name.contains("nbsp", ignoreCase = true) shouldBe true
+            }
         }
-    }
 
-    test("GET /api/html-entities should return empty list for non-existent name") {
-        val response =
+        test("GET /api/html-entities should handle pagination") {
+            val firstPage =
+                webTestClient
+                    .get()
+                    .uri("/api/html-entities?name=&page=0&size=5")
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody<HtmlEntitySearchResponseDto>()
+                    .returnResult()
+                    .responseBody
+
+            val secondPage =
+                webTestClient
+                    .get()
+                    .uri("/api/html-entities?name=&page=1&size=5")
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody<HtmlEntitySearchResponseDto>()
+                    .returnResult()
+                    .responseBody
+
+            firstPage shouldNotBe null
+            secondPage shouldNotBe null
+
+            // Different pages should have different content
+            firstPage!!.content.size shouldBe 5
+            secondPage!!.content.size shouldBe 5
+
+            // First item of first page should have a lower code value than first item of second page
+            if (firstPage.content.isNotEmpty() && secondPage.content.isNotEmpty()) {
+                firstPage.content.first().code shouldBeLessThan secondPage.content.first().code
+            }
+        }
+
+        test("GET /api/html-entities should return empty list for non-existent name") {
+            val response =
+                webTestClient
+                    .get()
+                    .uri("/api/html-entities?name=nonexistententity123456&page=0&size=10")
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody<HtmlEntitySearchResponseDto>()
+                    .returnResult()
+                    .responseBody
+
+            response shouldNotBe null
+            response!!.content shouldBe emptyList()
+            response.totalElements shouldBe 0
+        }
+
+        test("GET /api/html-entities should handle invalid page size") {
             webTestClient
                 .get()
-                .uri("/api/html-entities?name=nonexistententity123456&page=0&size=10")
+                .uri("/api/html-entities?name=&page=0&size=0")
                 .exchange()
-                .expectStatus().isOk
-                .expectBody<HtmlEntitySearchResponseDto>()
-                .returnResult()
-                .responseBody
-
-        response shouldNotBe null
-        response!!.content shouldBe emptyList()
-        response.totalElements shouldBe 0
-    }
-
-    test("GET /api/html-entities should handle invalid page size") {
-        webTestClient
-            .get()
-            .uri("/api/html-entities?name=&page=0&size=0")
-            .exchange()
-            .expectStatus().isBadRequest
-    }
-})
+                .expectStatus()
+                .isBadRequest
+        }
+    })

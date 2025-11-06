@@ -19,11 +19,12 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class SimpleIntegrationTest(
     private val webTestClient: WebTestClient,
 ) : FunSpec({
-    test("Spring context should load") {
-        webTestClient
-            .get()
-            .uri("/api/http-headers")
-            .exchange()
-            .expectStatus().isOk
-    }
-})
+        test("Spring context should load") {
+            webTestClient
+                .get()
+                .uri("/api/http-headers")
+                .exchange()
+                .expectStatus()
+                .isOk
+        }
+    })

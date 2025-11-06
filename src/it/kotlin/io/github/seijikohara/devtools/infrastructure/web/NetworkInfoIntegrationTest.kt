@@ -27,94 +27,100 @@ class NetworkInfoIntegrationTest(
     private val webTestClient: WebTestClient,
 ) : FunSpec({
 
-    context("RDAP endpoint") {
-        test("GET /api/rdap/{ip} should return 400 for invalid IP address") {
-            webTestClient
-                .get()
-                .uri("/api/rdap/invalid-ip")
-                .exchange()
-                .expectStatus().isBadRequest
-        }
-
-        xtest("GET /api/rdap/{ip} should return 200 for valid IPv4 address") {
-            // Disabled: This test depends on external RDAP API which may be unavailable or slow
-            // Integration tests should focus on testing the integration between application layers,
-            // not external API availability
-            val response =
+        context("RDAP endpoint") {
+            test("GET /api/rdap/{ip} should return 400 for invalid IP address") {
                 webTestClient
                     .get()
-                    .uri("/api/rdap/8.8.8.8")
+                    .uri("/api/rdap/invalid-ip")
                     .exchange()
-                    .expectStatus().isOk
-                    .expectBody<RdapResponseDto>()
-                    .returnResult()
-                    .responseBody
+                    .expectStatus()
+                    .isBadRequest
+            }
 
-            response shouldNotBe null
-            response!!.rdap shouldNotBe null
+            xtest("GET /api/rdap/{ip} should return 200 for valid IPv4 address") {
+                // Disabled: This test depends on external RDAP API which may be unavailable or slow
+                // Integration tests should focus on testing the integration between application layers,
+                // not external API availability
+                val response =
+                    webTestClient
+                        .get()
+                        .uri("/api/rdap/8.8.8.8")
+                        .exchange()
+                        .expectStatus()
+                        .isOk
+                        .expectBody<RdapResponseDto>()
+                        .returnResult()
+                        .responseBody
+
+                response shouldNotBe null
+                response!!.rdap shouldNotBe null
+            }
+
+            xtest("GET /api/rdap/{ip} should return 200 for valid IPv6 address") {
+                // Disabled: This test depends on external RDAP API which may be unavailable or slow
+                // Integration tests should focus on testing the integration between application layers,
+                // not external API availability
+                val response =
+                    webTestClient
+                        .get()
+                        .uri("/api/rdap/2001:4860:4860::8888")
+                        .exchange()
+                        .expectStatus()
+                        .isOk
+                        .expectBody<RdapResponseDto>()
+                        .returnResult()
+                        .responseBody
+
+                response shouldNotBe null
+                response!!.rdap shouldNotBe null
+            }
         }
 
-        xtest("GET /api/rdap/{ip} should return 200 for valid IPv6 address") {
-            // Disabled: This test depends on external RDAP API which may be unavailable or slow
-            // Integration tests should focus on testing the integration between application layers,
-            // not external API availability
-            val response =
+        context("GeoLocation endpoint") {
+            test("GET /api/geo/{ip} should return 400 for invalid IP address") {
                 webTestClient
                     .get()
-                    .uri("/api/rdap/2001:4860:4860::8888")
+                    .uri("/api/geo/invalid-ip")
                     .exchange()
-                    .expectStatus().isOk
-                    .expectBody<RdapResponseDto>()
-                    .returnResult()
-                    .responseBody
+                    .expectStatus()
+                    .isBadRequest
+            }
 
-            response shouldNotBe null
-            response!!.rdap shouldNotBe null
+            xtest("GET /api/geo/{ip} should return 200 for valid IPv4 address") {
+                // Disabled: This test depends on external GeoIP API which may be unavailable or slow
+                // Integration tests should focus on testing the integration between application layers,
+                // not external API availability
+                val response =
+                    webTestClient
+                        .get()
+                        .uri("/api/geo/8.8.8.8")
+                        .exchange()
+                        .expectStatus()
+                        .isOk
+                        .expectBody<GeoResponseDto>()
+                        .returnResult()
+                        .responseBody
+
+                response shouldNotBe null
+                response!!.geo shouldNotBe null
+            }
+
+            xtest("GET /api/geo/{ip} should return location data for valid IP") {
+                // Disabled: This test depends on external API response which may vary
+                // and the DTO structure uses raw JSON data without direct property access
+                val response =
+                    webTestClient
+                        .get()
+                        .uri("/api/geo/8.8.8.8")
+                        .exchange()
+                        .expectStatus()
+                        .isOk
+                        .expectBody<GeoResponseDto>()
+                        .returnResult()
+                        .responseBody
+
+                response shouldNotBe null
+                response!!.geo shouldNotBe null
+            }
         }
-    }
-
-    context("GeoLocation endpoint") {
-        test("GET /api/geo/{ip} should return 400 for invalid IP address") {
-            webTestClient
-                .get()
-                .uri("/api/geo/invalid-ip")
-                .exchange()
-                .expectStatus().isBadRequest
-        }
-
-        xtest("GET /api/geo/{ip} should return 200 for valid IPv4 address") {
-            // Disabled: This test depends on external GeoIP API which may be unavailable or slow
-            // Integration tests should focus on testing the integration between application layers,
-            // not external API availability
-            val response =
-                webTestClient
-                    .get()
-                    .uri("/api/geo/8.8.8.8")
-                    .exchange()
-                    .expectStatus().isOk
-                    .expectBody<GeoResponseDto>()
-                    .returnResult()
-                    .responseBody
-
-            response shouldNotBe null
-            response!!.geo shouldNotBe null
-        }
-
-        xtest("GET /api/geo/{ip} should return location data for valid IP") {
-            // Disabled: This test depends on external API response which may vary
-            // and the DTO structure uses raw JSON data without direct property access
-            val response =
-                webTestClient
-                    .get()
-                    .uri("/api/geo/8.8.8.8")
-                    .exchange()
-                    .expectStatus().isOk
-                    .expectBody<GeoResponseDto>()
-                    .returnResult()
-                    .responseBody
-
-            response shouldNotBe null
-            response!!.geo shouldNotBe null
-        }
-    }
-})
+    })
