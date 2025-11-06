@@ -5,7 +5,7 @@ kotest = "6.0.4"
 kotlin = "2.2.21"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
-mockk = "1.13.14"
+mockk = "1.14.6"
 node-gradle = "7.1.0"
 # @keep
 nodejs = "24.11.0"
