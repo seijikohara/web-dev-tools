@@ -6,8 +6,6 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/seijikohara/web-dev-tools)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/seijikohara/web-dev-tools)
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/seijikohara/web-dev-tools/tree/main)
-
 ## Frameworks and libraries
 
 ### Backend
