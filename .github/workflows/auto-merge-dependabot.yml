@@ -27,6 +27,13 @@ jobs:
         with:
           app-id: ${{ vars.DEV_AUTOMATION_APP_ID }}
           private-key: ${{ secrets.DEV_AUTOMATION_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
 
       - name: Fetch Dependabot metadata
         id: metadata
@@ -46,7 +53,7 @@ jobs:
             --body "🚨 Security vulnerability detected (CVSS: ${{ steps.metadata.outputs.cvss }}). Skipping auto-merge for manual review."
           exit 1
         env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Auto-approve and merge
         run: |
@@ -60,14 +67,13 @@ jobs:
           gh pr review ${{ github.event.pull_request.number }} --approve \
             --body "✅ Auto-approved ${{ steps.metadata.outputs.update-type }} update for ${{ steps.metadata.outputs.dependency-names }}"
 
-          # Enable auto-merge with rebase
+          # Enable auto-merge
           gh pr merge ${{ github.event.pull_request.number }} --auto --rebase
-
           # Add success comment
           gh pr comment ${{ github.event.pull_request.number }} \
-            --body "🚀 Auto-merge enabled for this ${{ steps.metadata.outputs.update-type }} update. Will rebase and merge once all checks pass."
+            --body "🚀 Auto-merge enabled for this ${{ steps.metadata.outputs.update-type }} update. Will merge once all checks pass."
         env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Handle failures
         if: failure()
@@ -76,4 +82,4 @@ jobs:
           gh pr comment ${{ github.event.pull_request.number }} \
             --body "❌ Auto-merge failed. Please check the workflow logs and consider manual review."
         env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}

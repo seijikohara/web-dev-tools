@@ -1,4 +1,5 @@
 import com.github.gradle.node.npm.task.NpmTask
+import org.gradle.api.plugins.JavaPlugin
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
@@ -15,11 +16,11 @@ plugins {
     alias(libs.plugins.node.gradle)
     alias(libs.plugins.spotless)
     alias(libs.plugins.versions)
+    alias(libs.plugins.version.catalog.update)
     alias(libs.plugins.project.report)
 }
 
-group = "com.github.seijikohara.devtools"
-version = "1.0.0"
+group = "io.github.seijikohara.devtools"
 
 java {
     toolchain {
@@ -32,6 +33,10 @@ repositories {
 }
 
 dependencies {
+    // BOMs (Bill of Materials)
+    implementation(platform(libs.kotlinx.coroutines.bom))
+    implementation(platform(libs.kotlinx.serialization.bom))
+
     // Kotlin
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.serialization.json)
@@ -62,18 +67,6 @@ dependencies {
     // Runtime
     runtimeOnly(libs.h2)
     runtimeOnly(libs.r2dbc.h2)
-
-    // Testing
-    testImplementation(libs.spring.boot.starter.test)
-    testImplementation(libs.reactor.test)
-    testImplementation(libs.springmockk)
-    testImplementation(libs.kotest.runner.junit5)
-    testImplementation(libs.kotest.assertions.core)
-    testImplementation(libs.kotest.assertions.json)
-    testImplementation(libs.kotest.property)
-    testImplementation(libs.kotest.extensions.spring)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.kotlinx.coroutines.debug)
 }
 
 kotlin {
@@ -82,8 +75,75 @@ kotlin {
     }
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+
+            dependencies {
+                implementation(platform(libs.kotest.bom))
+                implementation(libs.kotest.runner.junit5)
+                implementation(libs.kotest.assertions.core)
+                implementation(libs.mockk)
+            }
+        }
+
+        val integrationTest by registering(JvmTestSuite::class) {
+            useJUnitJupiter()
+
+            dependencies {
+                implementation(project())
+                implementation(platform(libs.kotest.bom))
+                implementation(platform(libs.kotlinx.serialization.bom))
+                implementation(libs.spring.boot.starter.test)
+                implementation(libs.spring.boot.starter.webflux)
+                implementation(libs.reactor.test)
+                implementation(libs.kotest.runner.junit5)
+                implementation(libs.kotest.assertions.core)
+                implementation(libs.kotest.extensions.spring) {
+                    exclude(group = "org.springframework.boot", module = "spring-boot-starter-web")
+                }
+                implementation(libs.springmockk)
+                implementation(libs.kotlinx.serialization.json)
+            }
+
+            // Fix for JvmTestSuite not inheriting main implementation dependencies
+            // See: https://github.com/gradle/gradle/issues/25269
+            configurations {
+                named(sources.implementationConfigurationName) {
+                    extendsFrom(project.configurations.getByName(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME))
+                }
+
+                // Exclude spring-boot-starter-web from all configurations to force WebFlux usage
+                all {
+                    exclude(group = "org.springframework.boot", module = "spring-boot-starter-web")
+                    exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
+                }
+            }
+
+            sources {
+                kotlin {
+                    srcDirs("src/it/kotlin")
+                }
+                resources {
+                    srcDirs("src/it/resources")
+                }
+            }
+
+            targets {
+                all {
+                    testTask.configure {
+                        description = "Runs integration tests (infrastructure layer)"
+                        shouldRunAfter(test)
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.named("check") {
+    dependsOn(testing.suites.named("test"))
 }
 
 tasks.withType<BootJar> {
@@ -122,28 +182,4 @@ val npmRunBuild by tasks.registering(NpmTask::class) {
 
     args.set(listOf("run", "build-only", "--", "--outDir", "../src/main/resources/static"))
     workingDir.set(File("./frontend"))
-}
-
-/**
- * Heroku
- */
-
-val herokuStageBuildFrontend by tasks.registering {
-    group = "heroku"
-    dependsOn(npmRunBuild)
-    doLast {
-        delete("frontend/node_modules")
-    }
-}
-
-val herokuStageBuild by tasks.registering {
-    group = "heroku"
-    dependsOn("bootJar")
-    mustRunAfter(herokuStageBuildFrontend)
-}
-
-val herokuStage by tasks.registering {
-    group = "heroku"
-    dependsOn(herokuStageBuild)
-    dependsOn(herokuStageBuildFrontend)
 }
