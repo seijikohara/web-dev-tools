@@ -15,7 +15,6 @@ plugins {
     // Build tools
     alias(libs.plugins.node.gradle)
     alias(libs.plugins.spotless)
-    alias(libs.plugins.versions)
     alias(libs.plugins.version.catalog.update)
     alias(libs.plugins.project.report)
 }
