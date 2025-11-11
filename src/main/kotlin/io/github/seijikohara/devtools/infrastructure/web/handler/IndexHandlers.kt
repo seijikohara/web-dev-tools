@@ -1,6 +1,6 @@
 package io.github.seijikohara.devtools.infrastructure.web.handler
 
-import io.github.seijikohara.devtools.config.ApplicationProperties
+import io.github.seijikohara.devtools.infrastructure.config.ApplicationProperties
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse

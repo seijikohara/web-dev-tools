@@ -1,6 +1,7 @@
 package io.github.seijikohara.devtools.infrastructure.web
 
 import io.github.seijikohara.devtools.infrastructure.web.dto.HtmlEntitySearchResponseDto
+import io.kotest.assertions.assertSoftly
 import io.kotest.core.extensions.ApplyExtension
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.extensions.spring.SpringExtension
@@ -38,11 +39,13 @@ class HtmlReferenceIntegrationTest(
                     .returnResult()
                     .responseBody
 
-            response shouldNotBe null
-            response!!.content.shouldNotBeEmpty()
-            response.totalElements shouldBeGreaterThan 0
-            response.page shouldBe 0
-            response.size shouldBe 10
+            assertSoftly(response) {
+                it shouldNotBe null
+                it!!.content.shouldNotBeEmpty()
+                it.totalElements shouldBeGreaterThan 0
+                it.page shouldBe 0
+                it.size shouldBe 10
+            }
         }
 
         test("GET /api/html-entities should filter by name") {
@@ -57,12 +60,14 @@ class HtmlReferenceIntegrationTest(
                     .returnResult()
                     .responseBody
 
-            response shouldNotBe null
-            response!!.content.shouldNotBeEmpty()
+            assertSoftly(response) {
+                it shouldNotBe null
+                it!!.content.shouldNotBeEmpty()
 
-            // All returned content should have "nbsp" in their name
-            response.content.forEach { item ->
-                item.name.contains("nbsp", ignoreCase = true) shouldBe true
+                // All returned content should have "nbsp" in their name
+                it.content.forEach { item ->
+                    item.name.contains("nbsp", ignoreCase = true) shouldBe true
+                }
             }
         }
 
@@ -89,16 +94,18 @@ class HtmlReferenceIntegrationTest(
                     .returnResult()
                     .responseBody
 
-            firstPage shouldNotBe null
-            secondPage shouldNotBe null
+            assertSoftly {
+                firstPage shouldNotBe null
+                secondPage shouldNotBe null
 
-            // Different pages should have different content
-            firstPage!!.content.size shouldBe 5
-            secondPage!!.content.size shouldBe 5
+                // Different pages should have different content
+                firstPage!!.content.size shouldBe 5
+                secondPage!!.content.size shouldBe 5
 
-            // First item of first page should have a lower code value than first item of second page
-            if (firstPage.content.isNotEmpty() && secondPage.content.isNotEmpty()) {
-                firstPage.content.first().code shouldBeLessThan secondPage.content.first().code
+                // First item of first page should have a lower code value than first item of second page
+                if (firstPage.content.isNotEmpty() && secondPage.content.isNotEmpty()) {
+                    firstPage.content.first().code shouldBeLessThan secondPage.content.first().code
+                }
             }
         }
 
@@ -114,9 +121,11 @@ class HtmlReferenceIntegrationTest(
                     .returnResult()
                     .responseBody
 
-            response shouldNotBe null
-            response!!.content shouldBe emptyList()
-            response.totalElements shouldBe 0
+            assertSoftly(response) {
+                it shouldNotBe null
+                it!!.content shouldBe emptyList()
+                it.totalElements shouldBe 0
+            }
         }
 
         test("GET /api/html-entities should handle invalid page size") {

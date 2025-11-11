@@ -1,5 +1,6 @@
 package io.github.seijikohara.devtools.domain.htmlreference.model
 
+import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
@@ -80,13 +81,15 @@ class HtmlEntitySpec :
                         description = "ampersand",
                     )
 
-                entity.id shouldBe 123L
-                entity.name shouldBe "amp"
-                entity.code shouldBe code
-                entity.code2 shouldBe code2
-                entity.standard shouldBe "HTML5"
-                entity.dtd shouldBe "HTML 4.01"
-                entity.description shouldBe "ampersand"
+                assertSoftly(entity) {
+                    it.id shouldBe 123L
+                    it.name shouldBe "amp"
+                    it.code shouldBe code
+                    it.code2 shouldBe code2
+                    it.standard shouldBe "HTML5"
+                    it.dtd shouldBe "HTML 4.01"
+                    it.description shouldBe "ampersand"
+                }
             }
 
             test("should handle null optional properties") {
@@ -103,10 +106,12 @@ class HtmlEntitySpec :
                         description = null,
                     )
 
-                entity.code2 shouldBe null
-                entity.standard shouldBe null
-                entity.dtd shouldBe null
-                entity.description shouldBe null
+                assertSoftly(entity) {
+                    it.code2 shouldBe null
+                    it.standard shouldBe null
+                    it.dtd shouldBe null
+                    it.description shouldBe null
+                }
             }
         }
     })

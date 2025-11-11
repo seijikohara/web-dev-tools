@@ -1,6 +1,7 @@
 package io.github.seijikohara.devtools.infrastructure.externalapi.rdap
 
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
+import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -23,13 +24,15 @@ class RdapExtensionsSpec :
 
                 val result = response.toRdapInformation(testIpAddress)
 
-                result.ipAddress shouldBe testIpAddress
-                result.handle shouldBe "NET-192-0-2-0-1"
-                result.name shouldBe "TEST-NET-1"
-                result.country shouldNotBe null
-                result.country?.value shouldBe "US"
-                result.registeredAt shouldBe null
-                result.rawData shouldBe response
+                assertSoftly(result) {
+                    it.ipAddress shouldBe testIpAddress
+                    it.handle shouldBe "NET-192-0-2-0-1"
+                    it.name shouldBe "TEST-NET-1"
+                    it.country shouldNotBe null
+                    it.country?.value shouldBe "US"
+                    it.registeredAt shouldBe null
+                    it.rawData shouldBe response
+                }
             }
 
             test("should handle response with missing optional fields") {
@@ -40,11 +43,13 @@ class RdapExtensionsSpec :
 
                 val result = response.toRdapInformation(testIpAddress)
 
-                result.ipAddress shouldBe testIpAddress
-                result.handle shouldBe "NET-10-0-0-0-1"
-                result.name shouldBe null
-                result.country shouldBe null
-                result.registeredAt shouldBe null
+                assertSoftly(result) {
+                    it.ipAddress shouldBe testIpAddress
+                    it.handle shouldBe "NET-10-0-0-0-1"
+                    it.name shouldBe null
+                    it.country shouldBe null
+                    it.registeredAt shouldBe null
+                }
             }
 
             test("should handle response with all fields missing") {
@@ -52,12 +57,14 @@ class RdapExtensionsSpec :
 
                 val result = response.toRdapInformation(testIpAddress)
 
-                result.ipAddress shouldBe testIpAddress
-                result.handle shouldBe null
-                result.name shouldBe null
-                result.country shouldBe null
-                result.registeredAt shouldBe null
-                result.rawData shouldBe response
+                assertSoftly(result) {
+                    it.ipAddress shouldBe testIpAddress
+                    it.handle shouldBe null
+                    it.name shouldBe null
+                    it.country shouldBe null
+                    it.registeredAt shouldBe null
+                    it.rawData shouldBe response
+                }
             }
 
             test("should handle invalid country code") {
@@ -70,9 +77,11 @@ class RdapExtensionsSpec :
 
                 val result = response.toRdapInformation(testIpAddress)
 
-                result.handle shouldBe "NET-TEST"
-                result.name shouldBe "Test Network"
-                result.country shouldBe null
+                assertSoftly(result) {
+                    it.handle shouldBe "NET-TEST"
+                    it.name shouldBe "Test Network"
+                    it.country shouldBe null
+                }
             }
 
             test("should preserve raw data for debugging") {
@@ -87,9 +96,11 @@ class RdapExtensionsSpec :
 
                 val result = response.toRdapInformation(testIpAddress)
 
-                result.rawData shouldBe response
-                result.rawData["custom_field"] shouldBe JsonPrimitive("custom_value")
-                result.rawData["numeric_field"] shouldBe JsonPrimitive(999)
+                assertSoftly(result) {
+                    it.rawData shouldBe response
+                    it.rawData["custom_field"] shouldBe JsonPrimitive("custom_value")
+                    it.rawData["numeric_field"] shouldBe JsonPrimitive(999)
+                }
             }
 
             test("should handle different IP address types") {
@@ -103,8 +114,10 @@ class RdapExtensionsSpec :
 
                 val result = response.toRdapInformation(ipv6Address)
 
-                result.ipAddress shouldBe ipv6Address
-                result.handle shouldBe "NET6-2001-DB8-1"
+                assertSoftly(result) {
+                    it.ipAddress shouldBe ipv6Address
+                    it.handle shouldBe "NET6-2001-DB8-1"
+                }
             }
         }
     })

@@ -1,4 +1,4 @@
-package io.github.seijikohara.devtools.config
+package io.github.seijikohara.devtools.infrastructure.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.config.CorsRegistry

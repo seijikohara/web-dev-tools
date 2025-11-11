@@ -1,6 +1,7 @@
 package io.github.seijikohara.devtools.infrastructure.web
 
 import io.github.seijikohara.devtools.infrastructure.web.dto.HttpHeadersResponseDto
+import io.kotest.assertions.assertSoftly
 import io.kotest.core.extensions.ApplyExtension
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.extensions.spring.SpringExtension
@@ -38,15 +39,17 @@ class HttpDiagnosticsIntegrationTest(
                     .returnResult()
                     .responseBody
 
-            response shouldNotBe null
-            response!!.headers.shouldNotBeEmpty()
+            assertSoftly(response) {
+                it shouldNotBe null
+                it!!.headers.shouldNotBeEmpty()
 
-            // Verify that the custom header is included in the response
-            response.headers shouldContain
-                HttpHeadersResponseDto.HttpHeaderDto(
-                    name = "X-Custom-Header",
-                    value = "test-value",
-                )
+                // Verify that the custom header is included in the response
+                it.headers shouldContain
+                    HttpHeadersResponseDto.HttpHeaderDto(
+                        name = "X-Custom-Header",
+                        value = "test-value",
+                    )
+            }
         }
 
         test("GET /api/http-headers should include WebTestClient headers") {
@@ -61,11 +64,13 @@ class HttpDiagnosticsIntegrationTest(
                     .returnResult()
                     .responseBody
 
-            response shouldNotBe null
-            response!!.headers.shouldNotBeEmpty()
+            assertSoftly(response) {
+                it shouldNotBe null
+                it!!.headers.shouldNotBeEmpty()
 
-            // WebTestClient should send Request ID header
-            val headerNames = response.headers.map { it.name }
-            headerNames shouldContain "WebTestClient-Request-Id"
+                // WebTestClient should send Request ID header
+                val headerNames = it.headers.map { header -> header.name }
+                headerNames shouldContain "WebTestClient-Request-Id"
+            }
         }
     })

@@ -1,9 +1,9 @@
 package io.github.seijikohara.devtools.infrastructure.externalapi.geoip
 
-import io.github.seijikohara.devtools.config.ApplicationProperties
 import io.github.seijikohara.devtools.domain.networkinfo.model.GeoLocation
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
 import io.github.seijikohara.devtools.domain.networkinfo.repository.GeoIpRepository
+import io.github.seijikohara.devtools.infrastructure.config.ApplicationProperties
 import io.github.seijikohara.devtools.infrastructure.externalapi.common.decodeJsonToElements
 import io.github.seijikohara.devtools.infrastructure.externalapi.geoip.toGeoLocation
 import org.slf4j.Logger

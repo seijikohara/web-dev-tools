@@ -1,6 +1,6 @@
 package io.github.seijikohara.devtools.infrastructure.web.config
 
-import io.github.seijikohara.devtools.config.ApplicationProperties
+import io.github.seijikohara.devtools.infrastructure.config.ApplicationProperties
 import io.github.seijikohara.devtools.infrastructure.web.handler.handleIndex
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

@@ -1,4 +1,4 @@
-package io.github.seijikohara.devtools.config
+package io.github.seijikohara.devtools.infrastructure.config
 
 import org.slf4j.Logger
 import org.springframework.boot.context.properties.ConfigurationProperties

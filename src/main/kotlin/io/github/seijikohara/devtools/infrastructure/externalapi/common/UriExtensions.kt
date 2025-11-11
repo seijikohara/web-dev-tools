@@ -25,23 +25,25 @@ private fun concatenatePaths(vararg paths: String): String =
     paths
         .takeIf { it.isNotEmpty() }
         ?.let { pathArray ->
-            val hasLeadingSlash = pathArray.first().startsWith('/')
-            val hasTrailingSlash = pathArray.last().endsWith('/')
-
-            pathArray
-                .asSequence()
-                .map { it.replace(Regex("/+"), "/") }
-                .filter(String::isNotEmpty)
-                .map { it.trim('/') }
-                .filter(String::isNotEmpty)
-                .toList()
-                .takeIf(List<String>::isNotEmpty)
-                ?.joinToString("/")
-                ?.let { joinedPath ->
+            Triple(
+                pathArray.first().startsWith('/'),
+                pathArray.last().endsWith('/'),
+                pathArray
+                    .asSequence()
+                    .map { it.replace(Regex("/+"), "/") }
+                    .filter(String::isNotEmpty)
+                    .map { it.trim('/') }
+                    .filter(String::isNotEmpty)
+                    .toList()
+                    .takeIf(List<String>::isNotEmpty)
+                    ?.joinToString("/"),
+            ).let { (hasLeadingSlash, hasTrailingSlash, joinedPath) ->
+                joinedPath?.let { path ->
                     buildList {
                         if (hasLeadingSlash) add("/")
-                        add(joinedPath)
+                        add(path)
                         if (hasTrailingSlash) add("/")
                     }.joinToString("")
                 } ?: if (hasLeadingSlash) "/" else ""
+            }
         } ?: ""
