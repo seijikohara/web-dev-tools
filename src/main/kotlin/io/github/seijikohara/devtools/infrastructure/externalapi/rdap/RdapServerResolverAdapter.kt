@@ -2,8 +2,8 @@ package io.github.seijikohara.devtools.infrastructure.externalapi.rdap
 
 import com.google.common.collect.RangeMap
 import inet.ipaddr.IPAddress
-import io.github.seijikohara.devtools.config.ApplicationProperties
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
+import io.github.seijikohara.devtools.infrastructure.config.ApplicationProperties
 import org.slf4j.Logger
 import java.net.URI
 

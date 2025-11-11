@@ -3,6 +3,7 @@
 [![GitHub Actions](https://github.com/seijikohara/web-dev-tools/actions/workflows/ci.yml/badge.svg)](https://github.com/seijikohara/web-dev-tools/actions)
 ![Last Commit](https://img.shields.io/github/last-commit/seijikohara/web-dev-tools)
 ![GitHub top language](https://img.shields.io/github/languages/top/seijikohara/web-dev-tools)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Personal project for technical learning and experimentation, providing web developer utilities including HTML entity reference, IP geolocation, RDAP information, and HTTP diagnostics.
 
@@ -37,6 +38,7 @@ Personal project for technical learning and experimentation, providing web devel
 - **[Kotest](https://kotest.io/)** - Kotlin testing framework with multiple test styles and property-based testing
 - **[MockK](https://mockk.io/)** - Mocking library for Kotlin with coroutine support
 - **[SpringMockK](https://github.com/Ninja-Squad/springmockk)** - MockK integration for Spring dependency injection
+- **[ArchUnit](https://www.archunit.org/)** - Architecture testing library for enforcing Clean Architecture and DDD principles
 
 ### Frontend
 
@@ -73,3 +75,7 @@ Personal project for technical learning and experimentation, providing web devel
 ### Infrastructure
 
 - **[Docker](https://www.docker.com/)** - Container platform with multi-stage builds and distroless images (Java 25 runtime)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

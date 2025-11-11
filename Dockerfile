@@ -1,7 +1,9 @@
 FROM eclipse-temurin:25-jdk AS builder
 WORKDIR /app
 COPY ./ ./
-RUN ./gradlew clean npmRunBuild build -x test --no-daemon --stacktrace
+RUN ./gradlew clean --stacktrace && \
+    ./gradlew npmRunBuild --stacktrace && \
+    ./gradlew build -x test -x spotlessCheck -x spotlessKotlinCheck --stacktrace
 
 FROM gcr.io/distroless/java25-debian13
 WORKDIR /app

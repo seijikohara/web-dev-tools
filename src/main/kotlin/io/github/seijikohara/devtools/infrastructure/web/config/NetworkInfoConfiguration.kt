@@ -2,9 +2,9 @@ package io.github.seijikohara.devtools.infrastructure.web.config
 
 import io.github.seijikohara.devtools.application.usecase.GetGeoLocationUseCase
 import io.github.seijikohara.devtools.application.usecase.GetRdapInformationUseCase
-import io.github.seijikohara.devtools.config.ApplicationProperties
 import io.github.seijikohara.devtools.domain.networkinfo.repository.GeoIpRepository
 import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapRepository
+import io.github.seijikohara.devtools.infrastructure.config.ApplicationProperties
 import io.github.seijikohara.devtools.infrastructure.externalapi.geoip.GeoIpRepositoryAdapter
 import io.github.seijikohara.devtools.infrastructure.externalapi.rdap.RdapRepositoryAdapter
 import io.github.seijikohara.devtools.infrastructure.externalapi.rdap.RdapServerResolver

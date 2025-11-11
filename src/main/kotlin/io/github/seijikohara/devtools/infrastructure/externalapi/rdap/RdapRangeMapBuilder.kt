@@ -5,7 +5,7 @@ import com.google.common.collect.Range
 import com.google.common.collect.RangeMap
 import inet.ipaddr.IPAddress
 import inet.ipaddr.IPAddressString
-import io.github.seijikohara.devtools.config.ApplicationProperties
+import io.github.seijikohara.devtools.infrastructure.config.ApplicationProperties
 import io.github.seijikohara.devtools.infrastructure.externalapi.common.decodeJson
 import kotlinx.serialization.Serializable
 import org.slf4j.Logger

@@ -1,6 +1,7 @@
 package io.github.seijikohara.devtools.infrastructure.externalapi.geoip
 
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
+import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -24,13 +25,15 @@ class GeoIpExtensionsSpec :
 
                 val result = response.toGeoLocation(testIpAddress)
 
-                result.ipAddress shouldBe testIpAddress
-                result.countryCode shouldNotBe null
-                result.countryCode?.value shouldBe "US"
-                result.city shouldBe "New York"
-                result.latitude shouldBe 40.7128
-                result.longitude shouldBe -74.0060
-                result.rawData shouldBe response
+                assertSoftly(result) {
+                    it.ipAddress shouldBe testIpAddress
+                    it.countryCode shouldNotBe null
+                    it.countryCode?.value shouldBe "US"
+                    it.city shouldBe "New York"
+                    it.latitude shouldBe 40.7128
+                    it.longitude shouldBe -74.0060
+                    it.rawData shouldBe response
+                }
             }
 
             test("should handle alternative country field name") {
@@ -44,9 +47,11 @@ class GeoIpExtensionsSpec :
 
                 val result = response.toGeoLocation(testIpAddress)
 
-                result.countryCode shouldNotBe null
-                result.countryCode?.value shouldBe "JP"
-                result.city shouldBe "Tokyo"
+                assertSoftly(result) {
+                    it.countryCode shouldNotBe null
+                    it.countryCode?.value shouldBe "JP"
+                    it.city shouldBe "Tokyo"
+                }
             }
 
             test("should handle response with missing optional fields") {
@@ -57,12 +62,14 @@ class GeoIpExtensionsSpec :
 
                 val result = response.toGeoLocation(testIpAddress)
 
-                result.ipAddress shouldBe testIpAddress
-                result.countryCode shouldNotBe null
-                result.countryCode?.value shouldBe "GB"
-                result.city shouldBe null
-                result.latitude shouldBe null
-                result.longitude shouldBe null
+                assertSoftly(result) {
+                    it.ipAddress shouldBe testIpAddress
+                    it.countryCode shouldNotBe null
+                    it.countryCode?.value shouldBe "GB"
+                    it.city shouldBe null
+                    it.latitude shouldBe null
+                    it.longitude shouldBe null
+                }
             }
 
             test("should handle response with all fields missing") {
@@ -70,12 +77,14 @@ class GeoIpExtensionsSpec :
 
                 val result = response.toGeoLocation(testIpAddress)
 
-                result.ipAddress shouldBe testIpAddress
-                result.countryCode shouldBe null
-                result.city shouldBe null
-                result.latitude shouldBe null
-                result.longitude shouldBe null
-                result.rawData shouldBe response
+                assertSoftly(result) {
+                    it.ipAddress shouldBe testIpAddress
+                    it.countryCode shouldBe null
+                    it.city shouldBe null
+                    it.latitude shouldBe null
+                    it.longitude shouldBe null
+                    it.rawData shouldBe response
+                }
             }
 
             test("should handle invalid coordinate values") {
@@ -88,8 +97,10 @@ class GeoIpExtensionsSpec :
 
                 val result = response.toGeoLocation(testIpAddress)
 
-                result.latitude shouldBe null
-                result.longitude shouldBe null
+                assertSoftly(result) {
+                    it.latitude shouldBe null
+                    it.longitude shouldBe null
+                }
             }
 
             test("should handle invalid country code") {
@@ -101,8 +112,10 @@ class GeoIpExtensionsSpec :
 
                 val result = response.toGeoLocation(testIpAddress)
 
-                result.countryCode shouldBe null
-                result.city shouldBe "Unknown"
+                assertSoftly(result) {
+                    it.countryCode shouldBe null
+                    it.city shouldBe "Unknown"
+                }
             }
 
             test("should preserve raw data for debugging") {
@@ -115,9 +128,11 @@ class GeoIpExtensionsSpec :
 
                 val result = response.toGeoLocation(testIpAddress)
 
-                result.rawData shouldBe response
-                result.rawData["custom_field"] shouldBe JsonPrimitive("custom_value")
-                result.rawData["another_field"] shouldBe JsonPrimitive(123)
+                assertSoftly(result) {
+                    it.rawData shouldBe response
+                    it.rawData["custom_field"] shouldBe JsonPrimitive("custom_value")
+                    it.rawData["another_field"] shouldBe JsonPrimitive(123)
+                }
             }
         }
     })
