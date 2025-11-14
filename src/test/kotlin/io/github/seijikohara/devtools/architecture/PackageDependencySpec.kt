@@ -1,96 +1,106 @@
 package io.github.seijikohara.devtools.architecture
 
-import com.tngtech.archunit.core.domain.JavaClasses
-import com.tngtech.archunit.core.importer.ClassFileImporter
-import com.tngtech.archunit.core.importer.ImportOption
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
-import io.kotest.core.spec.style.DescribeSpec
+import com.lemonappdev.konsist.api.Konsist
+import com.lemonappdev.konsist.api.ext.list.withPackage
+import com.lemonappdev.konsist.api.verify.assertFalse
+import io.kotest.core.spec.style.FunSpec
 import io.kotest.datatest.withData
 
 /**
  * Package dependency rules using Kotest's data-driven testing.
  *
- * Demonstrates Kotest's powerful data-driven testing with ArchUnit.
+ * Demonstrates Kotest's powerful data-driven testing with Konsist.
  * Each forbidden dependency is tested individually with clear test names.
  */
 class PackageDependencySpec :
-    DescribeSpec({
-        val classes: JavaClasses =
-            ClassFileImporter()
-                .withImportOption(ImportOption.DoNotIncludeTests())
-                .importPackages("io.github.seijikohara.devtools")
-
-        describe("Domain layer forbidden dependencies") {
+    FunSpec({
+        context("Domain layer forbidden dependencies") {
             data class ForbiddenDependency(
                 val name: String,
-                val packages: List<String>,
+                val packagePrefixes: List<String>,
             )
 
             withData(
                 nameFn = { it.name },
                 ForbiddenDependency(
                     name = "Spring Framework",
-                    packages = listOf("org.springframework.."),
+                    packagePrefixes = listOf("org.springframework"),
                 ),
                 ForbiddenDependency(
                     name = "Spring Data",
-                    packages = listOf("org.springframework.data.."),
+                    packagePrefixes = listOf("org.springframework.data"),
                 ),
                 ForbiddenDependency(
                     name = "R2DBC",
-                    packages = listOf("io.r2dbc.."),
+                    packagePrefixes = listOf("io.r2dbc"),
                 ),
                 ForbiddenDependency(
                     name = "Spring Web",
-                    packages = listOf("org.springframework.web.."),
+                    packagePrefixes = listOf("org.springframework.web"),
                 ),
                 ForbiddenDependency(
                     name = "Jakarta Servlet",
-                    packages = listOf("jakarta.servlet.."),
+                    packagePrefixes = listOf("jakarta.servlet"),
                 ),
                 ForbiddenDependency(
                     name = "Infrastructure layer",
-                    packages = listOf("..infrastructure.."),
+                    packagePrefixes = listOf(".infrastructure."),
                 ),
-            ) { (_, packages) ->
-                noClasses()
-                    .that()
-                    .resideInAPackage("..domain..")
-                    .should()
-                    .dependOnClassesThat()
-                    .resideInAnyPackage(*packages.toTypedArray())
-                    .check(classes)
+            ) { (_, packagePrefixes) ->
+                Konsist
+                    .scopeFromProduction()
+                    .files
+                    .withPackage("..domain..")
+                    .assertFalse(testName = koTestName) {
+                        it.hasImport { import ->
+                            packagePrefixes.any { prefix ->
+                                if (prefix.startsWith(".")) {
+                                    import.name.contains(prefix)
+                                } else {
+                                    import.name.startsWith(prefix)
+                                }
+                            }
+                        }
+                    }
             }
         }
 
-        describe("Application layer forbidden dependencies") {
+        context("Application layer forbidden dependencies") {
             data class ForbiddenDependency(
                 val name: String,
-                val packages: List<String>,
+                val packagePrefixes: List<String>,
             )
 
             withData(
                 nameFn = { it.name },
                 ForbiddenDependency(
                     name = "Infrastructure layer",
-                    packages = listOf("..infrastructure.."),
+                    packagePrefixes = listOf(".infrastructure."),
                 ),
                 ForbiddenDependency(
                     name = "Database libraries",
-                    packages = listOf("org.springframework.data..", "io.r2dbc.."),
+                    packagePrefixes = listOf("org.springframework.data", "io.r2dbc"),
                 ),
                 ForbiddenDependency(
                     name = "Web libraries",
-                    packages = listOf("org.springframework.web..", "jakarta.servlet.."),
+                    packagePrefixes = listOf("org.springframework.web", "jakarta.servlet"),
                 ),
-            ) { (_, packages) ->
-                noClasses()
-                    .that()
-                    .resideInAPackage("..application..")
-                    .should()
-                    .dependOnClassesThat()
-                    .resideInAnyPackage(*packages.toTypedArray())
-                    .check(classes)
+            ) { (_, packagePrefixes) ->
+                Konsist
+                    .scopeFromProduction()
+                    .files
+                    .withPackage("..application..")
+                    .assertFalse(testName = koTestName) {
+                        it.hasImport { import ->
+                            packagePrefixes.any { prefix ->
+                                if (prefix.startsWith(".")) {
+                                    import.name.contains(prefix)
+                                } else {
+                                    import.name.startsWith(prefix)
+                                }
+                            }
+                        }
+                    }
             }
         }
     })

@@ -3,25 +3,25 @@ package io.github.seijikohara.devtools.application.usecase
 /**
  * Use case for retrieving client IP address and hostname information.
  *
- * This is a functional interface that encapsulates the business logic
- * for extracting client IP information from HTTP request headers and connection data.
+ * @see Request
+ * @see Response
  */
 fun interface GetIpInfoUseCase {
     /**
-     * Executes the use case.
+     * Retrieves client IP address and hostname information.
      *
-     * @param request The use case request containing HTTP headers and connection information
-     * @return Response containing the client's IP address and hostname
+     * @param request The request containing HTTP headers and connection information
+     * @return [Response] containing the client's IP address and hostname
      */
     operator fun invoke(request: Request): Response
 
     /**
      * Request for retrieving IP information.
      *
-     * @property xForwardedFor X-Forwarded-For header value (proxy forwarding chain)
-     * @property xRealIp X-Real-IP header value (direct proxy IP)
-     * @property remoteAddress Remote socket address from connection
-     * @property canonicalHostName Canonical hostname from reverse DNS lookup
+     * @property xForwardedFor X-Forwarded-For header value
+     * @property xRealIp X-Real-IP header value
+     * @property remoteAddress Remote socket address
+     * @property canonicalHostName Canonical hostname
      */
     data class Request(
         val xForwardedFor: String?,
@@ -33,8 +33,8 @@ fun interface GetIpInfoUseCase {
     /**
      * Response containing IP information.
      *
-     * @property ipAddress The client's IP address (extracted from headers or remote address)
-     * @property hostName The client's hostname (from reverse DNS lookup)
+     * @property ipAddress The client's IP address
+     * @property hostName The client's hostname
      */
     data class Response(
         val ipAddress: String?,
@@ -43,14 +43,9 @@ fun interface GetIpInfoUseCase {
 }
 
 /**
- * Factory function to create a GetIpInfoUseCase instance.
+ * Creates a [GetIpInfoUseCase] instance.
  *
- * IP address extraction priority:
- * 1. X-Forwarded-For header (first IP in the chain, for proxied requests)
- * 2. X-Real-IP header (for direct proxy connections)
- * 3. Remote address (for direct connections)
- *
- * @return A GetIpInfoUseCase instance
+ * @return A [GetIpInfoUseCase] instance
  */
 fun getIpInfoUseCase(): GetIpInfoUseCase =
     GetIpInfoUseCase { request ->

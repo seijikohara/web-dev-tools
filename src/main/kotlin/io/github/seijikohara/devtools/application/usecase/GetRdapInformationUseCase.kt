@@ -1,5 +1,6 @@
 package io.github.seijikohara.devtools.application.usecase
 
+import io.github.seijikohara.devtools.domain.common.extensions.flatMap
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
 import io.github.seijikohara.devtools.domain.networkinfo.model.RdapInformation
 import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapRepository
@@ -7,15 +8,16 @@ import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapReposito
 /**
  * Use case for retrieving RDAP information for an IP address.
  *
- * This is a functional interface that encapsulates the business logic
- * for fetching RDAP data.
+ * @see Request
+ * @see Response
+ * @see RdapInformation
  */
 fun interface GetRdapInformationUseCase {
     /**
-     * Executes the use case.
+     * Retrieves RDAP information for an IP address.
      *
-     * @param request The use case request containing the IP address string
-     * @return Result containing Response if successful, or a failure with an exception
+     * @param request The request containing the IP address string
+     * @return [Result] containing [Response] on success, or failure with exception
      */
     suspend operator fun invoke(request: Request): Result<Response>
 
@@ -31,7 +33,7 @@ fun interface GetRdapInformationUseCase {
     /**
      * Response containing RDAP information.
      *
-     * @property rdapInformation RDAP registration data for the requested IP address
+     * @property rdapInformation RDAP registration data
      */
     data class Response(
         val rdapInformation: RdapInformation,
@@ -39,17 +41,17 @@ fun interface GetRdapInformationUseCase {
 }
 
 /**
- * Factory function to create a GetRdapInformationUseCase instance.
+ * Creates a [GetRdapInformationUseCase] instance.
  *
  * @param rdapRepository The RDAP repository implementation
- * @return A GetRdapInformationUseCase instance
+ * @return A [GetRdapInformationUseCase] instance
  */
 fun getRdapInformationUseCase(rdapRepository: RdapRepository): GetRdapInformationUseCase =
     GetRdapInformationUseCase { request ->
         IpAddress
             .of(request.ipAddressString)
-            .mapCatching { ipAddress ->
-                rdapRepository(ipAddress).getOrThrow()
+            .flatMap { ipAddress ->
+                rdapRepository(ipAddress)
             }.map { rdapInfo ->
                 GetRdapInformationUseCase.Response(rdapInfo)
             }

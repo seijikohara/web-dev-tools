@@ -4,15 +4,13 @@ import io.github.seijikohara.devtools.application.usecase.SearchHtmlEntitiesUseC
 import io.github.seijikohara.devtools.domain.htmlreference.model.HtmlEntity
 
 /**
- * Data transfer object for HTML entity search response.
+ * HTML entity search response.
  *
- * Represents paginated search results for HTML entities.
- *
- * @property content List of HTML entities in the current page
- * @property totalElements Total number of entities matching the search criteria
- * @property page Current page number (zero-based)
- * @property size Number of items per page
- * @property totalPages Total number of pages
+ * @property content List of HTML entities
+ * @property totalElements Total number of entities
+ * @property page Page number
+ * @property size Items per page
+ * @property totalPages Total pages
  */
 data class HtmlEntitySearchResponseDto(
     val content: List<HtmlEntityDto>,
@@ -22,15 +20,15 @@ data class HtmlEntitySearchResponseDto(
     val totalPages: Int,
 ) {
     /**
-     * Data transfer object for individual HTML entity.
+     * HTML entity.
      *
-     * @property name Name of the HTML entity
-     * @property code Primary numeric character code
-     * @property code2 Secondary numeric character code, if applicable
+     * @property name Entity name
+     * @property code Numeric character code
+     * @property code2 Alternative numeric character code
      * @property standard HTML standard specification
      * @property dtd Document type definition
-     * @property description Human-readable description of the entity
-     * @property entityReference HTML entity reference string (e.g., "&amp;")
+     * @property description Entity description
+     * @property entityReference Entity reference string
      */
     data class HtmlEntityDto(
         val name: String,
@@ -44,10 +42,10 @@ data class HtmlEntitySearchResponseDto(
 }
 
 /**
- * Converts use case response to DTO.
+ * Converts to [HtmlEntitySearchResponseDto].
  *
- * @receiver Response from the search HTML entities use case
- * @return HTML entity search response DTO
+ * @receiver Response data
+ * @return [HtmlEntitySearchResponseDto] instance
  */
 fun SearchHtmlEntitiesUseCase.Response.toDto(): HtmlEntitySearchResponseDto =
     HtmlEntitySearchResponseDto(
@@ -59,10 +57,10 @@ fun SearchHtmlEntitiesUseCase.Response.toDto(): HtmlEntitySearchResponseDto =
     )
 
 /**
- * Converts domain entity to DTO.
+ * Converts to [HtmlEntityDto].
  *
- * @receiver HTML entity domain object
- * @return HTML entity DTO
+ * @receiver HTML entity
+ * @return [HtmlEntityDto] instance
  */
 private fun HtmlEntity.toDto(): HtmlEntitySearchResponseDto.HtmlEntityDto =
     HtmlEntitySearchResponseDto.HtmlEntityDto(

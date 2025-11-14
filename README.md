@@ -10,6 +10,10 @@ Personal project for technical learning and experimentation, providing web devel
 - **Backend**: Reactive architecture with Kotlin coroutines and Spring WebFlux, implementing clean architecture principles and domain-driven design with non-blocking I/O throughout the stack
 - **Frontend**: Type-safe single-page application with Vue 3 Composition API and TypeScript, featuring component-based UI and modern build tooling
 
+For detailed information:
+- **Architecture principles**: See [Architecture Guide](docs/ARCHITECTURE.md) for Clean Architecture and DDD implementation details
+- **Frontend setup**: See [Frontend README](frontend/README.md) for development environment and testing guide
+
 ## Tech Stack
 
 ### Backend

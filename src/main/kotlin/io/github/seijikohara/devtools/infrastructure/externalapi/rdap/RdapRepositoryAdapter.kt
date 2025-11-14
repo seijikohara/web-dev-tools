@@ -2,11 +2,10 @@ package io.github.seijikohara.devtools.infrastructure.externalapi.rdap
 
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
 import io.github.seijikohara.devtools.domain.networkinfo.model.RdapInformation
+import io.github.seijikohara.devtools.domain.networkinfo.model.buildQueryUri
 import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapRepository
-import io.github.seijikohara.devtools.infrastructure.externalapi.common.buildRdapUri
-import io.github.seijikohara.devtools.infrastructure.externalapi.common.decodeJsonToElements
-import io.github.seijikohara.devtools.infrastructure.externalapi.rdap.toRdapInformation
-import org.slf4j.Logger
+import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapServerResolver
+import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
@@ -14,31 +13,24 @@ import org.springframework.web.reactive.function.client.awaitBody
 /**
  * Adapter implementation for RDAP repository.
  *
- * Retrieves RDAP information from external RDAP servers via HTTP.
- * Uses functional programming approach with expression chains.
- *
- * @property logger Logger for recording API requests
- * @property webClient HTTP client for external API communication
- * @property rdapServerResolver Resolver for determining the appropriate RDAP server
+ * @property webClient HTTP client for external API calls
+ * @property rdapServerResolver RDAP server resolver
  */
 class RdapRepositoryAdapter(
-    private val logger: Logger,
     private val webClient: WebClient,
     private val rdapServerResolver: RdapServerResolver,
 ) : RdapRepository {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     /**
-     * Retrieves RDAP information for the given IP address.
+     * Retrieves RDAP information for an IP address.
      *
-     * Resolves the appropriate RDAP server for the IP address, constructs
-     * the request URI, fetches the data, and transforms the JSON response
-     * into a domain model object.
-     *
-     * @param ipAddress The IP address to look up
-     * @return Result containing RdapInformation on success, or error on failure
+     * @param ipAddress The IP address to query
+     * @return [Result] containing [RdapInformation] on success, or failure with exception
      */
     override suspend fun invoke(ipAddress: IpAddress): Result<RdapInformation> =
         rdapServerResolver(ipAddress)
-            .mapCatching { server -> server.buildRdapUri(ipAddress) }
+            .mapCatching { server -> server.buildQueryUri(ipAddress) }
             .onSuccess { uri -> logger.info("[RDAP] Fetching: $uri") }
             .mapCatching { uri ->
                 webClient
@@ -47,6 +39,6 @@ class RdapRepositoryAdapter(
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .awaitBody<String>()
-            }.mapCatching(::decodeJsonToElements)
-            .mapCatching { rawData -> rawData.toRdapInformation(ipAddress) }
+            }.mapCatching(::decodeJsonToRdapResponse)
+            .mapCatching { it.toDomain(ipAddress) }
 }

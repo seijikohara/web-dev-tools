@@ -4,17 +4,17 @@ import io.github.seijikohara.devtools.domain.networkinfo.model.GeoLocation
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
 
 /**
- * Repository interface (port) for accessing GeoIP information.
+ * Repository interface for accessing geographic location information.
  *
- * This is a functional interface that defines the contract for retrieving
- * geographic location information for an IP address.
+ * @see GeoLocation
+ * @see IpAddress
  */
 fun interface GeoIpRepository {
     /**
-     * Retrieves geographic location information for the given IP address.
+     * Retrieves geographic location information for an IP address.
      *
-     * @param ipAddress The IP address to look up
-     * @return Result containing GeoLocation if successful, or a failure with an exception
+     * @param ipAddress The IP address to query
+     * @return [Result] containing [GeoLocation] on success, or failure with exception
      */
     suspend operator fun invoke(ipAddress: IpAddress): Result<GeoLocation>
 }

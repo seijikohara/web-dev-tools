@@ -1,7 +1,7 @@
 [versions]
-archunit = "1.4.1"
 guava = "33.5.0-jre"
 ipaddress = "5.5.1"
+konsist = "0.17.3"
 kotest = "6.0.4"
 kotlin = "2.2.21"
 kotlinx-coroutines = "1.10.2"
@@ -15,15 +15,16 @@ npm = "11.6.2"
 spotless = "8.0.0"
 spring-boot = "3.5.7"
 spring-dependency-management = "1.1.7"
+springdoc-openapi = "2.8.14"
 springmockk = "4.0.2"
 version-catalog-update = "1.0.1"
 
 [libraries]
-archunit-junit5 = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
 flyway-core = { module = "org.flywaydb:flyway-core" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 h2 = { module = "com.h2database:h2" }
 ipaddress = { module = "com.github.seancfoley:ipaddress", version.ref = "ipaddress" }
+konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core" }
 kotest-bom = { module = "io.kotest:kotest-bom", version.ref = "kotest" }
 kotest-extensions-spring = { module = "io.kotest:kotest-extensions-spring" }
@@ -46,6 +47,7 @@ spring-boot-starter-data-r2dbc = { module = "org.springframework.boot:spring-boo
 spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+springdoc-openapi-starter-webflux-ui = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version.ref = "springdoc-openapi" }
 springmockk = { module = "com.ninja-squad:springmockk", version.ref = "springmockk" }
 
 [plugins]

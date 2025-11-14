@@ -8,27 +8,22 @@ import inet.ipaddr.IPAddressString
 import io.github.seijikohara.devtools.infrastructure.config.ApplicationProperties
 import io.github.seijikohara.devtools.infrastructure.externalapi.common.decodeJson
 import kotlinx.serialization.Serializable
-import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.net.URI
+
+private val logger = LoggerFactory.getLogger(RdapRangeMapBuilder::class.java)
 
 /**
  * Builder for constructing IP address range to RDAP server URI mapping.
- *
- * Loads IPv4 and IPv6 RDAP definitions from configuration files
- * and constructs an efficient Guava RangeMap for lookups.
  */
 object RdapRangeMapBuilder {
     /**
-     * Builds RangeMap for RDAP server URI resolution.
+     * Builds range map for RDAP server URI resolution.
      *
-     * @param logger Logger for initialization messages
-     * @param applicationProperties Application configuration containing RDAP definitions
-     * @return RangeMap mapping IP address ranges to RDAP server URIs
+     * @param applicationProperties Application configuration properties
+     * @return [RangeMap] for IP address to RDAP server URI mapping
      */
-    fun build(
-        logger: Logger,
-        applicationProperties: ApplicationProperties,
-    ): RangeMap<IPAddress, URI> =
+    fun build(applicationProperties: ApplicationProperties): RangeMap<IPAddress, URI> =
         listOf(
             applicationProperties.network.rdap.ipv4 to "IPV4",
             applicationProperties.network.rdap.ipv6 to "IPV6",
@@ -58,10 +53,7 @@ object RdapRangeMapBuilder {
 }
 
 /**
- * RDAP definition file structure.
- *
- * Represents the JSON structure of RDAP server mapping files
- * as defined by IANA (Internet Assigned Numbers Authority).
+ * RDAP definition file structure as defined by IANA.
  */
 @Serializable
 internal data class RdapFileStructure(

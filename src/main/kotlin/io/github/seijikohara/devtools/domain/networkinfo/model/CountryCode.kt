@@ -1,12 +1,11 @@
 package io.github.seijikohara.devtools.domain.networkinfo.model
 
 /**
- * ISO 3166-1 alpha-2 country code value object.
+ * Represents an ISO 3166-1 alpha-2 country code.
  *
- * Represents a two-letter country code in uppercase format.
- * Examples: "US", "JP", "GB"
+ * Wraps a validated two-character uppercase country code string conforming to ISO 3166-1 alpha-2.
  *
- * @property value The string representation of the country code
+ * @property value The two-character uppercase country code string
  */
 @JvmInline
 value class CountryCode private constructor(
@@ -14,10 +13,13 @@ value class CountryCode private constructor(
 ) {
     companion object {
         /**
-         * Creates a CountryCode from a string value.
+         * Creates a [CountryCode] from a string value with validation.
          *
-         * @param value The string representation of a country code (must be 2 uppercase letters)
-         * @return Result containing the CountryCode if valid, or a failure with an exception
+         * Validates that the input has exactly two uppercase letters.
+         *
+         * @param value The country code string
+         * @return [Result.success] containing the [CountryCode] if valid,
+         *         or [Result.failure] with [IllegalArgumentException] if invalid format
          */
         fun of(value: String): Result<CountryCode> =
             runCatching {
@@ -29,5 +31,10 @@ value class CountryCode private constructor(
             }
     }
 
+    /**
+     * Returns the string representation of this country code.
+     *
+     * @return The two-character uppercase country code
+     */
     override fun toString(): String = value
 }

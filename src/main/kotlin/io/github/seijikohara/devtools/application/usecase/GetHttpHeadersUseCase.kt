@@ -3,22 +3,22 @@ package io.github.seijikohara.devtools.application.usecase
 /**
  * Use case for retrieving HTTP request headers.
  *
- * This is a functional interface that encapsulates the business logic
- * for extracting and formatting HTTP headers from a request.
+ * @see Request
+ * @see Response
  */
 fun interface GetHttpHeadersUseCase {
     /**
-     * Executes the use case.
+     * Retrieves HTTP headers from the request.
      *
-     * @param request The use case request containing HTTP headers
-     * @return Response containing the list of HTTP headers
+     * @param request The request containing HTTP headers
+     * @return [Response] containing the list of HTTP headers
      */
     operator fun invoke(request: Request): Response
 
     /**
      * Request for retrieving HTTP headers.
      *
-     * @property headers Map of header names to their values (multi-value headers supported)
+     * @property headers Map of header names to values supporting multi-value headers
      */
     data class Request(
         val headers: Map<String, List<String>>,
@@ -27,7 +27,7 @@ fun interface GetHttpHeadersUseCase {
     /**
      * Response containing HTTP headers.
      *
-     * @property headers List of HTTP header name-value pairs
+     * @property headers List of [HttpHeader] instances
      */
     data class Response(
         val headers: List<HttpHeader>,
@@ -46,11 +46,9 @@ fun interface GetHttpHeadersUseCase {
 }
 
 /**
- * Factory function to create a GetHttpHeadersUseCase instance.
+ * Creates a [GetHttpHeadersUseCase] instance.
  *
- * Flattens multi-value headers into individual name-value pairs.
- *
- * @return A GetHttpHeadersUseCase instance
+ * @return A [GetHttpHeadersUseCase] instance
  */
 fun getHttpHeadersUseCase(): GetHttpHeadersUseCase =
     GetHttpHeadersUseCase { request ->

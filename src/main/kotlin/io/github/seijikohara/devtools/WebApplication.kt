@@ -6,9 +6,6 @@ import org.springframework.boot.runApplication
 
 /**
  * Main application class for the Web Development Tools application.
- *
- * This Spring Boot application provides various web development utilities
- * including HTML entity reference, network information lookup, and HTTP diagnostics.
  */
 @SpringBootApplication
 @ConfigurationPropertiesScan
@@ -16,8 +13,6 @@ class WebApplication
 
 /**
  * Application entry point.
- *
- * Bootstraps the Spring Boot application with the provided command-line arguments.
  *
  * @param args Command-line arguments passed to the application
  */

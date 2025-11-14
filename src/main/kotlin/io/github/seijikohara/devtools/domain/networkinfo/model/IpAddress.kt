@@ -3,12 +3,11 @@ package io.github.seijikohara.devtools.domain.networkinfo.model
 import inet.ipaddr.IPAddressString
 
 /**
- * IP address value object supporting both IPv4 and IPv6.
+ * Represents an IP address supporting both IPv4 and IPv6 formats.
  *
- * This value class provides type-safe IP address handling with validation.
- * Internally uses the IPAddress library (com.github.seancfoley:ipaddress) for robust validation and parsing.
+ * Wraps a validated IP address string using the `inet.ipaddr` library for validation.
  *
- * @property value The string representation of the IP address
+ * @property value The validated string representation of the IP address
  */
 @JvmInline
 value class IpAddress private constructor(
@@ -16,10 +15,13 @@ value class IpAddress private constructor(
 ) {
     companion object {
         /**
-         * Creates an IpAddress from a string value.
+         * Creates an [IpAddress] from a string value with validation.
+         *
+         * Validates that the input is not blank and conforms to IPv4 or IPv6 format.
          *
          * @param value The string representation of an IP address
-         * @return Result containing the IpAddress if valid, or a failure with an exception
+         * @return [Result.success] containing the [IpAddress] if valid,
+         *         or [Result.failure] with [IllegalArgumentException] if invalid
          */
         fun of(value: String): Result<IpAddress> =
             runCatching {
@@ -37,9 +39,10 @@ value class IpAddress private constructor(
     }
 
     /**
-     * Converts this IpAddress to inet.ipaddr.IPAddress for interoperability with existing code.
+     * Converts this [IpAddress] to `inet.ipaddr.IPAddress` for library interoperability.
      *
-     * @throws IllegalStateException if the IP address is invalid (should never occur due to validation in of())
+     * @return The `inet.ipaddr.IPAddress` representation
+     * @throws IllegalStateException if the IP address is invalid (should never occur due to validation in [of])
      */
     fun toInetIPAddress(): inet.ipaddr.IPAddress =
         requireNotNull(IPAddressString(value).toAddress()) {
@@ -47,14 +50,23 @@ value class IpAddress private constructor(
         }
 
     /**
-     * Checks if this IP address is IPv4.
+     * Checks if this IP address is in IPv4 format.
+     *
+     * @return `true` if IPv4, `false` if IPv6
      */
     fun isIpV4(): Boolean = toInetIPAddress().isIPv4
 
     /**
-     * Checks if this IP address is IPv6.
+     * Checks if this IP address is in IPv6 format.
+     *
+     * @return `true` if IPv6, `false` if IPv4
      */
     fun isIpV6(): Boolean = toInetIPAddress().isIPv6
 
+    /**
+     * Returns the string representation of this IP address.
+     *
+     * @return The IP address string
+     */
     override fun toString(): String = value
 }

@@ -6,26 +6,24 @@ import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Repository
 
 /**
- * Spring Data R2DBC repository for HTML entities.
- *
- * Provides database access using Spring Data's reactive coroutine support.
+ * Database repository for HTML entities.
  */
 @Repository
 interface HtmlEntityDbRepository : CoroutineCrudRepository<HtmlEntityDbEntity, Long> {
     /**
-     * Count HTML entities by name containing keyword.
+     * Counts HTML entities by name containing keyword.
      *
-     * @param name Search keyword (case-insensitive partial match)
+     * @param name Search keyword
      * @return Total count of matching entities
      */
     suspend fun countByNameContaining(name: String): Long
 
     /**
-     * Find HTML entities by name containing keyword with pagination.
+     * Finds HTML entities by name containing keyword with pagination.
      *
-     * @param name Search keyword (case-insensitive partial match)
+     * @param name Search keyword
      * @param pageable Pagination and sorting information
-     * @return Flow of matching entities
+     * @return [Flow] of matching entities
      */
     fun findByNameContaining(
         name: String,

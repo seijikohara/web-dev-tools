@@ -5,9 +5,7 @@ import org.springframework.web.reactive.config.CorsRegistry
 import org.springframework.web.reactive.config.WebFluxConfigurer
 
 /**
- * WebFlux configuration class for configuring web layer settings.
- *
- * @property applicationProperties Application configuration properties
+ * WebFlux configuration for web layer settings.
  */
 @Configuration
 class WebFluxConfig(
@@ -16,9 +14,7 @@ class WebFluxConfig(
     /**
      * Configures CORS (Cross-Origin Resource Sharing) mappings.
      *
-     * Applies CORS settings from application properties to the specified path patterns.
-     *
-     * @param corsRegistry Registry for CORS configuration
+     * @param corsRegistry [CorsRegistry] for CORS configuration
      */
     override fun addCorsMappings(corsRegistry: CorsRegistry) {
         applicationProperties.cors.run {

@@ -1,5 +1,4 @@
 import com.github.gradle.node.npm.task.NpmTask
-import org.gradle.api.plugins.JavaPlugin
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
@@ -20,7 +19,9 @@ plugins {
 }
 
 group = "io.github.seijikohara.devtools"
+version = "1.0.0"
 
+// Java Toolchain configuration
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -32,95 +33,108 @@ repositories {
 }
 
 dependencies {
-    // BOMs (Bill of Materials)
+    // BOMs (Bill of Materials) - Define platform dependencies first
     implementation(platform(libs.kotlinx.coroutines.bom))
     implementation(platform(libs.kotlinx.serialization.bom))
 
-    // Kotlin
+    // Kotlin dependencies
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.reactive)
     implementation(libs.kotlinx.coroutines.reactor)
 
-    // Spring Boot
+    // Spring Boot starters
     implementation(libs.spring.boot.starter.webflux)
     implementation(libs.spring.boot.starter.actuator)
     implementation(libs.spring.boot.starter.data.r2dbc)
     implementation(libs.spring.boot.starter.jdbc)
 
-    // Reactor
+    // Additional Spring dependencies
+    implementation(libs.springdoc.openapi.starter.webflux.ui)
     implementation(libs.reactor.kotlin.extensions)
 
     // Database
     implementation(libs.flyway.core)
 
-    // Libraries
+    // Utility libraries
     implementation(libs.guava)
     implementation(libs.ipaddress)
 
-    // Development
+    // Development only
     developmentOnly(libs.spring.boot.devtools)
     annotationProcessor(libs.spring.boot.configuration.processor)
 
-    // Runtime
+    // Runtime dependencies
     runtimeOnly(libs.h2)
     runtimeOnly(libs.r2dbc.h2)
 }
 
+// Kotlin compiler configuration
 kotlin {
     compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
+        // JSR-305 strict mode for better null-safety with Java interop
+        freeCompilerArgs.add("-Xjsr305=strict")
     }
 }
 
+// Testing configuration using Test Suites
 testing {
     suites {
+        // Default test suite (unit tests)
         val test by getting(JvmTestSuite::class) {
             useJUnitJupiter()
 
             dependencies {
+                // Test BOMs for version management
                 implementation(platform(libs.kotest.bom))
+
+                // Core test dependencies
                 implementation(libs.kotest.runner.junit5)
                 implementation(libs.kotest.assertions.core)
                 implementation(libs.mockk)
-                implementation(libs.archunit.junit5)
+                implementation(libs.konsist)
             }
         }
 
+        // Integration test suite
         val integrationTest by registering(JvmTestSuite::class) {
             useJUnitJupiter()
 
             dependencies {
+                // Depend on main source set
                 implementation(project())
+
+                // Test BOMs for version management
                 implementation(platform(libs.kotest.bom))
                 implementation(platform(libs.kotlinx.serialization.bom))
+
+                // Spring Boot test dependencies
                 implementation(libs.spring.boot.starter.test)
                 implementation(libs.spring.boot.starter.webflux)
                 implementation(libs.reactor.test)
+
+                // Kotest dependencies
                 implementation(libs.kotest.runner.junit5)
                 implementation(libs.kotest.assertions.core)
-                implementation(libs.kotest.extensions.spring) {
-                    exclude(group = "org.springframework.boot", module = "spring-boot-starter-web")
-                }
+
+                // Kotest Spring extension
+                implementation(libs.kotest.extensions.spring)
+
+                // Additional test dependencies
                 implementation(libs.springmockk)
                 implementation(libs.kotlinx.serialization.json)
             }
 
-            // Fix for JvmTestSuite not inheriting main implementation dependencies
-            // See: https://github.com/gradle/gradle/issues/25269
+            // Enforce WebFlux usage (exclude servlet-based dependencies)
             configurations {
-                named(sources.implementationConfigurationName) {
-                    extendsFrom(project.configurations.getByName(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME))
-                }
-
-                // Exclude spring-boot-starter-web from all configurations to force WebFlux usage
                 all {
                     exclude(group = "org.springframework.boot", module = "spring-boot-starter-web")
                     exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
                 }
             }
 
+            // Custom source directories
             sources {
                 kotlin {
                     srcDirs("src/it/kotlin")
@@ -130,26 +144,34 @@ testing {
                 }
             }
 
-            targets {
-                all {
-                    testTask.configure {
-                        description = "Runs integration tests (infrastructure layer)"
-                        shouldRunAfter(test)
-                    }
+            // Configure test task execution order
+            targets.configureEach {
+                testTask.configure {
+                    description = "Runs integration tests (infrastructure layer)"
+                    shouldRunAfter(tasks.named("test"))
                 }
             }
         }
     }
 }
 
-tasks.named("check") {
-    dependsOn(testing.suites.named("test"))
+// Task configuration
+tasks {
+    check {
+        dependsOn(testing.suites.named("integrationTest"))
+    }
+
+    withType<BootJar>().configureEach {
+        archiveFileName = "app.jar"
+    }
 }
 
-tasks.withType<BootJar> {
-    archiveFileName.set("app.jar")
+// Spring Boot configuration
+springBoot {
+    buildInfo()
 }
 
+// Code formatting
 spotless {
     kotlin {
         ktlint()
@@ -159,27 +181,22 @@ spotless {
     }
 }
 
-/**
- * Node.js
- */
-
+// Node.js plugin configuration
 node {
-    version.set(libs.versions.nodejs.get())
-    npmVersion.set(libs.versions.npm.get())
-    download.set(true)
-}
+    version = libs.versions.nodejs.get()
+    npmVersion = libs.versions.npm.get()
+    download = true
 
-// Task for installing frontend dependencies in web
-val npmInstallDependencies by tasks.registering(NpmTask::class) {
-    args.set(listOf("install"))
-    workingDir.set(File("./frontend"))
-}
+    tasks {
+        val npmInstallDependencies by registering(NpmTask::class) {
+            args = listOf("install")
+            workingDir = file("frontend")
+        }
 
-// Task for executing build:gradle in web
-val npmRunBuild by tasks.registering(NpmTask::class) {
-    // Before buildWeb can run, installDependencies must run
-    dependsOn(npmInstallDependencies)
-
-    args.set(listOf("run", "build-only", "--", "--outDir", "../src/main/resources/static"))
-    workingDir.set(File("./frontend"))
+        val npmRunBuild by registering(NpmTask::class) {
+            dependsOn(npmInstallDependencies)
+            args = listOf("run", "build-only", "--", "--outDir", "../src/main/resources/static")
+            workingDir = file("frontend")
+        }
+    }
 }
