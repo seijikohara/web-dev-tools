@@ -14,10 +14,7 @@ import org.springframework.data.domain.Sort
 /**
  * Adapter implementation for HTML entity repository.
  *
- * Bridges domain layer with database infrastructure using Spring Data R2DBC.
- * Uses coroutines for concurrent count and fetch operations to optimize performance.
- *
- * @property dbRepository Spring Data R2DBC repository for database access
+ * @property dbRepository Database repository for HTML entities
  */
 class HtmlEntityRepositoryAdapter(
     private val dbRepository: HtmlEntityDbRepository,
@@ -25,20 +22,17 @@ class HtmlEntityRepositoryAdapter(
     /**
      * Searches HTML entities by name with pagination.
      *
-     * Performs concurrent database operations for count and fetch to optimize performance.
-     * Converts database entities to domain entities using expression chains.
-     *
-     * @param name Search keyword for partial matching on entity name
+     * @param name Search keyword for entity name
      * @param pagination Pagination parameters
-     * @return Paginated result containing domain entities
+     * @return [PaginatedResult] containing [HtmlEntity] instances
      */
     override suspend fun searchByName(
         name: String,
         pagination: Pagination,
     ): PaginatedResult<HtmlEntity> =
         coroutineScope {
-            val countDeferred = async { dbRepository.countByNameContaining(name) }
-            val entitiesDeferred =
+            Pair(
+                async { dbRepository.countByNameContaining(name) },
                 async {
                     dbRepository
                         .findByNameContaining(
@@ -52,12 +46,13 @@ class HtmlEntityRepositoryAdapter(
                         .map { it.toDomain() }
                         .sequence()
                         .getOrThrow()
-                }
-
-            PaginatedResult(
-                totalCount = countDeferred.await(),
-                items = entitiesDeferred.await(),
-                pagination = pagination,
-            )
+                },
+            ).let { (count, entities) ->
+                PaginatedResult(
+                    totalCount = count.await(),
+                    items = entities.await(),
+                    pagination = pagination,
+                )
+            }
         }
 }

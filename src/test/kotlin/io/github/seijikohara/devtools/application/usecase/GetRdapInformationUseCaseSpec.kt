@@ -11,7 +11,6 @@ import io.kotest.matchers.shouldNotBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.serialization.json.JsonElement
 
 class GetRdapInformationUseCaseSpec :
     FunSpec({
@@ -38,7 +37,6 @@ class GetRdapInformationUseCaseSpec :
                         name = name,
                         country = CountryCode.of(countryStr).getOrNull(),
                         registeredAt = null,
-                        rawData = emptyMap<String, JsonElement>(),
                     )
 
                 coEvery { mockRepository(ipAddress) } returns Result.success(expectedRdapInfo)
@@ -115,7 +113,6 @@ class GetRdapInformationUseCaseSpec :
                         name = null,
                         country = null,
                         registeredAt = null,
-                        rawData = emptyMap(),
                     )
 
                 coEvery { mockRepository(ipAddress) } returns Result.success(minimalRdapInfo)

@@ -3,37 +3,31 @@ package io.github.seijikohara.devtools.infrastructure.externalapi.rdap
 import com.google.common.collect.RangeMap
 import inet.ipaddr.IPAddress
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
+import io.github.seijikohara.devtools.domain.networkinfo.model.RdapServerUri
+import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapServerNotFoundException
+import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapServerResolver
 import io.github.seijikohara.devtools.infrastructure.config.ApplicationProperties
-import org.slf4j.Logger
 import java.net.URI
 
 /**
  * Adapter implementation for resolving RDAP server URIs.
- *
- * Uses Guava's RangeMap for efficient IP address range lookups.
- * Loads RDAP definitions at initialization time.
- *
- * @property rangeMap Mapping from IP address ranges to RDAP server URIs
  */
 class RdapServerResolverAdapter(
-    logger: Logger,
     applicationProperties: ApplicationProperties,
 ) : RdapServerResolver {
     private val rangeMap: RangeMap<IPAddress, URI> =
-        RdapRangeMapBuilder.build(logger, applicationProperties)
+        RdapRangeMapBuilder.build(applicationProperties)
 
     /**
-     * Resolves the RDAP server URI for the given IP address.
+     * Resolves the RDAP server URI for an IP address.
      *
-     * Performs a range lookup in the pre-built RangeMap to find the appropriate
-     * RDAP server for the IP address.
-     *
-     * @param ipAddress The IP address to resolve
-     * @return Result containing the RDAP server URI on success, or RdapServerNotFoundException on failure
+     * @param ipAddress The IP address to query
+     * @return [Result] containing [RdapServerUri] on success, or failure with exception
      */
-    override fun invoke(ipAddress: IpAddress): Result<URI> =
+    override fun invoke(ipAddress: IpAddress): Result<RdapServerUri> =
         runCatching {
             rangeMap[ipAddress.toInetIPAddress()]
+                ?.let(RdapServerUri::of)
                 ?: throw RdapServerNotFoundException("No RDAP server found for ${ipAddress.value}")
         }
 }

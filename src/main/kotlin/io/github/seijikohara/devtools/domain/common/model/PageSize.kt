@@ -1,25 +1,30 @@
 package io.github.seijikohara.devtools.domain.common.model
 
 /**
- * Represents a page size for pagination.
+ * Represents the number of items per page in paginated results.
  *
- * This is a value object that ensures the page size is within valid bounds (1 to MAX_SIZE).
+ * Wraps a validated page size value with defined minimum and maximum bounds.
  *
- * @property value The page size value
+ * @property value The validated page size value
+ * @see of
  */
 @JvmInline
 value class PageSize private constructor(
     val value: Int,
 ) {
     companion object {
+        /** The minimum allowed page size. */
         private const val MIN_SIZE = 1
+
+        /** The maximum allowed page size. */
         private const val MAX_SIZE = 1000
 
         /**
-         * Creates a PageSize instance with validation.
+         * Creates a [PageSize] instance with validation.
          *
          * @param value The page size value to validate
-         * @return Result containing PageSize if valid, or an error if invalid
+         * @return [Result.success] containing the [PageSize] if valid,
+         *         or [Result.failure] with [IllegalArgumentException] if out of valid range
          */
         fun of(value: Int): Result<PageSize> =
             runCatching {

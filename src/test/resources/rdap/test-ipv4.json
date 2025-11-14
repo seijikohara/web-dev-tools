@@ -1,0 +1,32 @@
+{
+  "description": "Test RDAP bootstrap file for IPv4 address allocations",
+  "publication": "2024-01-01T00:00:00Z",
+  "version": "1.0",
+  "services": [
+    [
+      [
+        "1.0.0.0/8",
+        "2.0.0.0/8"
+      ],
+      [
+        "https://rdap.example.com/test1/"
+      ]
+    ],
+    [
+      [
+        "8.8.8.0/24"
+      ],
+      [
+        "https://rdap.example.com/test2/"
+      ]
+    ],
+    [
+      [
+        "192.168.0.0/16"
+      ],
+      [
+        "https://rdap.example.com/test3/"
+      ]
+    ]
+  ]
+}

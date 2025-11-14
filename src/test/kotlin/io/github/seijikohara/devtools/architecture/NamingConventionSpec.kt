@@ -1,9 +1,9 @@
 package io.github.seijikohara.devtools.architecture
 
-import com.tngtech.archunit.core.domain.JavaClasses
-import com.tngtech.archunit.core.importer.ClassFileImporter
-import com.tngtech.archunit.core.importer.ImportOption
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes
+import com.lemonappdev.konsist.api.Konsist
+import com.lemonappdev.konsist.api.ext.list.withAllAnnotationsOf
+import com.lemonappdev.konsist.api.ext.list.withPackage
+import com.lemonappdev.konsist.api.verify.assertTrue
 import io.kotest.core.spec.style.FunSpec
 
 /**
@@ -14,68 +14,53 @@ import io.kotest.core.spec.style.FunSpec
  */
 class NamingConventionSpec :
     FunSpec({
-        lateinit var classes: JavaClasses
-
-        beforeSpec {
-            classes =
-                ClassFileImporter()
-                    .withImportOption(ImportOption.DoNotIncludeTests())
-                    .importPackages("io.github.seijikohara.devtools")
-        }
-
-        context("Domain layer naming conventions") {
-            test("repository interfaces should end with 'Repository'") {
-                classes()
-                    .that()
-                    .resideInAPackage("..domain..repository..")
-                    .and()
-                    .areInterfaces()
-                    .should()
-                    .haveSimpleNameEndingWith("Repository")
-                    .check(classes)
+        context("Interface naming conventions") {
+            test("repository interfaces should end with 'Repository' or 'Resolver'") {
+                Konsist
+                    .scopeFromProduction()
+                    .interfaces()
+                    .withPackage("..domain..repository..")
+                    .assertTrue(testName = koTestName) {
+                        it.name.endsWith("Repository") || it.name.endsWith("Resolver")
+                    }
             }
-        }
 
-        context("Application layer naming conventions") {
             test("use case functional interfaces should end with 'UseCase'") {
-                classes()
-                    .that()
-                    .resideInAPackage("..application.usecase..")
-                    .and()
-                    .areInterfaces()
-                    .and()
-                    .haveSimpleNameEndingWith("UseCase")
-                    .should()
-                    .beInterfaces()
-                    .check(classes)
+                Konsist
+                    .scopeFromProduction()
+                    .interfaces()
+                    .withPackage("..application.usecase..")
+                    .assertTrue(testName = koTestName) {
+                        it.name.endsWith("UseCase")
+                    }
             }
         }
 
-        context("Infrastructure layer naming conventions") {
+        context("Implementation naming conventions") {
             test("repository implementations should end with 'Adapter'") {
-                classes()
-                    .that()
-                    .resideInAPackage("..infrastructure..")
-                    .and()
-                    .haveSimpleNameContaining("Repository")
-                    .and()
-                    .areNotInterfaces()
-                    .should()
-                    .haveSimpleNameEndingWith("Adapter")
-                    .check(classes)
+                Konsist
+                    .scopeFromProduction()
+                    .classes()
+                    .filter { klass ->
+                        val packageName = klass.packagee?.name ?: ""
+                        (
+                            packageName.contains(".infrastructure.database.") ||
+                                packageName.contains(".infrastructure.externalapi.")
+                        ) &&
+                            klass.name.contains("Repository")
+                    }.assertTrue(testName = koTestName) {
+                        it.name.endsWith("Adapter")
+                    }
             }
-        }
 
-        context("Configuration class naming conventions") {
             test("configuration classes should end with 'Configuration' or 'Config'") {
-                classes()
-                    .that()
-                    .areAnnotatedWith(org.springframework.context.annotation.Configuration::class.java)
-                    .should()
-                    .haveSimpleNameEndingWith("Configuration")
-                    .orShould()
-                    .haveSimpleNameEndingWith("Config")
-                    .check(classes)
+                Konsist
+                    .scopeFromProduction()
+                    .classes()
+                    .withAllAnnotationsOf(org.springframework.context.annotation.Configuration::class)
+                    .assertTrue(testName = koTestName) {
+                        it.name.endsWith("Configuration") || it.name.endsWith("Config")
+                    }
             }
         }
     })

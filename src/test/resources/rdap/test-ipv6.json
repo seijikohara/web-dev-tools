@@ -1,0 +1,23 @@
+{
+  "description": "Test RDAP bootstrap file for IPv6 address allocations",
+  "publication": "2024-01-01T00:00:00Z",
+  "version": "1.0",
+  "services": [
+    [
+      [
+        "2001:db8::/32"
+      ],
+      [
+        "https://rdap.example.com/testv6/"
+      ]
+    ],
+    [
+      [
+        "2400::/12"
+      ],
+      [
+        "https://rdap.example.com/testv6-2/"
+      ]
+    ]
+  ]
+}

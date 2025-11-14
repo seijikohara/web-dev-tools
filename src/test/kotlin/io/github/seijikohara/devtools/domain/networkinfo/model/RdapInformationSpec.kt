@@ -2,7 +2,6 @@ package io.github.seijikohara.devtools.domain.networkinfo.model
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.serialization.json.JsonElement
 import java.time.Duration
 import java.time.Instant
 
@@ -19,7 +18,6 @@ class RdapInformationSpec :
                         name = "Example Org",
                         country = CountryCode.of("US").getOrNull(),
                         registeredAt = null,
-                        rawData = emptyMap(),
                     )
 
                 rdapInfo.isStale() shouldBe false
@@ -38,7 +36,6 @@ class RdapInformationSpec :
                         name = "Example Org",
                         country = CountryCode.of("US").getOrNull(),
                         registeredAt = recentDate,
-                        rawData = emptyMap(),
                     )
 
                 rdapInfo.isStale() shouldBe false
@@ -55,7 +52,6 @@ class RdapInformationSpec :
                         name = "Example Org",
                         country = CountryCode.of("US").getOrNull(),
                         registeredAt = almostStaleDate,
-                        rawData = emptyMap(),
                     )
 
                 rdapInfo.isStale() shouldBe false
@@ -74,7 +70,6 @@ class RdapInformationSpec :
                         name = "Example Org",
                         country = CountryCode.of("US").getOrNull(),
                         registeredAt = oldDate,
-                        rawData = emptyMap(),
                     )
 
                 rdapInfo.isStale() shouldBe true
@@ -91,7 +86,6 @@ class RdapInformationSpec :
                         name = "Example Org",
                         country = CountryCode.of("US").getOrNull(),
                         registeredAt = veryOldDate,
-                        rawData = emptyMap(),
                     )
 
                 rdapInfo.isStale() shouldBe true
@@ -110,7 +104,6 @@ class RdapInformationSpec :
                         name = "Example Org",
                         country = CountryCode.of("US").getOrNull(),
                         registeredAt = date,
-                        rawData = emptyMap(),
                     )
 
                 // With 50 days threshold, 100 days old should be stale
@@ -126,7 +119,6 @@ class RdapInformationSpec :
                 val ipAddress = IpAddress.of("203.0.113.1").getOrThrow()
                 val countryCode = CountryCode.of("JP").getOrNull()
                 val registeredAt = Instant.parse("2020-01-01T00:00:00Z")
-                val rawData = emptyMap<String, JsonElement>()
 
                 val rdapInfo =
                     RdapInformation(
@@ -135,7 +127,6 @@ class RdapInformationSpec :
                         name = "Example Japan",
                         country = countryCode,
                         registeredAt = registeredAt,
-                        rawData = rawData,
                     )
 
                 rdapInfo.ipAddress shouldBe ipAddress
@@ -143,7 +134,6 @@ class RdapInformationSpec :
                 rdapInfo.name shouldBe "Example Japan"
                 rdapInfo.country shouldBe countryCode
                 rdapInfo.registeredAt shouldBe registeredAt
-                rdapInfo.rawData shouldBe rawData
             }
 
             test("should handle null optional properties") {
@@ -156,7 +146,6 @@ class RdapInformationSpec :
                         name = null,
                         country = null,
                         registeredAt = null,
-                        rawData = emptyMap(),
                     )
 
                 rdapInfo.handle shouldBe null

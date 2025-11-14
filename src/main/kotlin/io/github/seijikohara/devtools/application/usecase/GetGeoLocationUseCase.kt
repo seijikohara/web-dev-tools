@@ -1,5 +1,6 @@
 package io.github.seijikohara.devtools.application.usecase
 
+import io.github.seijikohara.devtools.domain.common.extensions.flatMap
 import io.github.seijikohara.devtools.domain.networkinfo.model.GeoLocation
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
 import io.github.seijikohara.devtools.domain.networkinfo.repository.GeoIpRepository
@@ -7,15 +8,16 @@ import io.github.seijikohara.devtools.domain.networkinfo.repository.GeoIpReposit
 /**
  * Use case for retrieving geographic location information for an IP address.
  *
- * This is a functional interface that encapsulates the business logic
- * for fetching GeoIP data.
+ * @see Request
+ * @see Response
+ * @see GeoLocation
  */
 fun interface GetGeoLocationUseCase {
     /**
-     * Executes the use case.
+     * Retrieves geographic location information for an IP address.
      *
-     * @param request The use case request containing the IP address string
-     * @return Result containing Response if successful, or a failure with an exception
+     * @param request The request containing the IP address string
+     * @return [Result] containing [Response] on success, or failure with exception
      */
     suspend operator fun invoke(request: Request): Result<Response>
 
@@ -31,7 +33,7 @@ fun interface GetGeoLocationUseCase {
     /**
      * Response containing geographic location information.
      *
-     * @property geoLocation Geographic location data for the requested IP address
+     * @property geoLocation Geographic location data
      */
     data class Response(
         val geoLocation: GeoLocation,
@@ -39,17 +41,17 @@ fun interface GetGeoLocationUseCase {
 }
 
 /**
- * Factory function to create a GetGeoLocationUseCase instance.
+ * Creates a [GetGeoLocationUseCase] instance.
  *
  * @param geoIpRepository The GeoIP repository implementation
- * @return A GetGeoLocationUseCase instance
+ * @return A [GetGeoLocationUseCase] instance
  */
 fun getGeoLocationUseCase(geoIpRepository: GeoIpRepository): GetGeoLocationUseCase =
     GetGeoLocationUseCase { request ->
         IpAddress
             .of(request.ipAddressString)
-            .mapCatching { ipAddress ->
-                geoIpRepository(ipAddress).getOrThrow()
+            .flatMap { ipAddress ->
+                geoIpRepository(ipAddress)
             }.map { geoLocation ->
                 GetGeoLocationUseCase.Response(geoLocation)
             }

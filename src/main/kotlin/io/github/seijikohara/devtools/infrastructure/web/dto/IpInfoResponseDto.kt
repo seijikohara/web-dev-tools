@@ -1,12 +1,10 @@
 package io.github.seijikohara.devtools.infrastructure.web.dto
 
 /**
- * Data transfer object for IP information response.
+ * IP information response.
  *
- * Represents the client's IP address and hostname information.
- *
- * @property ipAddress Client's IP address
- * @property hostName Client's hostname
+ * @property ipAddress IP address
+ * @property hostName Hostname
  */
 data class IpInfoResponseDto(
     val ipAddress: String?,

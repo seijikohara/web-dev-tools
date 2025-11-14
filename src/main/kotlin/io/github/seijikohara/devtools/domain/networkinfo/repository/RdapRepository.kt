@@ -4,17 +4,19 @@ import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
 import io.github.seijikohara.devtools.domain.networkinfo.model.RdapInformation
 
 /**
- * Repository interface (port) for accessing RDAP information.
+ * Repository interface for accessing RDAP information.
  *
- * This is a functional interface that defines the contract for retrieving
- * RDAP (Registry Data Access Protocol) information for an IP address.
+ * Provides access to RDAP (Registry Data Access Protocol) registration data.
+ *
+ * @see RdapInformation
+ * @see IpAddress
  */
 fun interface RdapRepository {
     /**
-     * Retrieves RDAP information for the given IP address.
+     * Retrieves RDAP information for an IP address.
      *
-     * @param ipAddress The IP address to look up
-     * @return Result containing RdapInformation if successful, or a failure with an exception
+     * @param ipAddress The IP address to query
+     * @return [Result] containing [RdapInformation] on success, or failure with exception
      */
     suspend operator fun invoke(ipAddress: IpAddress): Result<RdapInformation>
 }

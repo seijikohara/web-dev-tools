@@ -5,20 +5,21 @@ import io.github.seijikohara.devtools.domain.common.model.Pagination
 import io.github.seijikohara.devtools.domain.htmlreference.model.HtmlEntity
 
 /**
- * Repository port for HTML entities.
+ * Repository interface for accessing HTML entity data.
  *
- * Defines the contract for retrieving HTML entity information.
- * This is a port in Clean Architecture, implemented by infrastructure adapters.
- *
- * Functional interface (SAM) allows for concise lambda implementations.
+ * @see HtmlEntity
+ * @see PaginatedResult
+ * @see Pagination
  */
 fun interface HtmlEntityRepository {
     /**
-     * Search for HTML entities by name.
+     * Searches for HTML entities by name using case-insensitive partial matching.
      *
-     * @param name The search keyword (partial match)
+     * Returns an empty list if no entities match the search criteria.
+     *
+     * @param name The search keyword for partial matching against entity names
      * @param pagination The pagination parameters
-     * @return Paginated result containing matching HTML entities
+     * @return [PaginatedResult] containing matching [HtmlEntity] instances
      */
     suspend fun searchByName(
         name: String,

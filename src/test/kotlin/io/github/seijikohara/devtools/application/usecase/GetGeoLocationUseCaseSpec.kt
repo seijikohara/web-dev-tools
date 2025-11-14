@@ -12,7 +12,6 @@ import io.kotest.matchers.string.shouldContain
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.serialization.json.JsonElement
 
 class GetGeoLocationUseCaseSpec :
     FunSpec({
@@ -40,7 +39,6 @@ class GetGeoLocationUseCaseSpec :
                         city = city,
                         latitude = lat,
                         longitude = lng,
-                        rawData = emptyMap<String, JsonElement>(),
                     )
 
                 coEvery { mockRepository(ipAddress) } returns Result.success(expectedGeoLocation)
@@ -118,7 +116,6 @@ class GetGeoLocationUseCaseSpec :
                         city = null,
                         latitude = null,
                         longitude = null,
-                        rawData = emptyMap(),
                     )
 
                 coEvery { mockRepository(ipAddress) } returns Result.success(minimalGeoLocation)

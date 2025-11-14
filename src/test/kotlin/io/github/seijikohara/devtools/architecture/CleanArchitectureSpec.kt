@@ -1,13 +1,12 @@
 package io.github.seijikohara.devtools.architecture
 
-import com.tngtech.archunit.core.domain.JavaClasses
-import com.tngtech.archunit.core.importer.ClassFileImporter
-import com.tngtech.archunit.core.importer.ImportOption
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
+import com.lemonappdev.konsist.api.Konsist
+import com.lemonappdev.konsist.api.ext.list.withPackage
+import com.lemonappdev.konsist.api.verify.assertFalse
 import io.kotest.core.spec.style.FunSpec
 
 /**
- * Architecture tests using Kotest + ArchUnit.
+ * Architecture tests using Kotest + Konsist.
  *
  * Verifies Clean Architecture and DDD principles:
  * - Domain layer has no dependencies on infrastructure concerns
@@ -18,66 +17,63 @@ import io.kotest.core.spec.style.FunSpec
  */
 class CleanArchitectureSpec :
     FunSpec({
-        lateinit var classes: JavaClasses
-
-        beforeSpec {
-            classes =
-                ClassFileImporter()
-                    .withImportOption(ImportOption.DoNotIncludeTests())
-                    .importPackages("io.github.seijikohara.devtools")
-        }
-
         context("Clean Architecture layer dependencies") {
             test("domain layer should not depend on infrastructure layer") {
-                noClasses()
-                    .that()
-                    .resideInAPackage("..domain..")
-                    .should()
-                    .dependOnClassesThat()
-                    .resideInAPackage("..infrastructure..")
-                    .check(classes)
+                Konsist
+                    .scopeFromProduction()
+                    .files
+                    .withPackage("..domain..")
+                    .assertFalse(testName = koTestName) {
+                        it.hasImport { import -> import.name.contains(".infrastructure.") }
+                    }
             }
 
             test("application layer should not depend on infrastructure layer") {
-                noClasses()
-                    .that()
-                    .resideInAPackage("..application..")
-                    .should()
-                    .dependOnClassesThat()
-                    .resideInAPackage("..infrastructure..")
-                    .check(classes)
+                Konsist
+                    .scopeFromProduction()
+                    .files
+                    .withPackage("..application..")
+                    .assertFalse(testName = koTestName) {
+                        it.hasImport { import -> import.name.contains(".infrastructure.") }
+                    }
             }
         }
 
         context("Domain layer purity") {
             test("domain should not depend on Spring Framework") {
-                noClasses()
-                    .that()
-                    .resideInAPackage("..domain..")
-                    .should()
-                    .dependOnClassesThat()
-                    .resideInAPackage("org.springframework..")
-                    .check(classes)
+                Konsist
+                    .scopeFromProduction()
+                    .files
+                    .withPackage("..domain..")
+                    .assertFalse(testName = koTestName) {
+                        it.hasImport { import -> import.name.startsWith("org.springframework") }
+                    }
             }
 
             test("domain should not depend on database libraries") {
-                noClasses()
-                    .that()
-                    .resideInAPackage("..domain..")
-                    .should()
-                    .dependOnClassesThat()
-                    .resideInAnyPackage("org.springframework.data..", "io.r2dbc..")
-                    .check(classes)
+                Konsist
+                    .scopeFromProduction()
+                    .files
+                    .withPackage("..domain..")
+                    .assertFalse(testName = koTestName) {
+                        it.hasImport { import ->
+                            import.name.startsWith("org.springframework.data") ||
+                                import.name.startsWith("io.r2dbc")
+                        }
+                    }
             }
 
             test("domain should not depend on web libraries") {
-                noClasses()
-                    .that()
-                    .resideInAPackage("..domain..")
-                    .should()
-                    .dependOnClassesThat()
-                    .resideInAnyPackage("org.springframework.web..", "jakarta.servlet..")
-                    .check(classes)
+                Konsist
+                    .scopeFromProduction()
+                    .files
+                    .withPackage("..domain..")
+                    .assertFalse(testName = koTestName) {
+                        it.hasImport { import ->
+                            import.name.startsWith("org.springframework.web") ||
+                                import.name.startsWith("jakarta.servlet")
+                        }
+                    }
             }
         }
     })

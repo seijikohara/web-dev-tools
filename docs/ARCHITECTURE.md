@@ -4,32 +4,30 @@ This project follows **Clean Architecture** and **Domain-Driven Design (DDD)** p
 
 ## Layer Structure
 
-```
-┌─────────────────────────────────────┐
-│       Infrastructure Layer          │
-│  (Web, Database, External APIs)     │
-│                                     │
-│  ┌───────────────────────────────┐ │
-│  │     Application Layer         │ │
-│  │     (Use Cases)               │ │
-│  │                               │ │
-│  │  ┌─────────────────────────┐ │ │
-│  │  │    Domain Layer         │ │ │
-│  │  │  (Business Logic)       │ │ │
-│  │  └─────────────────────────┘ │ │
-│  └───────────────────────────────┘ │
-└─────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Infrastructure["Infrastructure Layer<br/>(Web, Database, External APIs)"]
+        subgraph Application["Application Layer<br/>(Use Cases)"]
+            subgraph Domain["Domain Layer<br/>(Business Logic)"]
+            end
+        end
+    end
+
+    style Infrastructure fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    style Application fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style Domain fill:#fff9c4,stroke:#f57f17,stroke-width:2px
 ```
 
 ### Domain Layer (`domain`)
+
 **Purpose**: Contains core business logic and domain models
 
 **Rules**:
-- ✅ May only depend on itself and standard library (Kotlin/Java)
-- ❌ Must NOT depend on infrastructure layer
-- ❌ Must NOT depend on Spring Framework
-- ❌ Must NOT depend on database libraries
-- ❌ Must NOT depend on web frameworks
+- **Must** only depend on itself and standard library (Kotlin/Java)
+- **Must NOT** depend on infrastructure layer
+- **Must NOT** depend on Spring Framework
+- **Must NOT** depend on database libraries
+- **Must NOT** depend on web frameworks
 
 **Contents**:
 - Domain models (entities, value objects)
@@ -38,11 +36,12 @@ This project follows **Clean Architecture** and **Domain-Driven Design (DDD)** p
 - Domain events
 
 ### Application Layer (`application`)
+
 **Purpose**: Orchestrates domain logic to fulfill use cases
 
 **Rules**:
-- ✅ May depend on domain layer
-- ❌ Must NOT depend on infrastructure layer
+- **Must** depend on domain layer
+- **Must NOT** depend on infrastructure layer
 - Uses factory functions for dependency injection
 
 **Contents**:
@@ -51,10 +50,11 @@ This project follows **Clean Architecture** and **Domain-Driven Design (DDD)** p
 - DTOs for use case inputs/outputs
 
 ### Infrastructure Layer (`infrastructure`)
+
 **Purpose**: Implements technical details and external integrations
 
 **Rules**:
-- ✅ May depend on application and domain layers
+- **May** depend on application and domain layers
 - Implements repository interfaces (adapters)
 - Handles framework-specific code
 
@@ -66,11 +66,11 @@ This project follows **Clean Architecture** and **Domain-Driven Design (DDD)** p
 
 ## Preventing Architecture Violations
 
-### 1. Automated Testing with Kotest + ArchUnit
+### 1. Automated Testing with Kotest + Konsist
 
-The project uses **Kotest** (idiomatic Kotlin testing framework) combined with **ArchUnit** for architecture verification.
+The project uses **Kotest** (idiomatic Kotlin testing framework) combined with **Konsist** for architecture verification.
 
-```kotlin
+```bash
 ./gradlew test
 ```
 
@@ -78,51 +78,79 @@ The project uses **Kotest** (idiomatic Kotlin testing framework) combined with *
 
 All architecture tests use **Kotest FunSpec** for consistency and simplicity.
 
-**Basic Layer Dependency Test** (`CleanArchitectureSpec.kt`):
+**Basic Layer Dependency Test** ([`CleanArchitectureSpec.kt`](../src/test/kotlin/io/github/seijikohara/devtools/architecture/CleanArchitectureSpec.kt)):
+
 ```kotlin
 test("domain layer should not depend on infrastructure layer") {
-    noClasses()
-        .that().resideInAPackage("..domain..")
-        .should().dependOnClassesThat().resideInAPackage("..infrastructure..")
-        .check(classes)
+    Konsist
+        .scopeFromProduction()
+        .files
+        .withPackage("..domain..")
+        .assertFalse(testName = koTestName) {
+            it.hasImport { import -> import.name.contains(".infrastructure.") }
+        }
 }
 ```
 
-**Data-Driven Testing** (`PackageDependencySpec.kt`):
+**Data-Driven Testing** ([`PackageDependencySpec.kt`](../src/test/kotlin/io/github/seijikohara/devtools/architecture/PackageDependencySpec.kt)):
+
 ```kotlin
-describe("Domain layer forbidden dependencies") {
+context("Domain layer forbidden dependencies") {
+    data class ForbiddenDependency(
+        val name: String,
+        val packagePrefixes: List<String>,
+    )
+
     withData(
-        ForbiddenDependency("Spring Framework", listOf("org.springframework..")),
-        ForbiddenDependency("R2DBC", listOf("io.r2dbc..")),
-        // ... more dependencies
-    ) { (name, packages) ->
-        noClasses().that().resideInAPackage("..domain..")
-            .should().dependOnClassesThat()
-            .resideInAnyPackage(*packages.toTypedArray())
-            .check(classes)
+        nameFn = { it.name },
+        ForbiddenDependency("Spring Framework", listOf("org.springframework")),
+        ForbiddenDependency("R2DBC", listOf("io.r2dbc")),
+        ForbiddenDependency("Infrastructure layer", listOf(".infrastructure.")),
+    ) { (_, packagePrefixes) ->
+        Konsist
+            .scopeFromProduction()
+            .files
+            .withPackage("..domain..")
+            .assertFalse(testName = koTestName) {
+                it.hasImport { import ->
+                    packagePrefixes.any { prefix ->
+                        if (prefix.startsWith(".")) {
+                            import.name.contains(prefix)
+                        } else {
+                            import.name.startsWith(prefix)
+                        }
+                    }
+                }
+            }
     }
 }
 ```
 
-**Naming Convention Test** (`NamingConventionSpec.kt`):
+**Naming Convention Test** ([`NamingConventionSpec.kt`](../src/test/kotlin/io/github/seijikohara/devtools/architecture/NamingConventionSpec.kt)):
+
 ```kotlin
-context("Domain layer naming conventions") {
-    test("repository interfaces should end with 'Repository'") {
-        classes().that().resideInAPackage("..domain..repository..")
-            .and().areInterfaces()
-            .should().haveSimpleNameEndingWith("Repository")
-            .check(classes)
+context("Interface naming conventions") {
+    test("repository interfaces should end with 'Repository' or 'Resolver'") {
+        Konsist
+            .scopeFromProduction()
+            .interfaces()
+            .withPackage("..domain..repository..")
+            .assertTrue(testName = koTestName) {
+                it.name.endsWith("Repository") || it.name.endsWith("Resolver")
+            }
     }
 }
 ```
 
-#### Benefits of Kotest + ArchUnit
+#### Benefits of Kotest + Konsist
 
-1. **Multiple Test Styles**: Choose the style that fits your needs (FunSpec, BehaviorSpec, DescribeSpec, etc.)
-2. **Data-Driven Testing**: Test multiple scenarios with `withData` for clearer violation reports
-3. **Idiomatic Kotlin**: Natural Kotlin syntax with DSL
-4. **Better Test Names**: Kotest generates readable test names from string descriptions
-5. **Context and Hooks**: `beforeSpec`, `afterSpec`, nested contexts
+1. **Kotlin-Native**: Konsist is designed specifically for Kotlin codebases with first-class support for Kotlin language features
+2. **Multiple Test Styles**: Choose the style that fits your needs (`FunSpec`, `BehaviorSpec`, `DescribeSpec`, etc.)
+3. **Data-Driven Testing**: Test multiple scenarios with `withData` for clearer violation reports
+4. **Idiomatic Kotlin**: Natural Kotlin syntax with DSL
+5. **Better Test Names**: Kotest generates readable test names from string descriptions
+6. **Context and Hooks**: `beforeSpec`, `afterSpec`, nested contexts
+7. **Simple API**: More intuitive and concise than ArchUnit for common architecture checks
 
 These tests automatically detect violations:
 - Domain layer depending on infrastructure
@@ -136,10 +164,16 @@ These tests automatically detect violations:
 
 Always follow the **Dependency Inversion Principle**:
 
-```
-Infrastructure → Application → Domain
-                              ↑
-                    (no reverse dependencies)
+```mermaid
+graph LR
+    Infrastructure -->|depends on| Application
+    Application -->|depends on| Domain
+    Domain -.->|no reverse<br/>dependencies| Application
+    Domain -.->|no reverse<br/>dependencies| Infrastructure
+
+    style Domain fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style Application fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style Infrastructure fill:#e1f5ff,stroke:#01579b,stroke-width:2px
 ```
 
 ### 3. Adapter Pattern
@@ -147,6 +181,7 @@ Infrastructure → Application → Domain
 Use adapters to bridge domain interfaces with infrastructure:
 
 **Good Example**:
+
 ```kotlin
 // Domain layer - defines interface
 interface HtmlEntityRepository {
@@ -162,10 +197,11 @@ class HtmlEntityRepositoryAdapter(
 ```
 
 **Bad Example**:
+
 ```kotlin
 // Domain layer directly using Spring Data
 interface HtmlEntityRepository : CoroutineCrudRepository<HtmlEntity, Long> {
-    // ❌ Violates dependency rule!
+    // VIOLATION: Violates dependency rule!
 }
 ```
 
@@ -224,13 +260,15 @@ This makes violations **impossible to compile** rather than just test failures.
 
 ## Common Pitfalls
 
-### ❌ Domain model with Spring annotations
+### Incorrect: Domain model with Spring annotations
+
 ```kotlin
 @Entity  // Spring Data annotation
 data class HtmlEntity(...)
 ```
 
-### ✅ Correct: Separate domain and database models
+### Correct: Separate domain and database models
+
 ```kotlin
 // Domain layer
 data class HtmlEntity(val id: Long, val name: String, ...)
@@ -240,13 +278,15 @@ data class HtmlEntity(val id: Long, val name: String, ...)
 data class HtmlEntityDbEntity(val id: Long?, val name: String, ...)
 ```
 
-### ❌ Domain service with @Service annotation
+### Incorrect: Domain service with @Service annotation
+
 ```kotlin
 @Service  // Spring annotation
 class DomainService(...)
 ```
 
-### ✅ Correct: Pure domain service
+### Correct: Pure domain service
+
 ```kotlin
 // Domain layer - no annotations
 class DomainService {
@@ -257,9 +297,9 @@ class DomainService {
 ## Continuous Verification
 
 1. **Pre-commit**: Run tests locally
-```bash
-./gradlew test
-```
+   ```bash
+   ./gradlew test
+   ```
 
 2. **CI/CD**: Architecture tests run on every PR
 3. **Code Review**: Check for proper layer separation
@@ -268,5 +308,6 @@ class DomainService {
 ## References
 
 - [Clean Architecture by Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [ArchUnit Documentation](https://www.archunit.org/)
+- [Konsist Documentation](https://docs.konsist.lemonappdev.com/)
+- [Kotest Documentation](https://kotest.io/)
 - [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)

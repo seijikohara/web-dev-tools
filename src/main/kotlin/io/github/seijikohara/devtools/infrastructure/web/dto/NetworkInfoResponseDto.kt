@@ -2,46 +2,68 @@ package io.github.seijikohara.devtools.infrastructure.web.dto
 
 import io.github.seijikohara.devtools.application.usecase.GetGeoLocationUseCase
 import io.github.seijikohara.devtools.application.usecase.GetRdapInformationUseCase
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
+import java.time.Instant
 
 /**
- * Response DTO for RDAP information endpoint.
+ * RDAP information response.
  *
- * Maintains compatibility with existing API contract.
- *
- * @property rdap RDAP information as raw JSON data
+ * @property ipAddress IP address
+ * @property handle Registry handle
+ * @property name Registrant name
+ * @property country Country code
+ * @property registeredAt Registration timestamp
  */
-@Serializable
 data class RdapResponseDto(
-    val rdap: Map<String, @Contextual JsonElement>?,
+    val ipAddress: String,
+    val handle: String?,
+    val name: String?,
+    val country: String?,
+    val registeredAt: Instant?,
 )
 
 /**
- * Response DTO for GeoIP information endpoint.
+ * Geographic location response.
  *
- * Maintains compatibility with existing API contract.
- *
- * @property geo Geographic location information as raw JSON data
+ * @property ipAddress IP address
+ * @property countryCode Country code
+ * @property city City name
+ * @property latitude Latitude coordinate
+ * @property longitude Longitude coordinate
  */
-@Serializable
 data class GeoResponseDto(
-    val geo: Map<String, @Contextual JsonElement>?,
+    val ipAddress: String,
+    val countryCode: String?,
+    val city: String?,
+    val latitude: Double?,
+    val longitude: Double?,
 )
 
 /**
- * Converts use case response to DTO.
+ * Converts to [RdapResponseDto].
  *
- * @receiver Response from the get RDAP information use case
- * @return RDAP response DTO
+ * @receiver Response data
+ * @return [RdapResponseDto] instance
  */
-fun GetRdapInformationUseCase.Response.toDto(): RdapResponseDto = RdapResponseDto(rdap = rdapInformation.rawData)
+fun GetRdapInformationUseCase.Response.toDto(): RdapResponseDto =
+    RdapResponseDto(
+        ipAddress = rdapInformation.ipAddress.value,
+        handle = rdapInformation.handle,
+        name = rdapInformation.name,
+        country = rdapInformation.country?.value,
+        registeredAt = rdapInformation.registeredAt,
+    )
 
 /**
- * Converts use case response to DTO.
+ * Converts to [GeoResponseDto].
  *
- * @receiver Response from the get geo location use case
- * @return Geo response DTO
+ * @receiver Response data
+ * @return [GeoResponseDto] instance
  */
-fun GetGeoLocationUseCase.Response.toDto(): GeoResponseDto = GeoResponseDto(geo = geoLocation.rawData)
+fun GetGeoLocationUseCase.Response.toDto(): GeoResponseDto =
+    GeoResponseDto(
+        ipAddress = geoLocation.ipAddress.value,
+        countryCode = geoLocation.countryCode?.value,
+        city = geoLocation.city,
+        latitude = geoLocation.latitude,
+        longitude = geoLocation.longitude,
+    )
