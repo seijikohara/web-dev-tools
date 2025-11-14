@@ -24,6 +24,7 @@ class GeoIpRepositoryAdapterSpec :
             ApplicationProperties(
                 apiBasePath = "/api",
                 indexFile = ClassPathResource("static/index.html"),
+                swaggerUiPaths = listOf(),
                 cors =
                     ApplicationProperties.CorsProperties(
                         mappingPathPattern = "/api/**",
