@@ -149,6 +149,9 @@ testing {
                 testTask.configure {
                     description = "Runs integration tests (infrastructure layer)"
                     shouldRunAfter(tasks.named("test"))
+                    // Ensure frontend is built before integration tests
+                    // Incremental build configuration ensures this only runs when sources change
+                    dependsOn(tasks.named("npmRunBuild"))
                 }
             }
         }
@@ -159,6 +162,11 @@ testing {
 tasks {
     check {
         dependsOn(testing.suites.named("integrationTest"))
+    }
+
+    // Ensure frontend build runs before resource processing when both tasks are executed
+    processResources {
+        mustRunAfter("npmRunBuild")
     }
 
     withType<BootJar>().configureEach {
@@ -197,6 +205,11 @@ node {
             dependsOn(npmInstallDependencies)
             args = listOf("run", "build-only", "--", "--outDir", "../src/main/resources/static")
             workingDir = file("frontend")
+
+            // Configure incremental build to skip when sources haven't changed
+            inputs.dir("frontend/src")
+            inputs.files("frontend/package.json", "frontend/package-lock.json", "frontend/vite.config.ts")
+            outputs.dir("src/main/resources/static")
         }
     }
 }
