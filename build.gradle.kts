@@ -54,8 +54,8 @@ dependencies {
     implementation(libs.springdoc.openapi.starter.webflux.ui)
     implementation(libs.reactor.kotlin.extensions)
 
-    // Database
-    implementation(libs.flyway.core)
+    // Database (spring-boot-flyway includes flyway-core and spring-boot-jdbc transitively)
+    implementation(libs.spring.boot.flyway)
 
     // Utility libraries
     implementation(libs.guava)
@@ -111,7 +111,7 @@ testing {
 
                 // Spring Boot test dependencies
                 implementation(libs.spring.boot.starter.test)
-                implementation(libs.spring.boot.starter.webflux)
+                implementation(libs.spring.boot.webflux.test)
                 implementation(libs.reactor.test)
 
                 // Kotest dependencies
@@ -205,11 +205,6 @@ node {
             dependsOn(npmInstallDependencies)
             args = listOf("run", "build-only", "--", "--outDir", "../src/main/resources/static")
             workingDir = file("frontend")
-
-            // Configure incremental build to skip when sources haven't changed
-            inputs.dir("frontend/src")
-            inputs.files("frontend/package.json", "frontend/package-lock.json", "frontend/vite.config.ts")
-            outputs.dir("src/main/resources/static")
         }
     }
 }

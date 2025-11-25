@@ -13,14 +13,13 @@ nodejs = "24.11.0"
 # @keep
 npm = "11.6.2"
 spotless = "8.1.0"
-spring-boot = "3.5.7"
+spring-boot = "4.0.0"
 spring-dependency-management = "1.1.7"
-springdoc-openapi = "2.8.14"
+springdoc-openapi = "3.0.0"
 springmockk = "4.0.2"
 version-catalog-update = "1.0.1"
 
 [libraries]
-flyway-core = { module = "org.flywaydb:flyway-core" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 h2 = { module = "com.h2database:h2" }
 ipaddress = { module = "com.github.seancfoley:ipaddress", version.ref = "ipaddress" }
@@ -42,11 +41,13 @@ reactor-kotlin-extensions = { module = "io.projectreactor.kotlin:reactor-kotlin-
 reactor-test = { module = "io.projectreactor:reactor-test" }
 spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
 spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
+spring-boot-flyway = { module = "org.springframework.boot:spring-boot-flyway" }
 spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 spring-boot-starter-data-r2dbc = { module = "org.springframework.boot:spring-boot-starter-data-r2dbc" }
 spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+spring-boot-webflux-test = { module = "org.springframework.boot:spring-boot-webflux-test" }
 springdoc-openapi-starter-webflux-ui = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version.ref = "springdoc-openapi" }
 springmockk = { module = "com.ninja-squad:springmockk", version.ref = "springmockk" }
 

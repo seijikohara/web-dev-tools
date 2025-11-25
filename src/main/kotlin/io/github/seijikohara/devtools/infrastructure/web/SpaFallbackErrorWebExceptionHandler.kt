@@ -4,8 +4,8 @@ import io.github.seijikohara.devtools.infrastructure.config.ApplicationPropertie
 import org.springdoc.core.properties.SpringDocConfigProperties
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties
 import org.springframework.boot.autoconfigure.web.WebProperties
-import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler
-import org.springframework.boot.web.reactive.error.ErrorAttributes
+import org.springframework.boot.webflux.autoconfigure.error.AbstractErrorWebExceptionHandler
+import org.springframework.boot.webflux.error.ErrorAttributes
 import org.springframework.context.ApplicationContext
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -49,10 +49,8 @@ class SpaFallbackErrorWebExceptionHandler(
         }
 
     init {
-        serverCodecConfigurer.run {
-            setMessageWriters(writers)
-            setMessageReaders(readers)
-        }
+        setMessageWriters(serverCodecConfigurer.writers)
+        setMessageReaders(serverCodecConfigurer.readers)
     }
 
     override fun getRoutingFunction(errorAttributes: ErrorAttributes): RouterFunction<ServerResponse> =
