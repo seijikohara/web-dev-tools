@@ -23,7 +23,7 @@ For detailed information:
 - **[Kotlin 2](https://kotlinlang.org/)** - Type-safe JVM language with coroutines and compiler plugins
 
 #### Framework
-- **[Spring Boot 3](https://spring.io/projects/spring-boot)** - Production-ready framework with reactive web support (WebFlux, R2DBC, Actuator)
+- **[Spring Boot 4](https://spring.io/projects/spring-boot)** - Production-ready framework with reactive web support (WebFlux, R2DBC, Actuator)
 - **[Reactor Kotlin Extensions](https://projectreactor.io/docs/kotlin/release/reference/)** - Kotlin extension functions for Project Reactor
 
 #### Libraries
@@ -42,7 +42,7 @@ For detailed information:
 - **[Kotest](https://kotest.io/)** - Kotlin testing framework with multiple test styles and property-based testing
 - **[MockK](https://mockk.io/)** - Mocking library for Kotlin with coroutine support
 - **[SpringMockK](https://github.com/Ninja-Squad/springmockk)** - MockK integration for Spring dependency injection
-- **[ArchUnit](https://www.archunit.org/)** - Architecture testing library for enforcing Clean Architecture and DDD principles
+- **[Konsist](https://github.com/LemonAppDev/konsist)** - Architecture testing library for enforcing Clean Architecture and DDD principles
 
 ### Frontend
 

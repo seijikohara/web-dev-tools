@@ -150,7 +150,6 @@ context("Interface naming conventions") {
 4. **Idiomatic Kotlin**: Natural Kotlin syntax with DSL
 5. **Better Test Names**: Kotest generates readable test names from string descriptions
 6. **Context and Hooks**: `beforeSpec`, `afterSpec`, nested contexts
-7. **Simple API**: More intuitive and concise than ArchUnit for common architecture checks
 
 These tests automatically detect violations:
 - Domain layer depending on infrastructure

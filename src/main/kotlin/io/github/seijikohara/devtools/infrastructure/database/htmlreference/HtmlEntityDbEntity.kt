@@ -15,7 +15,7 @@ import org.springframework.data.relational.core.mapping.Table
  * @property dtd Document Type Definition
  * @property description Human-readable description
  */
-@Table("html_entity")
+@Table("HTML_ENTITY")
 data class HtmlEntityDbEntity(
     @Id @Column val id: Long? = null,
     @Column val name: String,

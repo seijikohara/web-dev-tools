@@ -29,7 +29,7 @@ class HttpHeadersController(
     suspend fun getHttpHeaders(request: ServerHttpRequest): HttpHeadersResponseDto =
         getHttpHeadersUseCase(
             GetHttpHeadersUseCase.Request(
-                headers = request.headers.toMap(),
+                headers = request.headers.headerSet().associate { it.key to it.value },
             ),
         ).let { response ->
             HttpHeadersResponseDto(
