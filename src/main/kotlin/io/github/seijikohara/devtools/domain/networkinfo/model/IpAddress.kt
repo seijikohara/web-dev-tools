@@ -76,8 +76,7 @@ class IpAddress private constructor(
      */
     override fun toString(): String = value
 
-    override fun equals(other: Any?): Boolean =
-        this === other || (other is IpAddress && value == other.value)
+    override fun equals(other: Any?): Boolean = this === other || (other is IpAddress && value == other.value)
 
     override fun hashCode(): Int = value.hashCode()
 }
