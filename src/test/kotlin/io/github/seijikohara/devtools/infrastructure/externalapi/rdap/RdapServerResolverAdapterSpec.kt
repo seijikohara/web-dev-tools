@@ -42,6 +42,10 @@ class RdapServerResolverAdapterSpec :
                             ApplicationProperties.NetworkProperties.GeoProperties(
                                 uri = "https://ipapi.co/",
                             ),
+                        dns =
+                            ApplicationProperties.NetworkProperties.DnsProperties(
+                                uri = "https://dns.google/resolve",
+                            ),
                     ),
             )
 

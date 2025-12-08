@@ -9,10 +9,19 @@ import inet.ipaddr.IPAddressString
  *
  * @property value The validated string representation of the IP address
  */
-@JvmInline
-value class IpAddress private constructor(
+class IpAddress private constructor(
     val value: String,
 ) {
+    /**
+     * Cached parsed IP address for efficient reuse.
+     * Parsing is performed only once during construction.
+     */
+    private val parsedAddress: inet.ipaddr.IPAddress by lazy {
+        requireNotNull(IPAddressString(value).toAddress()) {
+            "Invalid IP address: $value (should have been validated in of())"
+        }
+    }
+
     companion object {
         /**
          * Creates an [IpAddress] from a string value with validation.
@@ -44,24 +53,21 @@ value class IpAddress private constructor(
      * @return The `inet.ipaddr.IPAddress` representation
      * @throws IllegalStateException if the IP address is invalid (should never occur due to validation in [of])
      */
-    fun toInetIPAddress(): inet.ipaddr.IPAddress =
-        requireNotNull(IPAddressString(value).toAddress()) {
-            "Invalid IP address: $value (should have been validated in of())"
-        }
+    fun toInetIPAddress(): inet.ipaddr.IPAddress = parsedAddress
 
     /**
      * Checks if this IP address is in IPv4 format.
      *
      * @return `true` if IPv4, `false` if IPv6
      */
-    fun isIpV4(): Boolean = toInetIPAddress().isIPv4
+    fun isIpV4(): Boolean = parsedAddress.isIPv4
 
     /**
      * Checks if this IP address is in IPv6 format.
      *
      * @return `true` if IPv6, `false` if IPv4
      */
-    fun isIpV6(): Boolean = toInetIPAddress().isIPv6
+    fun isIpV6(): Boolean = parsedAddress.isIPv6
 
     /**
      * Returns the string representation of this IP address.
@@ -69,4 +75,8 @@ value class IpAddress private constructor(
      * @return The IP address string
      */
     override fun toString(): String = value
+
+    override fun equals(other: Any?): Boolean = this === other || (other is IpAddress && value == other.value)
+
+    override fun hashCode(): Int = value.hashCode()
 }

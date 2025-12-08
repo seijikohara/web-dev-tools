@@ -5,7 +5,6 @@ import io.github.seijikohara.devtools.application.usecase.GetRdapInformationUseC
 import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapServerNotFoundException
 import io.github.seijikohara.devtools.infrastructure.web.dto.GeoResponseDto
 import io.github.seijikohara.devtools.infrastructure.web.dto.RdapResponseDto
-import io.github.seijikohara.devtools.infrastructure.web.dto.toDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -19,6 +18,10 @@ import org.springframework.web.server.ResponseStatusException
 
 /**
  * REST controller for network information endpoints.
+ *
+ * Returns complete responses from external APIs:
+ * - RDAP: RFC 9083 compliant response
+ * - GeoIP: ipapi.co full response
  */
 @RestController
 @RequestMapping("\${application.api-base-path}")
@@ -30,11 +33,15 @@ class NetworkInfoController(
     /**
      * Retrieves RDAP information for an IP address.
      *
+     * Returns the complete RFC 9083 RDAP response including all available fields
+     * such as handle, name, country, status, entities, events, links, etc.
+     *
      * @param ip IP address
-     * @return [RdapResponseDto] instance
+     * @return [RdapResponseDto] Complete RDAP response
+     * @see <a href="https://datatracker.ietf.org/doc/rfc9083/">RFC 9083</a>
      */
     @GetMapping("/rdap/{ip}")
-    @Operation(summary = "Get RDAP information for an IP address")
+    @Operation(summary = "Get RDAP information for an IP address (RFC 9083 compliant)")
     suspend fun getRdapInformation(
         @Parameter(description = "IP address to lookup", example = "8.8.8.8")
         @PathVariable
@@ -43,7 +50,7 @@ class NetworkInfoController(
         getRdapInformationUseCase(
             GetRdapInformationUseCase.Request(ipAddressString = ip),
         ).fold(
-            onSuccess = { it.toDto() },
+            onSuccess = { it.rdapInformation },
             onFailure = { error ->
                 when (error) {
                     is RdapServerNotFoundException ->
@@ -60,11 +67,15 @@ class NetworkInfoController(
     /**
      * Retrieves geographic location for an IP address.
      *
+     * Returns the complete ipapi.co response including all available fields
+     * such as city, region, country, coordinates, timezone, ASN, organization, etc.
+     *
      * @param ip IP address
-     * @return [GeoResponseDto] instance
+     * @return [GeoResponseDto] Complete ipapi.co response
+     * @see <a href="https://ipapi.co/api/">ipapi.co API Reference</a>
      */
     @GetMapping("/geo/{ip}")
-    @Operation(summary = "Get geographic location for an IP address")
+    @Operation(summary = "Get geographic location for an IP address (ipapi.co full response)")
     suspend fun getGeoLocation(
         @Parameter(description = "IP address to lookup", example = "8.8.8.8")
         @PathVariable
@@ -73,7 +84,7 @@ class NetworkInfoController(
         getGeoLocationUseCase(
             GetGeoLocationUseCase.Request(ipAddressString = ip),
         ).fold(
-            onSuccess = { it.toDto() },
+            onSuccess = { it.geoLocation },
             onFailure = { error ->
                 when (error) {
                     is IllegalArgumentException ->

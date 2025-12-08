@@ -1,69 +1,24 @@
 package io.github.seijikohara.devtools.infrastructure.web.dto
 
-import io.github.seijikohara.devtools.application.usecase.GetGeoLocationUseCase
-import io.github.seijikohara.devtools.application.usecase.GetRdapInformationUseCase
-import java.time.Instant
+import io.github.seijikohara.devtools.domain.networkinfo.model.GeoLocation
+import io.github.seijikohara.devtools.domain.networkinfo.model.RdapInformation
 
 /**
- * RDAP information response.
+ * Type alias for RDAP response DTO.
  *
- * @property ipAddress IP address
- * @property handle Registry handle
- * @property name Registrant name
- * @property country Country code
- * @property registeredAt Registration timestamp
+ * Returns the complete RFC 9083 RDAP information directly.
+ *
+ * @see RdapInformation
+ * @see <a href="https://datatracker.ietf.org/doc/rfc9083/">RFC 9083</a>
  */
-data class RdapResponseDto(
-    val ipAddress: String,
-    val handle: String?,
-    val name: String?,
-    val country: String?,
-    val registeredAt: Instant?,
-)
+typealias RdapResponseDto = RdapInformation
 
 /**
- * Geographic location response.
+ * Type alias for GeoIP response DTO.
  *
- * @property ipAddress IP address
- * @property countryCode Country code
- * @property city City name
- * @property latitude Latitude coordinate
- * @property longitude Longitude coordinate
- */
-data class GeoResponseDto(
-    val ipAddress: String,
-    val countryCode: String?,
-    val city: String?,
-    val latitude: Double?,
-    val longitude: Double?,
-)
-
-/**
- * Converts to [RdapResponseDto].
+ * Returns the complete geolocation data directly.
  *
- * @receiver Response data
- * @return [RdapResponseDto] instance
+ * @see GeoLocation
+ * @see <a href="https://ipapi.co/api/">ipapi.co API Reference</a>
  */
-fun GetRdapInformationUseCase.Response.toDto(): RdapResponseDto =
-    RdapResponseDto(
-        ipAddress = rdapInformation.ipAddress.value,
-        handle = rdapInformation.handle,
-        name = rdapInformation.name,
-        country = rdapInformation.country?.value,
-        registeredAt = rdapInformation.registeredAt,
-    )
-
-/**
- * Converts to [GeoResponseDto].
- *
- * @receiver Response data
- * @return [GeoResponseDto] instance
- */
-fun GetGeoLocationUseCase.Response.toDto(): GeoResponseDto =
-    GeoResponseDto(
-        ipAddress = geoLocation.ipAddress.value,
-        countryCode = geoLocation.countryCode?.value,
-        city = geoLocation.city,
-        latitude = geoLocation.latitude,
-        longitude = geoLocation.longitude,
-    )
+typealias GeoResponseDto = GeoLocation

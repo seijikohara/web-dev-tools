@@ -1,6 +1,5 @@
 package io.github.seijikohara.devtools.application.usecase
 
-import io.github.seijikohara.devtools.domain.networkinfo.model.CountryCode
 import io.github.seijikohara.devtools.domain.networkinfo.model.GeoLocation
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
 import io.github.seijikohara.devtools.domain.networkinfo.repository.GeoIpRepository
@@ -8,7 +7,6 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.string.shouldContain
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -19,7 +17,7 @@ class GetGeoLocationUseCaseSpec :
         context("GetGeoLocationUseCase execution") {
             data class GeoLocationTestCase(
                 val ipStr: String,
-                val countryStr: String,
+                val countryCode: String,
                 val city: String,
                 val lat: Double,
                 val lng: Double,
@@ -29,13 +27,13 @@ class GetGeoLocationUseCaseSpec :
                 GeoLocationTestCase("192.168.1.1", "US", "New York", 40.7128, -74.0060),
                 GeoLocationTestCase("8.8.8.8", "US", "Mountain View", 37.386, -122.0838),
                 GeoLocationTestCase("2001:db8::1", "JP", "Tokyo", 35.6762, 139.6503),
-            ) { (ipStr, countryStr, city, lat, lng) ->
+            ) { (ipStr, countryCode, city, lat, lng) ->
                 val mockRepository = mockk<GeoIpRepository>()
                 val ipAddress = IpAddress.of(ipStr).getOrThrow()
                 val expectedGeoLocation =
                     GeoLocation(
-                        ipAddress = ipAddress,
-                        countryCode = CountryCode.of(countryStr).getOrNull(),
+                        ip = ipStr,
+                        countryCode = countryCode,
                         city = city,
                         latitude = lat,
                         longitude = lng,
@@ -50,8 +48,8 @@ class GetGeoLocationUseCaseSpec :
 
                 result.isSuccess shouldBe true
                 val response = result.getOrNull()!!
-                response.geoLocation.ipAddress shouldBe ipAddress
-                response.geoLocation.countryCode?.value shouldBe countryStr
+                response.geoLocation.ip shouldBe ipStr
+                response.geoLocation.countryCode shouldBe countryCode
                 response.geoLocation.city shouldBe city
                 response.geoLocation.latitude shouldBe lat
                 response.geoLocation.longitude shouldBe lng
@@ -111,7 +109,7 @@ class GetGeoLocationUseCaseSpec :
                 val ipAddress = IpAddress.of("10.0.0.1").getOrThrow()
                 val minimalGeoLocation =
                     GeoLocation(
-                        ipAddress = ipAddress,
+                        ip = "10.0.0.1",
                         countryCode = null,
                         city = null,
                         latitude = null,

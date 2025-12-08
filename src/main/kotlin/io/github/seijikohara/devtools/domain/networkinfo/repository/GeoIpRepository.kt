@@ -6,6 +6,8 @@ import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
 /**
  * Repository interface for accessing geographic location information.
  *
+ * Returns the complete geolocation data as a domain model [GeoLocation].
+ *
  * @see GeoLocation
  * @see IpAddress
  */

@@ -70,10 +70,12 @@ data class ApplicationProperties(
      *
      * @property rdap RDAP service configuration
      * @property geo Geo-location service configuration
+     * @property dns DNS resolution service configuration
      */
     data class NetworkProperties(
         val rdap: RdapProperties,
         val geo: GeoProperties,
+        val dns: DnsProperties,
     ) {
         /**
          * RDAP (Registration Data Access Protocol) service configuration.
@@ -92,6 +94,15 @@ data class ApplicationProperties(
          * @property uri URI of the geo-location service endpoint
          */
         data class GeoProperties(
+            val uri: String,
+        )
+
+        /**
+         * DNS resolution service configuration.
+         *
+         * @property uri URI of the DNS-over-HTTPS service endpoint
+         */
+        data class DnsProperties(
             val uri: String,
         )
     }

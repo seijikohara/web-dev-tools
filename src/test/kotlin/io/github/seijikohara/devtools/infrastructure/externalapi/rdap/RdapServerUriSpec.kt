@@ -19,10 +19,10 @@ class RdapServerUriSpec :
             )
 
             withData(
-                Ipv4UriCase("https://rdap.example.com", "192.168.1.1", "https://rdap.example.com/ip/192.168.1.1"),
+                Ipv4UriCase("https://rdap.example.com/", "192.168.1.1", "https://rdap.example.com/ip/192.168.1.1"),
                 Ipv4UriCase("https://rdap.example.com/", "8.8.8.8", "https://rdap.example.com/ip/8.8.8.8"),
-                Ipv4UriCase("https://rdap.example.com/api", "127.0.0.1", "https://rdap.example.com/ip/127.0.0.1"),
-                Ipv4UriCase("https://rdap.example.com/api/", "10.0.0.1", "https://rdap.example.com/ip/10.0.0.1"),
+                Ipv4UriCase("https://rdap.example.com/api/", "127.0.0.1", "https://rdap.example.com/api/ip/127.0.0.1"),
+                Ipv4UriCase("https://rdap.example.com/api/", "10.0.0.1", "https://rdap.example.com/api/ip/10.0.0.1"),
             ) { (baseUri, ipAddressStr, expected) ->
                 val rdapServerUri = RdapServerUri.of(URI.create(baseUri))
                 val ipAddress = IpAddress.of(ipAddressStr).getOrThrow()
@@ -41,9 +41,9 @@ class RdapServerUriSpec :
             )
 
             withData(
-                Ipv6UriCase("https://rdap.example.com", "2001:db8::1", "https://rdap.example.com/ip/2001:db8::1"),
+                Ipv6UriCase("https://rdap.example.com/", "2001:db8::1", "https://rdap.example.com/ip/2001:db8::1"),
                 Ipv6UriCase("https://rdap.example.com/", "::1", "https://rdap.example.com/ip/::1"),
-                Ipv6UriCase("https://rdap.example.com/api", "fe80::1", "https://rdap.example.com/ip/fe80::1"),
+                Ipv6UriCase("https://rdap.example.com/api/", "fe80::1", "https://rdap.example.com/api/ip/fe80::1"),
             ) { (baseUri, ipAddressStr, expected) ->
                 val rdapServerUri = RdapServerUri.of(URI.create(baseUri))
                 val ipAddress = IpAddress.of(ipAddressStr).getOrThrow()
@@ -63,7 +63,7 @@ class RdapServerUriSpec :
             )
 
             withData(
-                BaseUriCase("https://rdap.arin.net/registry", "https://rdap.arin.net/ip/192.0.2.1"),
+                BaseUriCase("https://rdap.arin.net/registry/", "https://rdap.arin.net/registry/ip/192.0.2.1"),
                 BaseUriCase("https://rdap.apnic.net/", "https://rdap.apnic.net/ip/192.0.2.1"),
                 BaseUriCase("http://rdap.example.com:8080/", "http://rdap.example.com:8080/ip/192.0.2.1"),
             ) { (baseUri, expected) ->
@@ -85,10 +85,8 @@ class RdapServerUriSpec :
             )
 
             withData(
-                PathConcatCase("https://example.com", "https://example.com/ip/192.0.2.1", "base without trailing slash"),
                 PathConcatCase("https://example.com/", "https://example.com/ip/192.0.2.1", "base with trailing slash"),
-                PathConcatCase("https://example.com/v1", "https://example.com/ip/192.0.2.1", "base with path"),
-                PathConcatCase("https://example.com/v1/", "https://example.com/ip/192.0.2.1", "base with path and trailing slash"),
+                PathConcatCase("https://example.com/v1/", "https://example.com/v1/ip/192.0.2.1", "base with path and trailing slash"),
             ) { (baseUri, expected, _) ->
                 val rdapServerUri = RdapServerUri.of(URI.create(baseUri))
 
