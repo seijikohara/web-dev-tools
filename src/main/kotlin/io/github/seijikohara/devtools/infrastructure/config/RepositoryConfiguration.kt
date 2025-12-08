@@ -1,11 +1,13 @@
 package io.github.seijikohara.devtools.infrastructure.config
 
+import io.github.seijikohara.devtools.domain.dns.repository.DnsRepository
 import io.github.seijikohara.devtools.domain.htmlreference.repository.HtmlEntityRepository
 import io.github.seijikohara.devtools.domain.networkinfo.repository.GeoIpRepository
 import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapRepository
 import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapServerResolver
 import io.github.seijikohara.devtools.infrastructure.database.htmlreference.HtmlEntityDbRepository
 import io.github.seijikohara.devtools.infrastructure.database.htmlreference.HtmlEntityRepositoryAdapter
+import io.github.seijikohara.devtools.infrastructure.externalapi.dns.DnsRepositoryAdapter
 import io.github.seijikohara.devtools.infrastructure.externalapi.geoip.GeoIpRepositoryAdapter
 import io.github.seijikohara.devtools.infrastructure.externalapi.rdap.RdapRepositoryAdapter
 import io.github.seijikohara.devtools.infrastructure.externalapi.rdap.RdapServerResolverAdapter
@@ -54,4 +56,12 @@ class RepositoryConfiguration(
      */
     @Bean
     fun htmlEntityRepository(dbRepository: HtmlEntityDbRepository): HtmlEntityRepository = HtmlEntityRepositoryAdapter(dbRepository)
+
+    /**
+     * Creates [DnsRepository] bean.
+     *
+     * @return [DnsRepository] instance
+     */
+    @Bean
+    fun dnsRepository(webClient: WebClient): DnsRepository = DnsRepositoryAdapter(webClient, applicationProperties)
 }

@@ -8,9 +8,12 @@ import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapReposito
 /**
  * Use case for retrieving RDAP information for an IP address.
  *
+ * Returns the complete RFC 9083 RDAP response with all available fields.
+ *
  * @see Request
  * @see Response
  * @see RdapInformation
+ * @see <a href="https://datatracker.ietf.org/doc/rfc9083/">RFC 9083</a>
  */
 fun interface GetRdapInformationUseCase {
     /**
@@ -33,7 +36,7 @@ fun interface GetRdapInformationUseCase {
     /**
      * Response containing RDAP information.
      *
-     * @property rdapInformation RDAP registration data
+     * @property rdapInformation Complete RFC 9083 RDAP information
      */
     data class Response(
         val rdapInformation: RdapInformation,

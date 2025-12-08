@@ -1,6 +1,5 @@
 package io.github.seijikohara.devtools.application.usecase
 
-import io.github.seijikohara.devtools.domain.networkinfo.model.CountryCode
 import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
 import io.github.seijikohara.devtools.domain.networkinfo.model.RdapInformation
 import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapRepository
@@ -20,23 +19,21 @@ class GetRdapInformationUseCaseSpec :
                 val ipStr: String,
                 val handle: String,
                 val name: String,
-                val countryStr: String,
+                val country: String,
             )
 
             withData(
                 RdapTestCase("192.0.2.1", "NET-192-0-2-0-1", "TEST-NET-1", "US"),
                 RdapTestCase("8.8.8.8", "NET-8-8-8-0-1", "GOOGLE", "US"),
                 RdapTestCase("2001:db8::1", "NET6-2001-DB8-1", "EXAMPLE-NET", "EU"),
-            ) { (ipStr, handle, name, countryStr) ->
+            ) { (ipStr, handle, name, country) ->
                 val mockRepository = mockk<RdapRepository>()
                 val ipAddress = IpAddress.of(ipStr).getOrThrow()
                 val expectedRdapInfo =
                     RdapInformation(
-                        ipAddress = ipAddress,
                         handle = handle,
                         name = name,
-                        country = CountryCode.of(countryStr).getOrNull(),
-                        registeredAt = null,
+                        country = country,
                     )
 
                 coEvery { mockRepository(ipAddress) } returns Result.success(expectedRdapInfo)
@@ -48,10 +45,9 @@ class GetRdapInformationUseCaseSpec :
 
                 result.isSuccess shouldBe true
                 val response = result.getOrNull()!!
-                response.rdapInformation.ipAddress shouldBe ipAddress
                 response.rdapInformation.handle shouldBe handle
                 response.rdapInformation.name shouldBe name
-                response.rdapInformation.country?.value shouldBe countryStr
+                response.rdapInformation.country shouldBe country
 
                 coVerify(exactly = 1) { mockRepository(ipAddress) }
             }
@@ -108,11 +104,9 @@ class GetRdapInformationUseCaseSpec :
                 val ipAddress = IpAddress.of("10.0.0.1").getOrThrow()
                 val minimalRdapInfo =
                     RdapInformation(
-                        ipAddress = ipAddress,
                         handle = null,
                         name = null,
                         country = null,
-                        registeredAt = null,
                     )
 
                 coEvery { mockRepository(ipAddress) } returns Result.success(minimalRdapInfo)

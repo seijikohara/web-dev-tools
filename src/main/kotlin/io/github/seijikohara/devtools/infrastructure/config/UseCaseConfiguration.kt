@@ -4,7 +4,9 @@ import io.github.seijikohara.devtools.application.usecase.GetGeoLocationUseCase
 import io.github.seijikohara.devtools.application.usecase.GetHttpHeadersUseCase
 import io.github.seijikohara.devtools.application.usecase.GetIpInfoUseCase
 import io.github.seijikohara.devtools.application.usecase.GetRdapInformationUseCase
+import io.github.seijikohara.devtools.application.usecase.ResolveDnsUseCase
 import io.github.seijikohara.devtools.application.usecase.SearchHtmlEntitiesUseCase
+import io.github.seijikohara.devtools.domain.dns.repository.DnsRepository
 import io.github.seijikohara.devtools.domain.htmlreference.repository.HtmlEntityRepository
 import io.github.seijikohara.devtools.domain.networkinfo.repository.GeoIpRepository
 import io.github.seijikohara.devtools.domain.networkinfo.repository.RdapRepository
@@ -14,6 +16,7 @@ import io.github.seijikohara.devtools.application.usecase.getGeoLocationUseCase 
 import io.github.seijikohara.devtools.application.usecase.getHttpHeadersUseCase as createGetHttpHeadersUseCase
 import io.github.seijikohara.devtools.application.usecase.getIpInfoUseCase as createGetIpInfoUseCase
 import io.github.seijikohara.devtools.application.usecase.getRdapInformationUseCase as createGetRdapInformationUseCase
+import io.github.seijikohara.devtools.application.usecase.resolveDnsUseCase as createResolveDnsUseCase
 import io.github.seijikohara.devtools.application.usecase.searchHtmlEntitiesUseCase as createSearchHtmlEntitiesUseCase
 
 /**
@@ -37,4 +40,7 @@ class UseCaseConfiguration {
     @Bean
     fun searchHtmlEntitiesUseCase(htmlEntityRepository: HtmlEntityRepository): SearchHtmlEntitiesUseCase =
         createSearchHtmlEntitiesUseCase(htmlEntityRepository)
+
+    @Bean
+    fun resolveDnsUseCase(dnsRepository: DnsRepository): ResolveDnsUseCase = createResolveDnsUseCase(dnsRepository)
 }

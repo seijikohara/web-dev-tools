@@ -8,9 +8,12 @@ import io.github.seijikohara.devtools.domain.networkinfo.repository.GeoIpReposit
 /**
  * Use case for retrieving geographic location information for an IP address.
  *
+ * Returns the complete geolocation data with all available fields.
+ *
  * @see Request
  * @see Response
  * @see GeoLocation
+ * @see <a href="https://ipapi.co/api/">ipapi.co API Reference</a>
  */
 fun interface GetGeoLocationUseCase {
     /**
@@ -33,7 +36,7 @@ fun interface GetGeoLocationUseCase {
     /**
      * Response containing geographic location information.
      *
-     * @property geoLocation Geographic location data
+     * @property geoLocation Complete geolocation data
      */
     data class Response(
         val geoLocation: GeoLocation,

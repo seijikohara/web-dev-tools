@@ -42,7 +42,11 @@ object RdapRangeMapBuilder {
                                     val rdapURI = URI.create(service[1][0])
                                     service[0].forEach { cidr ->
                                         val ipAddress = IPAddressString(cidr).address
-                                        put(Range.closed(ipAddress.lower, ipAddress.upper), rdapURI)
+                                        if (ipAddress != null) {
+                                            put(Range.closed(ipAddress.lower, ipAddress.upper), rdapURI)
+                                        } else {
+                                            logger.warn("[RDAP] Invalid CIDR format in $type definition: $cidr")
+                                        }
                                     }
                                 }
                             }.build()

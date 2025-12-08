@@ -38,4 +38,4 @@ value class RdapServerUri internal constructor(
  * @return Complete RDAP query URI
  * @see IpAddress
  */
-fun RdapServerUri.buildQueryUri(ipAddress: IpAddress): URI = value.resolve("/ip/${ipAddress.value}")
+fun RdapServerUri.buildQueryUri(ipAddress: IpAddress): URI = value.resolve("ip/${ipAddress.value}")

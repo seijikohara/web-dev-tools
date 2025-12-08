@@ -1,7 +1,7 @@
 package io.github.seijikohara.devtools.infrastructure.externalapi.geoip
 
-import io.github.seijikohara.devtools.domain.networkinfo.model.IpAddress
 import io.github.seijikohara.devtools.infrastructure.config.ApplicationProperties
+import io.github.seijikohara.devtools.infrastructure.externalapi.common.decodeJson
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
@@ -43,6 +43,10 @@ class GeoIpRepositoryAdapterSpec :
                             ApplicationProperties.NetworkProperties.GeoProperties(
                                 uri = "https://test.example.com",
                             ),
+                        dns =
+                            ApplicationProperties.NetworkProperties.DnsProperties(
+                                uri = "https://dns.google/resolve",
+                            ),
                     ),
             )
 
@@ -58,49 +62,57 @@ class GeoIpRepositoryAdapterSpec :
             }
         }
 
-        context("GeoIpResponse parsing") {
-            test("should parse valid GeoIP JSON to GeoLocation") {
+        context("IpApiCoResponse parsing") {
+            test("should parse valid ipapi.co JSON response") {
                 val testJson =
                     """
                     {
                         "ip": "8.8.8.8",
-                        "country_code": "US",
+                        "version": "IPv4",
                         "city": "Mountain View",
+                        "region": "California",
+                        "region_code": "CA",
+                        "country_code": "US",
+                        "country_code_iso3": "USA",
+                        "country_name": "United States",
+                        "country_capital": "Washington",
+                        "country_tld": ".us",
+                        "continent_code": "NA",
+                        "in_eu": false,
+                        "postal": "94035",
                         "latitude": 37.386,
-                        "longitude": -122.0838
+                        "longitude": -122.0838,
+                        "timezone": "America/Los_Angeles",
+                        "utc_offset": "-0800",
+                        "country_calling_code": "+1",
+                        "currency": "USD",
+                        "currency_name": "Dollar",
+                        "languages": "en-US,es-US",
+                        "country_area": 9629091.0,
+                        "country_population": 310232863,
+                        "asn": "AS15169",
+                        "org": "Google LLC"
                     }
                     """.trimIndent()
 
-                val geoIpResponse = decodeJsonToGeoIpResponse(testJson)
-                val ipAddress = IpAddress.of("8.8.8.8").getOrThrow()
-                val geoLocation = geoIpResponse.toDomain(ipAddress)
+                val response = decodeJson<IpApiCoResponse>(testJson)
 
-                geoLocation.ipAddress shouldBe ipAddress
-                geoLocation.countryCode?.value shouldBe "US"
-                geoLocation.city shouldBe "Mountain View"
-                geoLocation.latitude shouldBe 37.386
-                geoLocation.longitude shouldBe -122.0838
+                response?.ip shouldBe "8.8.8.8"
+                response?.version shouldBe "IPv4"
+                response?.city shouldBe "Mountain View"
+                response?.region shouldBe "California"
+                response?.regionCode shouldBe "CA"
+                response?.countryCode shouldBe "US"
+                response?.countryCodeIso3 shouldBe "USA"
+                response?.countryName shouldBe "United States"
+                response?.latitude shouldBe 37.386
+                response?.longitude shouldBe -122.0838
+                response?.asn shouldBe "AS15169"
+                response?.org shouldBe "Google LLC"
+                response?.inEu shouldBe false
             }
 
-            test("should handle alternative country field name") {
-                val testJson =
-                    """
-                    {
-                        "ip": "1.1.1.1",
-                        "country": "AU",
-                        "city": "Sydney"
-                    }
-                    """.trimIndent()
-
-                val geoIpResponse = decodeJsonToGeoIpResponse(testJson)
-                val ipAddress = IpAddress.of("1.1.1.1").getOrThrow()
-                val geoLocation = geoIpResponse.toDomain(ipAddress)
-
-                geoLocation.countryCode?.value shouldBe "AU"
-                geoLocation.city shouldBe "Sydney"
-            }
-
-            test("should handle missing optional fields") {
+            test("should handle minimal ipapi.co JSON response") {
                 val testJson =
                     """
                     {
@@ -108,15 +120,28 @@ class GeoIpRepositoryAdapterSpec :
                     }
                     """.trimIndent()
 
-                val geoIpResponse = decodeJsonToGeoIpResponse(testJson)
-                val ipAddress = IpAddress.of("192.168.1.1").getOrThrow()
-                val geoLocation = geoIpResponse.toDomain(ipAddress)
+                val response = decodeJson<IpApiCoResponse>(testJson)
 
-                geoLocation.ipAddress shouldBe ipAddress
-                geoLocation.countryCode shouldBe null
-                geoLocation.city shouldBe null
-                geoLocation.latitude shouldBe null
-                geoLocation.longitude shouldBe null
+                response?.ip shouldBe "192.168.1.1"
+                response?.city shouldBe null
+                response?.countryCode shouldBe null
+                response?.latitude shouldBe null
+                response?.longitude shouldBe null
+            }
+
+            test("should handle ipapi.co error response") {
+                val testJson =
+                    """
+                    {
+                        "error": true,
+                        "reason": "Reserved IP Address"
+                    }
+                    """.trimIndent()
+
+                val response = decodeJson<IpApiCoResponse>(testJson)
+
+                response?.error shouldBe true
+                response?.reason shouldBe "Reserved IP Address"
             }
         }
     })
