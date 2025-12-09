@@ -1,7 +1,8 @@
 # ========================================
 # Stage 1: Build the application
 # ========================================
-FROM eclipse-temurin:25-jdk AS builder
+# Use Java 21 for building (Kotlin toolchain requirement)
+FROM eclipse-temurin:21-jdk AS builder
 WORKDIR /build
 COPY ./ ./
 RUN ./gradlew clean --stacktrace && \
@@ -11,6 +12,7 @@ RUN ./gradlew clean --stacktrace && \
 # ========================================
 # Stage 2: Extract the JAR for AOT Cache
 # ========================================
+# Use Java 25 for runtime stages (AOT Cache support)
 FROM eclipse-temurin:25-jdk AS extractor
 WORKDIR /app
 COPY --from=builder /build/build/libs/app.jar ./app.jar
