@@ -67,16 +67,13 @@ class SpaFallbackErrorWebExceptionHandler(
      * @param request The server request
      * @return true if this is a SPA route request, false otherwise
      */
-    private fun isSpaNotFoundRequest(request: ServerRequest): Boolean {
-        val error = getError(request)
-        val isExcludedPath =
-            excludedPaths.any { request.path().pathStartsWith(it) }
-
-        return error is ResponseStatusException &&
-            error.statusCode == HttpStatus.NOT_FOUND &&
-            !isExcludedPath &&
-            request.headers().accept().any { it.includes(MediaType.TEXT_HTML) }
-    }
+    private fun isSpaNotFoundRequest(request: ServerRequest): Boolean =
+        getError(request).let { error ->
+            error is ResponseStatusException &&
+                error.statusCode == HttpStatus.NOT_FOUND &&
+                excludedPaths.none { request.path().pathStartsWith(it) } &&
+                request.headers().accept().any { it.includes(MediaType.TEXT_HTML) }
+        }
 
     /**
      * Checks if this path starts with the given prefix, handling trailing slashes.
@@ -84,11 +81,11 @@ class SpaFallbackErrorWebExceptionHandler(
      * @param prefix The path prefix to check
      * @return true if this path starts with the prefix
      */
-    private fun String.pathStartsWith(prefix: String): Boolean {
-        val normalizedPath = trimEnd('/')
-        val normalizedPrefix = prefix.trimEnd('/')
-
-        return normalizedPath == normalizedPrefix ||
-            normalizedPath.startsWith("$normalizedPrefix/")
-    }
+    private fun String.pathStartsWith(prefix: String): Boolean =
+        trimEnd('/').let { normalizedPath ->
+            prefix.trimEnd('/').let { normalizedPrefix ->
+                normalizedPath == normalizedPrefix ||
+                    normalizedPath.startsWith("$normalizedPrefix/")
+            }
+        }
 }
