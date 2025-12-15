@@ -63,79 +63,16 @@ src/
 ## Architecture Principles
 
 This project follows **Clean Architecture** and **Domain-Driven Design (DDD)** principles.
+See `rules/architecture/clean-architecture.md` for detailed guidelines.
 
-### Layer Dependencies
-
-```
-┌─────────────────────────────────────┐
-│        Infrastructure Layer         │
-│  (controllers, adapters, configs)   │
-├─────────────────────────────────────┤
-│        Application Layer            │
-│        (use cases)                  │
-├─────────────────────────────────────┤
-│          Domain Layer               │
-│  (entities, value objects, repos)   │
-└─────────────────────────────────────┘
-```
-
-**Strict Rules:**
+Key rules (enforced by Konsist tests):
 - Domain layer MUST NOT depend on infrastructure or application layers
 - Application layer MUST NOT depend on infrastructure layer
 - Domain layer MUST NOT use Spring Framework annotations
-- These rules are enforced by Konsist architecture tests
-
-### Use Case Pattern
-
-Use cases are defined as functional interfaces (`fun interface`) with factory functions:
-
-```kotlin
-fun interface GetSomethingUseCase {
-    suspend operator fun invoke(request: Request): Result<Response>
-
-    data class Request(...)
-    data class Response(...)
-}
-
-fun getSomethingUseCase(repository: SomeRepository): GetSomethingUseCase =
-    GetSomethingUseCase { request ->
-        // Implementation using Result type for error handling
-    }
-```
-
-### Repository Pattern
-
-- Domain layer defines repository interfaces
-- Infrastructure layer provides adapter implementations
-- Adapters must end with `Adapter` suffix (enforced by tests)
-
-### Value Objects
-
-Use `Result<T>` for validation in factory methods:
-
-```kotlin
-data class SomeValueObject(val value: Int) {
-    companion object {
-        fun of(value: Int): Result<SomeValueObject> = runCatching {
-            require(value > 0) { "Value must be positive" }
-            SomeValueObject(value)
-        }
-    }
-}
-```
-
-## Naming Conventions
-
-| Type | Convention | Example |
-|------|------------|---------|
-| Use Cases | `XxxUseCase` | `SearchHtmlEntitiesUseCase` |
-| Repositories | `XxxRepository` or `XxxResolver` | `HtmlEntityRepository` |
-| Adapters | `XxxAdapter` | `HtmlEntityRepositoryAdapter` |
-| Configurations | `XxxConfiguration` or `XxxConfig` | `RepositoryConfiguration` |
-| DTOs | `XxxDto` | `HtmlEntitySearchResponseDto` |
-| Test classes | `XxxSpec` | `SearchHtmlEntitiesUseCaseSpec` |
 
 ## Key Conventions
+
+See `rules/kotlin/conventions.md` for detailed Kotlin coding guidelines.
 
 ### Code Style
 
@@ -146,9 +83,9 @@ data class SomeValueObject(val value: Int) {
 
 ### Control Flow
 
-- Prefer expression-bodied functions
-- Use method chaining (`.map`, `.mapCatching`, `.fold`)
-- Use early returns for validation
+- Prefer expression-bodied functions (mandatory)
+- Use method chaining (`.map`, `.mapCatching`, `.fold`) - never use `for`/`while` for transformations
+- Use string templates - never use string concatenation
 
 ### Documentation
 
@@ -171,30 +108,4 @@ See `rules/general/pr.md` for detailed verification steps.
 
 ## Git Conventions
 
-Follow Conventional Commits format:
-
-```
-<type>(<scope>): <description>
-```
-
-### Types
-
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Formatting, no code change |
-| `refactor` | Code change without feature/fix |
-| `perf` | Performance improvement |
-| `test` | Adding/updating tests |
-| `chore` | Build, tooling, dependencies |
-| `build` | Build system changes |
-
-### Scope Examples
-
-- `usecase` - Use case changes
-- `domain` - Domain layer changes
-- `infra` - Infrastructure changes
-- `api` - API/controller changes
-- `deps` - Dependency updates
+Follow Conventional Commits format. See `rules/general/git.md` for detailed guidelines.
