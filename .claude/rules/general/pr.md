@@ -120,22 +120,7 @@ When documentation is affected, add a section to your PR description:
 
 ## Branch Strategy
 
-### Branch Naming
-
-```
-<type>/<short-description>
-```
-
-| Prefix | Use Case |
-|--------|----------|
-| `feature/` | New features |
-| `fix/` | Bug fixes |
-| `refactor/` | Code improvements |
-| `docs/` | Documentation |
-| `test/` | Test additions/fixes |
-| `chore/` | Tooling, dependencies |
-
-### Base Branch
+See `git.md` for branch naming conventions.
 
 - Always branch from and merge to `main`
 

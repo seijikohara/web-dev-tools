@@ -146,6 +146,9 @@ io.github.seijikohara.devtools/
 | Use Case Interface | `*UseCase` | `application/usecase/` |
 | Repository Implementation | `*Adapter` | `infrastructure/**/` |
 | Configuration Class | `*Configuration` or `*Config` | `infrastructure/config/` |
+| DTO | `*Dto` | `infrastructure/web/dto/` |
+| Unit Test Class | `*Spec` | `test/**/` |
+| Integration Test Class | `*IntegrationSpec` | `it/**/` |
 
 ## Data Flow
 

@@ -36,6 +36,20 @@ fun HtmlEntity.toDto(): HtmlEntityDto =
     )
 ```
 
+### Code Organization
+
+- Group imports: Kotlin stdlib → external libraries → internal packages
+- Order class members: companion object → properties → init → functions
+- Keep functions small and focused (single responsibility)
+- Use descriptive names over comments
+
+### Immutability
+
+- Prefer `val` over `var`
+- Use `data class` for immutable data
+- Avoid mutable collections in public APIs
+- Return new instances instead of mutating
+
 ### Modern Syntax Enforcement
 
 Always use the latest Kotlin syntax features:
