@@ -1,8 +1,8 @@
 # ========================================
 # Stage 1: Build the application
 # ========================================
-# Use Java 21 for building (Kotlin toolchain requirement)
-FROM eclipse-temurin:21-jdk AS builder
+# Use Java 25 for building (Kotlin toolchain requirement)
+FROM eclipse-temurin:25-jdk AS builder
 WORKDIR /build
 COPY ./ ./
 RUN ./gradlew clean --stacktrace && \
