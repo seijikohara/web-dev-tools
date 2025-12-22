@@ -24,7 +24,7 @@ version = "1.0.0"
 // Java Toolchain configuration
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
