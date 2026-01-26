@@ -12,7 +12,7 @@ node-gradle = "7.1.0"
 nodejs = "24.11.0"
 # @keep
 npm = "11.6.2"
-spotless = "8.1.0"
+spotless = "8.2.0"
 spring-boot = "4.0.1"
 spring-dependency-management = "1.1.7"
 springdoc-openapi = "3.0.1"
