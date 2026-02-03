@@ -1,6 +1,6 @@
 [versions]
 guava = "33.5.0-jre"
-ipaddress = "5.5.1"
+ipaddress = "5.6.1"
 konsist = "0.17.3"
 kotest = "6.1.1"
 kotlin = "2.3.0"
