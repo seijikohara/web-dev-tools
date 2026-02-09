@@ -1,6 +1,3 @@
-/**
- * Extension functions for functional programming with the [Result] type.
- */
 package io.github.seijikohara.devtools.domain.common.extensions
 
 /**

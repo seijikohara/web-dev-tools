@@ -53,9 +53,13 @@ class HtmlReferenceController(
             onSuccess = { it.toDto() },
             onFailure = { error ->
                 when (error) {
-                    is IllegalArgumentException ->
+                    is IllegalArgumentException -> {
                         throw ResponseStatusException(HttpStatus.BAD_REQUEST, error.message)
-                    else -> throw error
+                    }
+
+                    else -> {
+                        throw error
+                    }
                 }
             },
         )
