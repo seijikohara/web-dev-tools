@@ -1,0 +1,55 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "timezone": "Asia/Tokyo",
+  "schedule": ["* 3 * * *"],
+  "enabledManagers": [
+    "gradle",
+    "github-actions",
+    "dockerfile",
+    "git-submodules"
+  ],
+  "separateMajorMinor": false,
+  "packageRules": [
+    {
+      "matchManagers": ["gradle"],
+      "groupName": "gradle dependencies",
+      "groupSlug": "gradle-dependencies"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions dependencies",
+      "groupSlug": "github-actions-dependencies"
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "groupName": "docker dependencies",
+      "groupSlug": "docker-dependencies"
+    },
+    {
+      "matchManagers": ["git-submodules"],
+      "groupName": "git submodule dependencies",
+      "groupSlug": "git-submodule-dependencies"
+    },
+    {
+      "matchManagers": [
+        "gradle",
+        "github-actions",
+        "dockerfile",
+        "git-submodules"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch",
+        "pin",
+        "digest",
+        "replacement",
+        "rollback"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    }
+  ]
+}
