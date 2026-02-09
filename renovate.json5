@@ -9,6 +9,9 @@
     "dockerfile",
     "git-submodules"
   ],
+  "git-submodules": {
+    "enabled": true
+  },
   "separateMajorMinor": false,
   "packageRules": [
     {
