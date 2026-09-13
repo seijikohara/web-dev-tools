@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM eclipse-temurin:25.0.4_7-jdk@sha256:e787e08ef76f4c16866108cd7f9fcd96a68eef3ac6cc76866897d4d02d5a2262 AS builder
+FROM eclipse-temurin:25.0.4_7-jdk@sha256:dcf835e52330939b6c9f90ecab8aafcbcaa8fbf48423db44de884cf978c10144 AS builder
 WORKDIR /build
 COPY ./ ./
 RUN ./gradlew clean --stacktrace && \
@@ -7,14 +7,14 @@ RUN ./gradlew clean --stacktrace && \
     ./gradlew build -x test -x integrationTest --stacktrace
 
 # Stage 2: Extract JAR
-FROM eclipse-temurin:25.0.4_7-jdk@sha256:e787e08ef76f4c16866108cd7f9fcd96a68eef3ac6cc76866897d4d02d5a2262 AS extractor
+FROM eclipse-temurin:25.0.4_7-jdk@sha256:dcf835e52330939b6c9f90ecab8aafcbcaa8fbf48423db44de884cf978c10144 AS extractor
 WORKDIR /app
 COPY --from=builder /build/build/libs/app.jar ./app.jar
 RUN java -Djarmode=tools -jar app.jar extract --destination extracted
 
 # Stage 3: Generate AOT Cache
 # Use eclipse-temurin:25-jre (same Temurin version as distroless runtime)
-FROM eclipse-temurin:25.0.4_7-jre@sha256:f9e65324a37f28209ce7dd0e5149a7aa954520ed936fb87813cf6ded2400a112 AS aot-builder
+FROM eclipse-temurin:25.0.4_7-jre@sha256:15090d159279e5c158473eccb48cd87f57b3e3a47511a797eb5a7a7ea6f86b0f AS aot-builder
 WORKDIR /app
 COPY --from=extractor /app/extracted ./
 # -Xlog:aot=off: Suppress expected warnings for dynamic proxies and CGLIB classes
