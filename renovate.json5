@@ -66,6 +66,15 @@
       matchManagers: ["git-submodules"],
       groupName: "git submodules",
     },
+    {
+      // build.gradle.kts pins this artifact on the test runtime classpath because Konsist
+      // 0.17.3 builds a bare CompilerConfiguration that kotlin-compiler-embeddable >= 2.4.20
+      // rejects ("Extensions storage is not registered"). Drop this rule with the pin once
+      // Konsist supports the new API.
+      description: "Keep the kotlin-compiler-embeddable pin required by Konsist",
+      matchPackageNames: ["org.jetbrains.kotlin:kotlin-compiler-embeddable"],
+      enabled: false,
+    },
   ],
   vulnerabilityAlerts: {
     description: "Raise security fixes immediately and require manual review",
