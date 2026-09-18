@@ -94,6 +94,11 @@ testing {
                 implementation(libs.kotest.assertions.core)
                 implementation(libs.mockk)
                 implementation(libs.konsist)
+
+                // Konsist 0.17.3 builds a bare CompilerConfiguration that kotlin-compiler-embeddable >= 2.4.20
+                // rejects ("Extensions storage is not registered"), while spring-boot-dependencies aligns the
+                // artifact with the Kotlin plugin version. Pin it until Konsist supports the new API.
+                implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable:2.4.10")
             }
         }
 
