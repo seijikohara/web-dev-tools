@@ -26,16 +26,5 @@
       matchManagers: ["git-submodules"],
       groupName: "git submodules",
     },
-    {
-      // build.gradle.kts pins this artifact to 2.4.10 on the test runtime classpath. The pin
-      // was added for Konsist 0.17.3, which builds a bare CompilerConfiguration that
-      // kotlin-compiler-embeddable >= 2.4.20 rejects ("Extensions storage is not registered").
-      // Konsist 0.18.0 fixed Kotlin 2.4 support, and Konsist 0.18.1 depends on
-      // kotlin-compiler-embeddable 2.4.21, so the pin now downgrades that dependency. Drop
-      // this rule together with the pin in build.gradle.kts.
-      description: "Keep the kotlin-compiler-embeddable pin required by Konsist",
-      matchPackageNames: ["org.jetbrains.kotlin:kotlin-compiler-embeddable"],
-      enabled: false,
-    },
   ],
 }
