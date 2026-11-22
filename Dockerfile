@@ -21,7 +21,7 @@ COPY --from=extractor /app/extracted ./
 RUN java -Xlog:aot=off -XX:AOTCacheOutput=app.aot -Dspring.context.exit=onRefresh -jar app.jar
 
 # Stage 4: Runtime (uses same Temurin-25.0.1+8 as aot-builder for AOT cache compatibility)
-FROM gcr.io/distroless/java25-debian13@sha256:7bf4beb8fde0e21616519816149c5b85b8d92ab307188a4a0bb0a7dd1fd36605
+FROM gcr.io/distroless/java25-debian13@sha256:d1b024b25b9dd0a363c14e2927e8059c94bff102f2e2a645eb849ea36766292a
 WORKDIR /app
 COPY --from=aot-builder /app ./
 EXPOSE 20000
